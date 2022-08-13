@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/primary">
+
+    <include android:id="@+id/action_bar_include"
+        layout="@layout/action_bar"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="30dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/setsTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/your_sets"
+            android:textColor="@color/teal_200"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/setsRecycler"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="30dp"
+            android:clipToPadding="false"
+            android:overScrollMode="never"
+            android:orientation="vertical"
+            app:stackFromEnd="true"
+            android:background="@drawable/background_white_top"
+            android:paddingStart="10sp"
+            android:paddingTop="25sp"
+            android:paddingEnd="10sp" />
+
+    </LinearLayout>
+
+
+</LinearLayout>

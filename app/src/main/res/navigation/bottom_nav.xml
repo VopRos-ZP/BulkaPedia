@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/bottom_nav"
+    app:startDestination="@id/gearsItem">
+    <fragment
+        android:id="@+id/mapsItem"
+        android:name="com.bulkapedia.fragments.MapsFragment"
+        android:label="MapsFragment" >
+        <action
+            android:id="@+id/action_mapsItem_to_mapFragment"
+            app:destination="@id/mapFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/loginItem"
+        android:name="com.bulkapedia.fragments.LoginFragment"
+        android:label="LoginFragment" >
+        <action
+            android:id="@+id/action_loginItem_to_userClientFragment"
+            app:destination="@id/userClientFragment" />
+        <action
+            android:id="@+id/action_loginItem_to_registrationFragment"
+            app:destination="@id/registrationFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/userClientFragment"
+        android:name="com.bulkapedia.fragments.UserClientFragment"
+        android:label="UserClientFragment" >
+        <action
+            android:id="@+id/action_userClientFragment_to_settingsFragment"
+            app:destination="@id/settingsFragment" />
+        <argument
+            android:name="user"
+            app:argType="com.bulkapedia.database.User" />
+        <argument
+            android:name="see"
+            app:argType="boolean"
+            android:defaultValue="false" />
+        <action
+            android:id="@+id/action_userClientFragment_to_createUserSetFragment"
+            app:destination="@id/createUserSetFragment" />
+        <action
+            android:id="@+id/action_userClientFragment_to_commentsFragment"
+            app:destination="@id/commentsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/registrationFragment"
+        android:name="com.bulkapedia.fragments.RegistrationFragment"
+        android:label="RegistrationFragment" >
+        <action
+            android:id="@+id/action_registrationFragment_to_loginItem"
+            app:destination="@id/loginItem" />
+        <action
+            android:id="@+id/action_registrationFragment_to_userClientFragment"
+            app:destination="@id/userClientFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.bulkapedia.fragments.SettingsFragment"
+        android:label="SettingsFragment" >
+        <action
+            android:id="@+id/action_settingsFragment_to_userClientFragment"
+            app:destination="@id/userClientFragment" />
+        <action
+            android:id="@+id/action_settingsFragment_to_loginItem"
+            app:destination="@id/loginItem" />
+    </fragment>
+    <fragment
+        android:id="@+id/heroFragment"
+        android:name="com.bulkapedia.fragments.HeroFragment"
+        android:label="HeroFragment" >
+        <action
+            android:id="@+id/action_heroFragment_to_createUserSetFragment"
+            app:destination="@id/createUserSetFragment" />
+        <argument
+            android:name="heroModel"
+            app:argType="com.bulkapedia.models.HeroModel" />
+        <action
+            android:id="@+id/action_heroFragment_to_userClientFragment"
+            app:destination="@id/userClientFragment" />
+        <action
+            android:id="@+id/action_heroFragment_to_commentsFragment"
+            app:destination="@id/commentsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/mapFragment"
+        android:name="com.bulkapedia.fragments.MapFragment"
+        android:label="MapFragment">
+        <argument
+            android:name="mapModel"
+            app:argType="com.bulkapedia.models.MapModel" />
+    </fragment>
+    <fragment
+        android:id="@+id/createUserSetFragment"
+        android:name="com.bulkapedia.fragments.CreateUserSetFragment"
+        android:label="CreateUserSetFragment" >
+        <action
+            android:id="@+id/action_createUserSetFragment_to_heroFragment"
+            app:destination="@id/heroFragment" />
+        <argument
+            android:name="set"
+            app:argType="com.bulkapedia.sets.UserSet"
+            app:nullable="true"
+            android:defaultValue="@null" />
+        <argument
+            android:name="heroModel"
+            app:argType="com.bulkapedia.models.HeroModel" />
+    </fragment>
+    <fragment
+        android:id="@+id/gearsItem"
+        android:name="com.bulkapedia.fragments.HeroesFragment"
+        android:label="SelectHeroFragment" >
+        <action
+            android:id="@+id/action_gearsItem_to_heroFragment"
+            app:destination="@id/heroFragment" />
+        <action
+            android:id="@+id/action_gearsItem_to_topFragment"
+            app:destination="@id/topFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/topFragment"
+        android:name="com.bulkapedia.fragments.TopFragment"
+        android:label="TopFragment" >
+        <argument
+            android:name="topModel"
+            app:argType="com.bulkapedia.models.TopModel[]" />
+        <action
+            android:id="@+id/action_topFragment_to_userClientFragment"
+            app:destination="@id/userClientFragment" />
+        <action
+            android:id="@+id/action_topFragment_to_commentsFragment"
+            app:destination="@id/commentsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/commentsFragment"
+        android:name="com.bulkapedia.fragments.CommentsFragment"
+        android:label="CommentsFragment" >
+        <action
+            android:id="@+id/action_commentsFragment_to_heroFragment"
+            app:destination="@id/heroFragment" />
+        <argument
+            android:name="set"
+            app:argType="com.bulkapedia.sets.UserSet" />
+        <action
+            android:id="@+id/action_commentsFragment_to_createUserSetFragment"
+            app:destination="@id/createUserSetFragment" />
+        <action
+            android:id="@+id/action_commentsFragment_to_userClientFragment"
+            app:destination="@id/userClientFragment" />
+    </fragment>
+</navigation>

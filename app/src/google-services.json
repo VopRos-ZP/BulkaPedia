@@ -1,0 +1,69 @@
+{
+  "project_info": {
+    "project_number": "518501126794",
+    "firebase_url": "https://bulkapedia-e46fe-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "bulkapedia-e46fe",
+    "storage_bucket": "bulkapedia-e46fe.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:518501126794:android:8090d8650e83f3041d1373",
+        "android_client_info": {
+          "package_name": "com.bulkapedia"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "518501126794-karqlu66g08ob2s3gisk676dfferokr8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD8nqMOee_Jyv3ImoShM0lmRG-FdS7F7z8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "518501126794-karqlu66g08ob2s3gisk676dfferokr8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:518501126794:android:847bbc118cf6055a1d1373",
+        "android_client_info": {
+          "package_name": "com.vopros.bulkapedia.android"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "518501126794-karqlu66g08ob2s3gisk676dfferokr8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD8nqMOee_Jyv3ImoShM0lmRG-FdS7F7z8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "518501126794-karqlu66g08ob2s3gisk676dfferokr8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

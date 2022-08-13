@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <item
+        android:id="@+id/br_group"
+        android:title="@string/battle_royale_mode">
+
+        <menu>
+            <item
+                android:id="@+id/hotelMapItem"
+                android:icon="@drawable/hotel"
+                android:title="@string/hotel"
+                />
+
+            <item
+                android:id="@+id/railwayStationMapItem"
+                android:icon="@drawable/railway_station"
+                android:title="@string/railway_station"
+                />
+
+            <item
+                android:id="@+id/casinoMapItem"
+                android:icon="@drawable/casino"
+                android:title="@string/casino"
+                />
+
+            <item
+                android:id="@+id/villaMapItem"
+                android:icon="@drawable/villa"
+                android:title="@string/villa"
+                />
+
+            <item
+                android:id="@+id/roadMotelMapItem"
+                android:icon="@drawable/road_motel"
+                android:title="@string/road_motel"
+                />
+
+            <item
+                android:id="@+id/policeStationItem"
+                android:icon="@drawable/police_station"
+                android:title="@string/police_station"
+                />
+
+            <item
+                android:id="@+id/cityItem"
+                android:icon="@drawable/city"
+                android:title="@string/city"
+                />
+
+            <item
+                android:id="@+id/cityGardenItem"
+                android:icon="@drawable/city_garden"
+                android:title="@string/city_garden"
+                />
+
+            <item
+                android:id="@+id/villageItem"
+                android:icon="@drawable/village"
+                android:title="@string/village"
+                />
+
+            <item
+                android:id="@+id/sawmillItem"
+                android:icon="@drawable/sawmill"
+                android:title="@string/sawmill"
+                />
+
+        </menu>
+
+    </item>
+
+    <item
+        android:id="@+id/kh_group"
+        android:title="@string/kings_of_hill_mode">
+
+        <menu>
+
+            <item
+                android:id="@+id/hospitalItem"
+                android:title="@string/hospital"
+                />
+
+            <item
+                android:id="@+id/circusItem"
+                android:title="@string/circus"
+                />
+
+            <item
+                android:id="@+id/psychiatricHospitalItem"
+                android:title="@string/psychiatric_hospital"
+                />
+
+            <item
+                android:id="@+id/forgottenBazarItem"
+                android:title="@string/forgotten_bazar"
+                />
+
+        </menu>
+
+    </item>
+
+    <item
+        android:id="@+id/squad_group"
+        android:title="@string/squad_mode">
+
+        <menu>
+
+            <item
+                android:id="@+id/sewerageItem"
+                android:title="@string/sewerage"
+                android:icon="@drawable/sewerage"/>
+
+            <item
+                android:id="@+id/dungeonItem"
+                android:title="@string/dungeon"
+                />
+
+            <item
+                android:id="@+id/amusementParkItem"
+                android:title="@string/amusement_park"
+                />
+
+            <item
+                android:id="@+id/factoryItem"
+                android:title="@string/factory"
+                />
+            <item
+                android:id="@+id/mysteriousIslandItem"
+                android:title="@string/mysterious_island"
+                />
+
+        </menu>
+
+    </item>
+
+    <item
+        android:id="@+id/sabo_group"
+        android:title="@string/sabotage_mode">
+
+        <menu>
+
+            <item
+                android:id="@+id/undergroundBaseItem"
+                android:title="@string/underground_base"
+                android:icon="@drawable/sewerage"/>
+
+            <item
+                android:id="@+id/militaryStorageItem"
+                android:title="@string/dungeon"
+                />
+
+            <item
+                android:id="@+id/secretFloorItem"
+                android:title="@string/amusement_park"
+                />
+
+            <item
+                android:id="@+id/boardingItem"
+                android:title="@string/factory"
+                />
+
+        </menu>
+
+    </item>
+
+</menu>

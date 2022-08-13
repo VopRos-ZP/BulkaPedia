@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:background="@color/primary">
+
+    <ImageView
+        android:id="@+id/commentButton"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="@color/primary_dark"
+        app:srcCompat="@drawable/comment"
+        app:tint="@color/white" />
+    <ImageView
+        android:id="@+id/editProfileButton"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="@color/primary_dark"
+        app:srcCompat="@drawable/edit"
+        android:layout_marginHorizontal="6sp"
+        app:tint="@color/white" />
+    <ImageView
+        android:id="@+id/deleteButton"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="@color/primary_dark"
+        app:srcCompat="@drawable/delete"/>
+</LinearLayout>

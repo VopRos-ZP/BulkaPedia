@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="language">ru</string>
+    <string name="select_hero">Выберите героя</string>
+    <string name="select_map">Выберите карту</string>
+    <string name="ignore_personal_gears">Игнорировать персональную снарягу</string>
+    <string name="hide_effects">Скрыть эффекты</string>
+    <string name="battle_royale_mode">Королевская Битва</string>
+    <string name="squad_mode">Стенка</string>
+    <string name="kings_of_hill_mode">Царь горы</string>
+    <string name="all_modes">Универсальная</string>
+    <string name="menu_gears">Снаряжение</string>
+    <string name="menu_maps">Карты</string>
+    <string name="menu_workshop">Мастерская</string>
+    <string name="show_spawns">Показать точки появления</string>
+    <string name="hide_spawns">Скрыть точки появления</string>
+    <!--   найстройки -->
+    <string name="settings_text">Текст</string>
+    <string name="settings">Настройки</string>
+    <string name="your_sets">Ваши сеты</string>
+    <string name="profile">Профиль</string>
+    <string name="account">Аккаунт</string>
+    <string name="registration_login">Регистрация/Вход</string>
+    <string name="login">Вход</string>
+    <string name="change_login">Именить логин</string>
+    <string name="change_nickname">Именить ник</string>
+    <string name="reset_password">Изменить пароль</string>
+    <string name="logout">Выход</string>
+    <string name="hint_login">Введите логин</string>
+    <string name="hint_password">Введите пароль</string>
+    <string name="registration">Регистрация</string>
+    <string name="error_registration">Логин уже существует</string>
+    <string name="error_login">Пользователь не зарегистрирован</string>
+    <string name="error_login_password">Неверный логин или пароль</string>
+    <string name="invalid_passwords">Пароль должен совпадать</string>
+    <string name="empty_sets">Здесь пока ничего нет</string>
+    <string name="edit">Редактировать</string>
+    <string name="delete">Удалить</string>
+    <string name="lang">Язык</string>
+    <string name="save">Сохранить</string>
+    <string name="cancel">Отмена</string>
+    <string name="russian_lang">Русский</string>
+    <string name="english_lang">Английский</string>
+    <!--   эффекты -->
+    <string name="effects">Эффекты</string>
+    <string name="damage_effect">к основному урону</string>
+    <string name="armor_damage_effect">к урону по броне</string>
+    <string name="health_damage_effect">к урону по здоровью</string>
+    <string name="max_health_effect">к максимальному количеству здоровья</string>
+    <string name="max_armor_effect">к максимальному количеству брони</string>
+    <string name="add_health_effect">здоровья в секунду</string>
+    <string name="add_armor_effect">брони в секунду</string>
+    <string name="speed_effect">к скорости движения</string>
+    <string name="speed_in_focus_effect">к скорости движения с прицельной стрельбой</string>
+    <string name="spread_in_move_effect">к разбросу во время движения</string>
+    <string name="spread_in_focus_effect">к разбросу при стрельбе</string>
+    <string name="spread_in_not_focus_effect">к разбросу стрельбы не прицеливаясь</string>
+    <string name="visibility_effect">к дальности видимости</string>
+    <string name="piercing_effect">к бронебойности стрельбы</string>
+    <string name="fire_rate_effect">к скорости стрельбы</string>
+    <string name="fire_range_focus_effect">к дальности прицельной стрельбы</string>
+    <string name="fire_range_effect">к дальности стрельбы</string>
+    <string name="aiming_speed_effect">к скорости прицеливания</string>
+    <string name="running_volume_effect">к громкости бега</string>
+    <string name="time_up_ammo_effect">к времени подбора патронов</string>
+    <string name="time_up_bust_effect">к времени подбора улучшений</string>
+    <string name="reloading_time_effect">к скорости перезарядки</string>
+    <string name="piercing_power_effect">к пробивной способности</string>
+    <string name="add_patrons_effect">к количеству патронов</string>
+    <string name="max_damage_grenade_effect">к максимальному урону от гранаты</string>
+    <string name="max_radius_grenade_effect">к радиусу поражения от гранаты</string>
+    <string name="max_damage_rocket_effect">к максимальному урону от ракеты</string>
+    <string name="max_radius_rocket_effect">к радиусу поражения от ракеты</string>
+    <string name="jump_distance_effect">к максимальному расстоянию прыжка</string>
+    <string name="jump_damage_effect">к здоровью противников при приземлении</string>
+    <string name="speed_after_jump_effect">к скорости после использования отрыв</string>
+    <string name="invisible_duration_effect">к времени действия невидимости</string>
+    <string name="invisible_damage_effect">к урону после невидимости</string>
+    <string name="speed_after_invisible_effect">к скорости после невидимости</string>
+    <string name="scan_radius_effect">к радиусу раскрытия врагов</string>
+    <string name="scan_damage_effect">к урону по раскрытым героям</string>
+    <string name="scan_duration_effect">к времени действия просветки</string>
+    <string name="vision_duration_effect">к времени действия тепловизора</string>
+    <string name="piercing_vision_effect">к пробивной способности при акивации тепловизора</string>
+    <string name="wall_duration_effect">к времени действия стенки</string>
+    <string name="shield_duration_effect">к времени действия щита</string>
+    <string name="wall_protection_effect">к прочности стенки</string>
+    <string name="shield_protection_effect">к прочности щита</string>
+    <string name="fire_range_while_wall_effect">к дальности стрельбы, пока стоит стенка</string>
+    <string name="turret_damage_effect">к урону турелей</string>
+    <string name="turret_health_effect">к броне и здоровью турелей</string>
+    <string name="piercing_on_suppression_effect">к пробивной способности при активации подавление</string>
+    <string name="reloading_after_suppression_effect">к скорости перезарядки после подавления</string>
+    <string name="team_health_up_effect">к броне и здоровью при командном восстановлении</string>
+    <string name="health_after_team_health_effect">к броне и здоровью после командного восстановления</string>
+    <string name="stimulator_health_effect">к здоровью при активации стимулятора</string>
+    <string name="stimulator_speed_effect">к скорости движения после активации стимулятора</string>
+    <string name="band_running_volume_effect">к громкости движения после использовании бинта</string>
+    <string name="band_health_up_effect">к восстановлению здоровью при активации бинта</string>
+    <string name="max_health_after_tank_heal_effect">к максимуму брони и здоровья по завершению боевого комплекта</string>
+    <string name="tank_heal_on_activate_effect">к востанновлению брони и здоровья при активации боевого комплекта</string>
+    <string name="buff_damage_trooper_effect">к получаемому урону во время использования командное лечение</string>
+    <string name="buff_health_trooper_effect">к восстановлению здоровья в секунду при активации командное лечение</string>
+    <!--   персонажи -->
+    <string name="arnie">Арни</string>
+    <string name="cyclops">Циклоп</string>
+    <string name="sparkle">Искра</string>
+    <string name="hurricane">Ураган</string>
+    <string name="ghost">Призрак</string>
+    <string name="freddie">Фредди</string>
+    <string name="angel">Ангел</string>
+    <string name="raven">Ворон</string>
+    <string name="blot">Блот</string>
+    <string name="firefly">Огонёк</string>
+    <string name="slayer">Губитель</string>
+    <string name="mirage">Мираж</string>
+    <string name="smog">Смог</string>
+    <string name="dragoon">Драгун</string>
+    <string name="bastion">Бастион</string>
+    <string name="bertha">Берта</string>
+    <string name="leviathan">Левиафан</string>
+    <string name="stalker">Сталкер</string>
+    <string name="doc">Док</string>
+    <string name="levi">Леви</string>
+    <string name="satoshi">Сатоши</string>
+    <!--   названия карт -->
+    <!--   Кб -->
+    <string name="hotel">Отель</string>
+    <string name="bank">Банк</string>
+    <string name="city">Город</string>
+    <string name="city_garden">Городской сад</string>
+    <string name="police_station">Полицейский участок</string>
+    <string name="village">Деревня</string>
+    <string name="railway_station">Депо</string>
+    <string name="casino">Казино</string>
+    <string name="road_motel">Придорожный мотель</string>
+    <string name="villa">Вилла</string>
+    <string name="sawmill">Лесопилка</string>
+    <!--   Цг -->
+    <string name="hospital">Госпиталь</string>
+    <string name="psychiatric_hospital">Психиатрическая больница</string>
+    <string name="forgotten_bazar">Заброшенный базар</string>
+    <string name="circus">Цирк</string>
+    <!--   Стенка -->
+    <string name="sewerage">Сточные воды</string>
+    <string name="dungeon">Подземелье</string>
+    <string name="factory">Завод</string>
+    <string name="amusement_park">Парк развлечений</string>
+    <!--   Саб -->
+    <string name="secret_floor">Секретный этаж</string>
+    <string name="military_storage">Военный склад</string>
+    <string name="underground_base">Подземная база</string>
+    <!--   названия сетов -->
+    <string name="classical_set">Классика</string>
+    <string name="recommended_set">Рекомендованный</string>
+    <string name="healing_set">Живучесть</string>
+    <string name="damage_set">Урон</string>
+    <string name="squad_set">Стенка</string>
+    <string name="universe_set">Универсальная</string>
+    <string name="protective_set">Защита</string>
+    <string name="fire_range_set">Дальность</string>
+    <string name="spread_set">Мин. Разброс</string>
+    <string name="clip_size_set">Больше патронов</string>
+    <!--   описания сетов -->
+    <string name="description_set">Описание:</string>
+
+    <string name="hint_nickname">Введите ник</string>
+    <string name="sets">Сеты</string>
+    <string name="top_100">ТОП 100</string>
+    <string name="view">Показать</string>
+    <string name="difficult">Сложность</string>
+
+    <string name="shortguns">Дробовики</string>
+    <string name="scouts">Разведчики</string>
+    <string name="snipers">Снайперы</string>
+    <string name="tanks">Танки</string>
+    <string name="troopers">Штурмовики</string>
+    <string name="mysterious_island">Таинственный остров</string>
+    <string name="comments">Комментарии</string>
+    <string name="comment">Комментарий</string>
+    <string name="back">Назад</string>
+    <string name="sabotage_mode">Саботаж</string>
+    <string name="boarding">Абордаж</string>
+
+    <string name="delete_set_text">Вы точно хотите удалить сет?</string>
+
+</resources>
