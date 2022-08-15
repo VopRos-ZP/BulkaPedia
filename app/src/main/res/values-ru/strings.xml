@@ -101,6 +101,8 @@
     <string name="tank_heal_on_activate_effect">к востанновлению брони и здоровья при активации боевого комплекта</string>
     <string name="buff_damage_trooper_effect">к получаемому урону во время использования командное лечение</string>
     <string name="buff_health_trooper_effect">к восстановлению здоровья в секунду при активации командное лечение</string>
+    <string name="rain_of_arrows_radius_effect">к радиусу способности град стрел</string>
+    <string name="rain_of_arrows_damage_effect">к урону способности град стрел</string>
     <!--   персонажи -->
     <string name="arnie">Арни</string>
     <string name="cyclops">Циклоп</string>
@@ -114,6 +116,7 @@
     <string name="firefly">Огонёк</string>
     <string name="slayer">Губитель</string>
     <string name="mirage">Мираж</string>
+    <string name="lynx">Линкс</string>
     <string name="smog">Смог</string>
     <string name="dragoon">Драгун</string>
     <string name="bastion">Бастион</string>
