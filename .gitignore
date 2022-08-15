@@ -8,6 +8,8 @@
 .externalNativeBuild
 .cxx
 local.properties
-
-app/google-services.json
+app/src/google-services.json
 gradle
+app/release/
+app/src/androidTest/
+app/src/test/

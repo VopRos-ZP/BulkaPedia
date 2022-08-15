@@ -534,6 +534,37 @@ class GearsList {
             MIRAGE_CHOKER, MIRAGE_ANTIGRAV
         )
 
+        val LYNX_VISOR = Gear(GearSet.PERSONAL, 0, listOf(
+            Effect(65, false, R.string.visibility_effect),
+            Effect(-26, true, R.string.spread_in_move_effect)
+        ))
+        val LYNX_QUIVER = Gear(GearSet.PERSONAL, 0, listOf(
+            Effect(12, true, R.string.max_health_effect),
+            Effect(-37, true, R.string.spread_in_focus_effect)
+        ))
+        val LYNX_GLOVES = Gear(GearSet.PERSONAL, 0, listOf(
+            Effect(9, false, R.string.piercing_effect),
+            Effect(25, false, R.string.fire_range_focus_effect)
+        ))
+        val LYNX_KNEEPADS = Gear(GearSet.PERSONAL, 0, listOf(
+            Effect(12, true, R.string.speed_effect),
+            Effect(18, false, R.string.add_armor_effect)
+        ))
+        val LYNX_ARROWHEAD = Gear(GearSet.PERSONAL, 0, listOf(
+            Effect(18, false, R.string.add_health_effect),
+            Effect(10, true, R.string.health_damage_effect)
+        ))
+        val LYNX_EARBUDS = Gear(GearSet.PERSONAL, 0, listOf(
+            Effect(-26, true, R.string.spread_in_focus_effect),
+            Effect(-30, true, R.string.aiming_speed_effect)
+        ))
+
+        val LYNX_PERSONAL = listOf(
+            LYNX_VISOR, LYNX_QUIVER,
+            LYNX_GLOVES, LYNX_KNEEPADS,
+            LYNX_ARROWHEAD, LYNX_EARBUDS
+        )
+
         val SMOG_MASK = Gear(GearSet.PERSONAL, R.drawable.smog_mask, listOf(
             Effect(65, false, R.string.visibility_effect),
             Effect(25, false, R.string.add_health_effect)))

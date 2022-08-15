@@ -284,6 +284,29 @@ class PersonalGears {
                         else -> listOf()
                     }
                 }
+                HeroList.LYNX -> {
+                    when (count) {
+                        2, 3 -> listOf(
+                            Effect(-20, true, R.string.band_running_volume_effect),
+                            Effect(10, true, R.string.max_armor_effect)
+                        )
+                        4, 5 -> listOf(
+                            Effect(-20, true, R.string.band_running_volume_effect),
+                            Effect(10, true, R.string.max_armor_effect),
+                            Effect(25, false, 0),
+                            Effect(30, false, R.string.band_health_up_effect)
+                        )
+                        6 -> listOf(
+                            Effect(-20, true, R.string.band_running_volume_effect),
+                            Effect(10, true, R.string.max_armor_effect),
+                            Effect(25, false, 0),
+                            Effect(30, false, R.string.band_health_up_effect),
+                            Effect(7, false, R.string.piercing_power_effect),
+                            Effect(10, true, R.string.piercing_power_effect)
+                        )
+                        else -> listOf()
+                    }
+                }
                 HeroList.SMOG -> {
                     when (count) {
                         2, 3 -> listOf(

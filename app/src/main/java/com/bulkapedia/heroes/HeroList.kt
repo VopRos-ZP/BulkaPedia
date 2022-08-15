@@ -20,6 +20,7 @@ class HeroList {
         val FIREFLY = Firefly()
         val SLAYER = Slayer()
         val MIRAGE = Mirage()
+        val LYNX = Lynx()
         val SMOG = Smog()
         val BASTION = Bastion()
         val DRAGOON = Dragoon()

@@ -55,6 +55,9 @@
             android:id="@+id/mirageItem"
             android:icon="@drawable/mirage_menu"
             android:title="@string/mirage" />
+        <item
+            android:id="@+id/lynxItem"
+            android:title="@string/lynx" />
         <!--танки-->
         <item
             android:id="@+id/smogItem"

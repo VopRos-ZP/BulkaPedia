@@ -101,6 +101,8 @@
     <string name="tank_heal_on_activate_effect">to restore health and armor when the battle kit is activated</string>
     <string name="buff_damage_trooper_effect">to incoming damage while the team healing</string>
     <string name="buff_health_trooper_effect">to health regen per second when the team healing is activated</string>
+    <string name="rain_of_arrows_radius_effect">to the radius of the rain of arrows</string>
+    <string name="rain_of_arrows_damage_effect">to damage of the rain of arrows</string>
     <!--   персонажи -->
     <string name="arnie">Arnie</string>
     <string name="cyclops">Cyclops</string>
@@ -114,6 +116,7 @@
     <string name="firefly">Firefly</string>
     <string name="slayer">Slayer</string>
     <string name="mirage">Mirage</string>
+    <string name="lynx">Lynx</string>
     <string name="smog">Smog</string>
     <string name="dragoon">Dragoon</string>
     <string name="bastion">Bastion</string>
@@ -163,8 +166,6 @@
     <string name="clip_size_set">More bullets</string>
     <!--   описания сетов -->
     <string name="description_set">Description:</string>
-
-
 
     <string name="hint_nickname">Enter nickname</string>
     <string name="sets">Sets</string>
