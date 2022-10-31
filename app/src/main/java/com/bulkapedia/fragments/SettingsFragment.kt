@@ -14,10 +14,14 @@ import com.bulkapedia.R
 import com.bulkapedia.databinding.SettingsFragmentBinding
 import com.bulkapedia.preference.UserPreferences
 import com.bulkapedia.utils.Language
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 
 class SettingsFragment : Fragment() {
 
     private lateinit var bind: SettingsFragmentBinding
+    private lateinit var auth: FirebaseAuth
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -25,6 +29,7 @@ class SettingsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         bind = SettingsFragmentBinding.inflate(inflater, container, false)
+        auth = Firebase.auth
         return bind.root
     }
 
@@ -52,6 +57,7 @@ class SettingsFragment : Fragment() {
         }
         bind.logoutBtn.setOnClickListener {
             val action = SettingsFragmentDirections.actionSettingsFragmentToLoginItem()
+            auth.signOut()
             MAIN.prefs.setSigned(false)
             MAIN.getPreferences().edit {
                 putBoolean(UserPreferences.SIGNED, MAIN.prefs.getSigned())

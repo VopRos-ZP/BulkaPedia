@@ -18,6 +18,7 @@ class MapList {
             Map(R.id.cityGardenItem, R.drawable.city_garden, R.drawable.city_garden_spawns, R.string.city_garden, R.string.battle_royale_mode),
             Map(R.id.policeStationItem, R.drawable.police_station, R.drawable.police_station_spawns, R.string.police_station, R.string.battle_royale_mode),
             Map(R.id.sawmillItem, R.drawable.sawmill, R.drawable.sawmill_spawns, R.string.sawmill, R.string.battle_royale_mode),
+            Map(R.id.fortressItem, R.drawable.fortress, R.drawable.fortress_spawns, R.string.fortress, R.string.battle_royale_mode),
             // Kings Of Hill
             Map(R.id.hospitalItem, R.drawable.hospital, R.drawable.hospital_spawns, R.string.hospital, R.string.kings_of_hill_mode),
             Map(R.id.circusItem, R.drawable.circus, R.drawable.circus_spawns, R.string.circus, R.string.kings_of_hill_mode),

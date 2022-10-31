@@ -1,40 +1,65 @@
 package com.bulkapedia.database
 
-import com.bulkapedia.MAIN
 import com.bulkapedia.sets.GearCell
 import com.bulkapedia.sets.UserSet
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.ktx.database
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
 class Database {
 
-    private val db = Firebase.firestore
+    private val fs = Firebase.firestore
+    private val db = Firebase.database
 
-    fun getUsersNode(): CollectionReference = db.collection("users")
+    fun getUsersNode(): DatabaseReference = db.getReference("users")
 
-    fun getSetsNode(): CollectionReference = db.collection("sets")
+    fun getSetsNode(): CollectionReference = fs.collection("sets")
 
-    fun getCommentsNode(): CollectionReference = db.collection("comments")
+    fun getCommentsNode(): CollectionReference = fs.collection("comments")
 
-    /** Users **/
-    fun addUser(user: User) {
-        getUsersNode().add(user)
+    fun retrieveUserByNickname(nickname: String, func: (User) -> Unit) {
+        getUsersNode().addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                for (sd in snapshot.children) {
+                    val strings = mutableMapOf<String, String>()
+                    sd.children.forEach { data ->
+                        strings += data.key!! to (data.value as String)
+                    }
+                    val user = User(strings["login"], strings["password"], strings["nickname"])
+                    if (user.nickname == nickname) {
+                        func.invoke(user)
+                        break
+                    }
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {}
+        })
     }
 
-    fun getUserByLogin(login: String, code: (User?) -> Unit)
-    : User? = getUser("login", login, code)
+    fun retrieveUserByEmail(email: String, func: (User) -> Unit) {
+        getUsersNode().addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                for (sd in snapshot.children) {
+                    val strings = mutableMapOf<String, String>()
+                    sd.children.forEach { data ->
+                        strings += data.key!! to (data.value as String)
+                    }
+                    val user = User(strings["email"], strings["password"], strings["nickname"])
+                    if (user.email == email) {
+                        func.invoke(user)
+                        break
+                    }
+                }
+            }
 
-    fun getUserByNickname(nickname: String, code: (User?) -> Unit): User? = getUser("nickname", nickname, code)
-
-    private fun getUser(field: String, search: String, code: (User?) -> Unit): User? {
-        var user: User? = null
-        getUsersNode().whereEqualTo(field, search).get().addOnSuccessListener { query ->
-            user = query.documents[0].toObject(User::class.java)
-            code.invoke(user)
-            return@addOnSuccessListener
-        }
-        return user
+            override fun onCancelled(error: DatabaseError) {}
+        })
     }
 
     /** User sets **/

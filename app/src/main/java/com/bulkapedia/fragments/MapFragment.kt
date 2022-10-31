@@ -15,6 +15,8 @@ class MapFragment : Fragment() {
     private lateinit var bind: MapFragmentBinding
     private val args: MapFragmentArgs by navArgs()
 
+    private var isScaled = false
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -40,6 +42,12 @@ class MapFragment : Fragment() {
             bind.showSpawnPoints.setOnCheckedChangeListener { _, b ->
                 val map = if (b) mapSpawns else map
                 bind.mapImageView.setImageResource(map)
+            }
+            // Инициализируем нажатие на карту
+            bind.mapImageView.setOnClickListener { v ->
+                if (!isScaled) v.animate().scaleX(1.2f).scaleY(1.2f).duration = 500
+                if (isScaled) v.animate().scaleX(1f).scaleY(1f).duration = 500
+                isScaled = !isScaled
             }
         }
     }

@@ -20,18 +20,23 @@
     <string name="account">Account</string>
     <string name="your_sets">Your sets</string>
     <string name="registration_login">Registration/Login</string>
-    <string name="hint_login">Enter login</string>
+    <string name="hint_login">Enter email</string>
     <string name="hint_password">Enter password</string>
+    <string name="hint_new_password">Enter new password</string>
     <string name="login">Login</string>
     <string name="change_login">Change login</string>
     <string name="change_nickname">Change nickname</string>
-    <string name="reset_password">Change login</string>
+    <string name="reset_password">Change password</string>
     <string name="logout">Logout</string>
     <string name="registration">Registration</string>
+    <string name="forgot_password">Forgot password</string>
     <string name="error_registration">Login already exists</string>
     <string name="error_login">User is not registered</string>
     <string name="error_login_password">Invalid login or password</string>
+    <string name="error_reset_password">Invalid password</string>
+    <string name="hint_reset_code">Enter reset code</string>
     <string name="invalid_passwords">The password must match</string>
+    <string name="email_send">Check email</string>
     <string name="empty_sets">There\'s nothing here yet</string>
     <string name="edit">Edit</string>
     <string name="delete">Delete</string>
@@ -139,6 +144,7 @@
     <string name="road_motel">Road Motel</string>
     <string name="villa">Villa</string>
     <string name="sawmill">Sawmill</string>
+    <string name="fortress">Fortress</string>
     <!--   Цг -->
     <string name="hospital">Hospital</string>
     <string name="psychiatric_hospital">Psychiatric hospital</string>
@@ -184,7 +190,35 @@
     <string name="back">Back</string>
     <string name="sabotage_mode">Sabotage</string>
     <string name="boarding">Boarding</string>
+    <string name="counterpick">Counter pick</string>
 
     <string name="delete_set_text">Are you sure you want to delete the set?</string>
+    <string name="show_buffs">Show buffs</string>
+    <string name="hide_buffs">Hide buffs</string>
+    <string name="error_email">Enter email</string>
+
+    <string name="health">Health</string>
+    <string name="armor">Armor</string>
+    <string name="damage">Damage</string>
+    <string name="vision">Vision range</string>
+    <string name="max_silence">Max movement loudness radius</string>
+    <string name="max_speed">Max movement speed</string>
+    <string name="max_speed_in_focus">Max movement speed when aiming</string>
+    <string name="density">Piercing resistance</string>
+    <string name="reloading_time">Reloading time</string>
+    <string name="fire_rate">Fire rate (per sec)</string>
+    <string name="fire_range">Firing range</string>
+    <string name="fire_range_in_focus">Aimed fire range</string>
+    <string name="fire_spread">Fire spread</string>
+    <string name="fire_spread_while_moving">Fire spread while moving</string>
+    <string name="fire_spread_in_focus">Aimed fire spread</string>
+    <string name="magazine_size">Magazine size</string>
+    <string name="piercing_power">Piercing power</string>
+    <string name="health_damage_mod">Health damage modifier</string>
+    <string name="armor_damage_mod">Armor damage modifier</string>
+    <string name="armor_penetration">Armor penetration</string>
+    <string name="aiming_time">Aiming time</string>
+    <string name="send_reset_code">Send reset code</string>
+
 
 </resources>

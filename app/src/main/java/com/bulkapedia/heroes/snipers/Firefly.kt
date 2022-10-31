@@ -4,20 +4,14 @@ import com.bulkapedia.R
 import com.bulkapedia.gears.Gear
 import com.bulkapedia.gears.GearsList
 import com.bulkapedia.heroes.Hero
+import com.bulkapedia.models.CounterpickModel
 import com.bulkapedia.sets.GearCell
+import com.bulkapedia.utils.HeroStats
 
 class Firefly : Hero() {
 
     override fun getName(): Int {
         return R.string.firefly
-    }
-
-    override fun getMenuItem(): Int {
-        return R.id.fireflyItem
-    }
-
-    override fun getIcon(): Int {
-        return R.drawable.firefly_menu
     }
 
     override fun getBigIcon(): Int {
@@ -47,5 +41,42 @@ class Firefly : Hero() {
         }.toMap()
     }
 
+    override fun getCounterpicks(): List<CounterpickModel> {
+        return listOf(
+            CounterpickModel(R.drawable.angel_icon),
+            CounterpickModel(R.drawable.freddie_icon),
+            CounterpickModel(R.drawable.arnie_icon),
+            CounterpickModel(R.drawable.hurricane_icon),
+            CounterpickModel(R.drawable.sparkle_icon),
+            CounterpickModel(R.drawable.bastion_icon),
+            CounterpickModel(R.drawable.bertha_icon),
+            CounterpickModel(R.drawable.levi_icon),
+            CounterpickModel(R.drawable.stalker_icon),
+        )
+    }
+
+    override fun getStats(): HeroStats {
+        return HeroStats(
+            1985, 288, 728,
+            600,
+            300,
+            169,
+            85,
+            4,
+            4.0,
+            1.2,
+            220,
+            435,
+            14,
+            10,
+            8,
+            20,
+            8,
+            1.2,
+            2.0,
+            55,
+            0.4
+        )
+    }
 
 }

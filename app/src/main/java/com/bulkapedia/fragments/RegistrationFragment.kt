@@ -12,14 +12,17 @@ import com.bulkapedia.R
 import com.bulkapedia.database.User
 import com.bulkapedia.databinding.RegistrationFragmentBinding
 import com.bulkapedia.utils.addUserToShared
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 
 class RegistrationFragment : Fragment() {
 
     private lateinit var bind: RegistrationFragmentBinding
-    private lateinit var database: FirebaseFirestore
+    private lateinit var database: FirebaseDatabase
+    private lateinit var auth: FirebaseAuth
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -27,13 +30,14 @@ class RegistrationFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         bind = RegistrationFragmentBinding.inflate(inflater, container, false)
+        auth = Firebase.auth
         return bind.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        database = Firebase.firestore
+        database = Firebase.database
 
         bind.actionBarInclude.actionBar.title = getString(R.string.registration)
         bind.regBtn.setOnClickListener {
@@ -47,36 +51,24 @@ class RegistrationFragment : Fragment() {
                     .show()
                 return@setOnClickListener
             }
-            database.collection("users")
-                .get().addOnSuccessListener { result ->
-                    for (r in result) {
-                        if (r["login"].toString() == login) {
-                            Toast.makeText(context, "user are register", Toast.LENGTH_LONG)
-                                .show()
-                            return@addOnSuccessListener
+
+            auth.createUserWithEmailAndPassword(login, password).addOnCompleteListener {
+                if (it.isSuccessful) {
+                    val uid = FirebaseAuth.getInstance().currentUser!!.uid
+                    val user = User(login, password, nickname)
+                    database.getReference("users")
+                        .child(uid)
+                        .setValue(user).addOnSuccessListener {
+                            val action =
+                                RegistrationFragmentDirections.actionRegistrationFragmentToUserClientFragment(
+                                    user
+                                )
+                            findNavController().navigate(action)
+                            MAIN.prefs.setUser(user)
+                            MAIN.prefs.setSigned(true)
+                            addUserToShared(MAIN.getPreferences(), MAIN.prefs)
                         }
-                    }
-                    val map = mapOf(
-                        "login" to login,
-                        "password" to password,
-                        "nickname" to nickname,
-                    )
-                    database.collection("users")
-                        .add(map).addOnSuccessListener { addResult ->
-                            addResult.get().addOnSuccessListener { doc ->
-                                val user = doc.toObject(User::class.java)
-                                if (user != null) {
-                                    val action =
-                                        RegistrationFragmentDirections.actionRegistrationFragmentToUserClientFragment(
-                                            user
-                                        )
-                                    findNavController().navigate(action)
-                                    MAIN.prefs.setUser(user)
-                                    MAIN.prefs.setSigned(true)
-                                    addUserToShared(MAIN.getPreferences(), MAIN.prefs)
-                                }
-                            }
-                        }
+                }
             }
         }
         bind.loginBtn.setOnClickListener {

@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/heroFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white">
+    android:background="@color/primary">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -19,6 +18,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/white"
             android:orientation="horizontal">
 
             <ImageView
@@ -39,15 +39,15 @@
                     android:id="@+id/difficultTV"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:text="@string/difficult"
                     android:textAlignment="center"
-                    android:textSize="18sp"
                     android:textColor="@color/teal_200"
-                    android:text="@string/difficult"/>
+                    android:textSize="18sp" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_marginTop="15dp"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp">
 
                     <View
                         android:id="@+id/divider_one"
@@ -62,8 +62,8 @@
                         android:id="@+id/divider_two"
                         android:layout_width="40dp"
                         android:layout_height="10dp"
-                        android:background="@drawable/dif_indicator_yellow"
                         android:layout_marginHorizontal="5dp"
+                        android:background="@drawable/dif_indicator_yellow"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toStartOf="@+id/divider_three"
                         app:layout_constraintStart_toEndOf="@+id/divider_one"
@@ -97,15 +97,15 @@
                     android:id="@+id/tab_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:tabIndicatorHeight="3dp"
                     android:background="@color/white"
+                    app:tabIndicatorHeight="3dp"
                     app:tabMode="auto" />
 
                 <androidx.viewpager2.widget.ViewPager2
                     android:id="@+id/view_pager"
-                    android:background="@color/white"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:background="@color/white">
 
                 </androidx.viewpager2.widget.ViewPager2>
 
@@ -117,8 +117,31 @@
                     android:layout_marginVertical="10dp"
                     android:layout_marginEnd="40dp"
                     android:backgroundTint="@color/teal_200"
-                    app:srcCompat="@drawable/add"
-                    android:contentDescription="@string/snipers" />
+                    android:contentDescription="@string/snipers"
+                    app:srcCompat="@drawable/add" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/primary"
+                    android:paddingTop="15sp"
+                    android:paddingBottom="15sp"
+                    android:text="@string/counterpick"
+                    android:textAlignment="center"
+                    android:textColor="@color/white"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/counterpickRecycler"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/primary"
+                    android:clipToPadding="false"
+                    android:orientation="horizontal"
+                    android:overScrollMode="never"
+                    android:paddingHorizontal="20sp"
+                    app:stackFromEnd="true" />
 
             </LinearLayout>
 

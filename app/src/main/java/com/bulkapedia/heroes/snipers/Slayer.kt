@@ -4,20 +4,14 @@ import com.bulkapedia.R
 import com.bulkapedia.gears.Gear
 import com.bulkapedia.gears.GearsList
 import com.bulkapedia.heroes.Hero
+import com.bulkapedia.models.CounterpickModel
 import com.bulkapedia.sets.GearCell
+import com.bulkapedia.utils.HeroStats
 
 class Slayer : Hero() {
 
     override fun getName(): Int {
         return R.string.slayer
-    }
-
-    override fun getMenuItem(): Int {
-        return R.id.slayerItem
-    }
-
-    override fun getIcon(): Int {
-        return R.drawable.slayer_menu
     }
 
     override fun getBigIcon(): Int {
@@ -45,6 +39,49 @@ class Slayer : Hero() {
         return cells.mapIndexed { i, cell ->
             cell to GearsList.SLAYER_PERSONAL[i]
         }.toMap()
+    }
+
+    override fun getCounterpicks(): List<CounterpickModel> {
+        return listOf(
+            CounterpickModel(R.drawable.angel_icon),
+            CounterpickModel(R.drawable.freddie_icon),
+            CounterpickModel(R.drawable.ghost_icon),
+            CounterpickModel(R.drawable.raven_icon),
+            CounterpickModel(R.drawable.arnie_icon),
+            CounterpickModel(R.drawable.hurricane_icon),
+            CounterpickModel(R.drawable.sparkle_icon),
+            CounterpickModel(R.drawable.blot_icon),
+            CounterpickModel(R.drawable.mirage_icon),
+            CounterpickModel(R.drawable.bastion_icon),
+            CounterpickModel(R.drawable.bertha_icon),
+            CounterpickModel(R.drawable.dragoon_icon),
+            CounterpickModel(R.drawable.levi_icon),
+            CounterpickModel(R.drawable.satoshi_icon),
+        )
+    }
+
+    override fun getStats(): HeroStats {
+        return HeroStats(
+            792, 792, 2497,
+            600,
+            300,
+            171,
+            51,
+            4,
+            5.0,
+            0.3,
+            430,
+            430,
+            50,
+            5,
+            5,
+            5,
+            22,
+            1.0,
+            2.0,
+            85,
+            1.7
+        )
     }
 
 }

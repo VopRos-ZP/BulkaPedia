@@ -68,6 +68,12 @@
                 android:title="@string/sawmill"
                 />
 
+            <item
+                android:id="@+id/fortressItem"
+                android:icon="@drawable/fortress"
+                android:title="@string/fortress"
+                />
+
         </menu>
 
     </item>

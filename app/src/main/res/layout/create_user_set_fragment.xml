@@ -145,20 +145,42 @@
         </LinearLayout>
 
         <TextView
-            android:id="@+id/effectsTV"
+            android:id="@+id/showHideBuffs"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:ellipsize="none"
-            android:gravity="center"
-            android:maxLines="100"
-            android:scrollHorizontally="false"
+            android:background="@color/primary"
+            android:text="@string/show_buffs"
             android:textColor="@color/white"
-            android:textSize="16sp"
-            android:background="@drawable/background_primary_bottom"
+            android:textAlignment="center"
+            android:textSize="18sp"
+            android:paddingBottom="10sp"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="10sp"
+            android:scrollbars="none"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+            app:layout_constraintTop_toBottomOf="@+id/showHideBuffs"
+            android:background="@drawable/background_primary_bottom">
+
+            <TextView
+                android:id="@+id/effectsTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="none"
+                android:gravity="center"
+                android:maxLines="100"
+                android:scrollHorizontally="false"
+                android:textColor="@color/white"
+                android:textSize="16sp" />
+
+        </HorizontalScrollView>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

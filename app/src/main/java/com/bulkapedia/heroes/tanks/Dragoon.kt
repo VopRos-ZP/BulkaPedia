@@ -4,19 +4,13 @@ import com.bulkapedia.R
 import com.bulkapedia.gears.Gear
 import com.bulkapedia.gears.GearsList
 import com.bulkapedia.heroes.Hero
+import com.bulkapedia.models.CounterpickModel
 import com.bulkapedia.sets.GearCell
+import com.bulkapedia.utils.HeroStats
 
 class Dragoon : Hero() {
     override fun getName(): Int {
         return R.string.dragoon
-    }
-
-    override fun getMenuItem(): Int {
-        return R.id.dragoonItem
-    }
-
-    override fun getIcon(): Int {
-        return R.drawable.dragoon_menu
     }
 
     override fun getBigIcon(): Int {
@@ -46,5 +40,40 @@ class Dragoon : Hero() {
         }.toMap()
     }
 
+    override fun getCounterpicks(): List<CounterpickModel> {
+        return listOf(
+            CounterpickModel(R.drawable.satoshi_icon),
+            CounterpickModel(R.drawable.freddie_icon),
+            CounterpickModel(R.drawable.arnie_icon),
+            CounterpickModel(R.drawable.sparkle_icon),
+            CounterpickModel(R.drawable.bastion_icon),
+            CounterpickModel(R.drawable.doc_icon),
+            CounterpickModel(R.drawable.firefly_icon),
+        )
+    }
+
+    override fun getStats(): HeroStats {
+        return HeroStats(
+            2168, 2528, 137,
+            400,
+            200,
+            180,
+            18,
+            11,
+            1.5,
+            11.0,
+            255,
+            255,
+            20,
+            2,
+            15,
+            26,
+            4,
+            1.0,
+            3.2,
+            19,
+            1.0
+        )
+    }
 
 }

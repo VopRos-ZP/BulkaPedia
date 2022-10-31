@@ -9,11 +9,13 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.bulkapedia.MAIN
 import com.bulkapedia.R
 import com.bulkapedia.database.Database
 import com.bulkapedia.databinding.HeroFragmentBinding
 import com.bulkapedia.listeners.ViewPagerAdapter
+import com.bulkapedia.recycler.CounterpickRecyclerAdapter
 import com.bulkapedia.sets.UserSet
 import com.google.android.material.tabs.TabLayoutMediator
 import com.google.firebase.firestore.FirebaseFirestore
@@ -61,7 +63,8 @@ class HeroFragment : Fragment() {
             }
             // Инициализируем фрагменты сетов
             Database().getSets {
-                val sorted = it.sortedByDescending(UserSet::likes).take(3)
+                val list = it.filter { s -> s.hero == args.heroModel.heroIcon }
+                val sorted = list.sortedByDescending(UserSet::likes).take(3)
                 initSetFragments(sorted)
             }
 
@@ -78,6 +81,9 @@ class HeroFragment : Fragment() {
                     findNavController().navigate(action)
                 }
             }
+            // Инициализация контрпиков
+            bind.counterpickRecycler.layoutManager = LinearLayoutManager(MAIN, LinearLayoutManager.HORIZONTAL, false)
+            bind.counterpickRecycler.adapter = CounterpickRecyclerAdapter(heroCounterpick)
         }
     }
 

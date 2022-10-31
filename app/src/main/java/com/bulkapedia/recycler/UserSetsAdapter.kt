@@ -93,7 +93,7 @@ class UserSetsAdapter (
                     likesBox.setImageResource(R.drawable.unliked)
                 } else {
                     uSet.likes += 1
-                    uSet.userLikeIds.add(MAIN.prefs.getLogin()!!)
+                    uSet.userLikeIds.add(MAIN.prefs.getEmail()!!)
                     Database().addUserSet(uSet)
                     likesCount.text = "${uSet.likes}"
                     likesBox.setImageResource(R.drawable.liked)
@@ -104,7 +104,7 @@ class UserSetsAdapter (
 
     private fun containsId(set: UserSet): Boolean {
         for (id in set.userLikeIds) {
-            if (id == MAIN.prefs.getLogin()) {
+            if (id == MAIN.prefs.getEmail()) {
                 return true
             }
         }
@@ -113,7 +113,7 @@ class UserSetsAdapter (
 
     private fun removeId(set: UserSet) {
         for ((index, id) in set.userLikeIds.withIndex()) {
-            if (id == MAIN.prefs.getLogin()) {
+            if (id == MAIN.prefs.getEmail()) {
                 set.userLikeIds.removeAt(index)
             }
         }

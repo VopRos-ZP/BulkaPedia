@@ -60,11 +60,9 @@ class HeroSetFragment (
                 // profile
                 editProfileButton.setImageResource(R.drawable.person)
                 editProfileButton.setOnClickListener {
-                    Database().getUserByNickname(set.from) {
-                        if (it != null) {
-                            val action = HeroFragmentDirections.actionHeroFragmentToUserClientFragment(it, true)
-                            navController.navigate(action)
-                        }
+                    Database().retrieveUserByNickname(set.from) {
+                        val action = HeroFragmentDirections.actionHeroFragmentToUserClientFragment(it, true)
+                        navController.navigate(action)
                     }
                 }
             }
@@ -74,11 +72,10 @@ class HeroSetFragment (
                 editProfileButton.setOnClickListener {
                     if (!MAIN.prefs.getSigned()) return@setOnClickListener
                     val hero = HeroList.getHeroByBigImage(set.hero)
-                    val model = HeroModel(hero, hero.getBigIcon(), hero.getName())
+                    val model = HeroModel(hero, hero.getBigIcon(), hero.getName(), hero.getCounterpicks())
                     val action = HeroFragmentDirections.actionHeroFragmentToCreateUserSetFragment(model, set)
                     navController.navigate(action)
                 }
-
                 deleteButton.visibility = View.VISIBLE
                 deleteButton.isClickable = true
                 deleteButton.setOnClickListener {
@@ -106,7 +103,7 @@ class HeroSetFragment (
                 bind.likesBox.setImageResource(R.drawable.unliked)
             } else {
                 set.likes += 1
-                set.userLikeIds.add(MAIN.prefs.getLogin()!!)
+                set.userLikeIds.add(MAIN.prefs.getEmail()!!)
                 Database().addUserSet(set)
                 bind.likesCount.text = "${set.likes}"
                 bind.likesBox.setImageResource(R.drawable.liked)
@@ -126,14 +123,14 @@ class HeroSetFragment (
 
     private fun containsId() : Boolean {
         for (id in set.userLikeIds)
-            if (id == MAIN.prefs.getLogin())
+            if (id == MAIN.prefs.getEmail())
                 return true
         return false
     }
 
     private fun removeId() {
         for ((index, id) in set.userLikeIds.withIndex()) {
-            if (id == MAIN.prefs.getLogin()) {
+            if (id == MAIN.prefs.getEmail()) {
                 set.userLikeIds.removeAt(index)
             }
         }

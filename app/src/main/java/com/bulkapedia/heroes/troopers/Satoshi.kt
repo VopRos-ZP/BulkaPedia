@@ -4,19 +4,13 @@ import com.bulkapedia.R
 import com.bulkapedia.gears.Gear
 import com.bulkapedia.gears.GearsList
 import com.bulkapedia.heroes.Hero
+import com.bulkapedia.models.CounterpickModel
 import com.bulkapedia.sets.GearCell
+import com.bulkapedia.utils.HeroStats
 
 class Satoshi : Hero() {
     override fun getName(): Int {
         return R.string.satoshi
-    }
-
-    override fun getMenuItem(): Int {
-        return R.id.satoshiItem
-    }
-
-    override fun getIcon(): Int {
-        return R.drawable.satoshi_menu
     }
 
     override fun getBigIcon(): Int {
@@ -46,5 +40,37 @@ class Satoshi : Hero() {
         }.toMap()
     }
 
+    override fun getCounterpicks(): List<CounterpickModel> {
+        return listOf(
+            CounterpickModel(R.drawable.mirage_icon),
+//            CounterpickModel(R.drawable.lynx_icon),
+            CounterpickModel(R.drawable.smog_icon),
+            CounterpickModel(R.drawable.doc_icon),
+        )
+    }
+
+    override fun getStats(): HeroStats {
+        return HeroStats(
+            866, 1985, 280,
+            450,
+            400,
+            152,
+            76,
+            5,
+            1.2,
+            9.3,
+            265,
+            265,
+            35,
+            30,
+            15,
+            15,
+            4,
+            1.0,
+            1.0,
+            50,
+            0.6
+        )
+    }
 
 }

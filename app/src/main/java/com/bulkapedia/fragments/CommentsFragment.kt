@@ -23,8 +23,9 @@ import com.google.firebase.firestore.EventListener
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.bulkapedia.databinding.CommentsFragmentBinding
-import com.bulkapedia.sets.UserSet
 import com.bulkapedia.utils.TripleButtonUtils
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ktx.database
 import java.util.*
 
 class CommentsFragment : Fragment() {
@@ -33,7 +34,8 @@ class CommentsFragment : Fragment() {
     private val args: CommentsFragmentArgs by navArgs()
 
     private lateinit var commentAdapter: CommentsRecyclerAdapter
-    private lateinit var database: FirebaseFirestore
+    private lateinit var database: FirebaseDatabase
+    private lateinit var firestore: FirebaseFirestore
 
     private val comments = mutableListOf<CommentModel>()
 
@@ -48,7 +50,8 @@ class CommentsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        database = Firebase.firestore
+        database = Firebase.database
+        firestore = Firebase.firestore
         args.set.apply {
             val ivGears = listOf(
                 bind.heroSetInclude.setInclude.ivHead, bind.heroSetInclude.setInclude.ivBody,
@@ -73,11 +76,9 @@ class CommentsFragment : Fragment() {
                     // profile
                     editProfileButton.setImageResource(R.drawable.person)
                     editProfileButton.setOnClickListener {
-                        Database().getUserByNickname(args.set.from) {
-                            if (it != null) {
-                                val action = CommentsFragmentDirections.actionCommentsFragmentToUserClientFragment(it, true)
-                                findNavController().navigate(action)
-                            }
+                        Database().retrieveUserByNickname(args.set.from) {
+                            val action = HeroFragmentDirections.actionHeroFragmentToUserClientFragment(it, true)
+                            findNavController().navigate(action)
                         }
                     }
                 }
@@ -117,7 +118,7 @@ class CommentsFragment : Fragment() {
                     bind.heroSetInclude.likesBox.setImageResource(R.drawable.unliked)
                 } else {
                     likes += 1
-                    userLikeIds.add(MAIN.prefs.getLogin()!!)
+                    userLikeIds.add(MAIN.prefs.getEmail()!!)
                     Database().addUserSet(this)
                     bind.heroSetInclude.likesCount.text = "$likes"
                     bind.heroSetInclude.likesBox.setImageResource(R.drawable.liked)
@@ -142,10 +143,10 @@ class CommentsFragment : Fragment() {
                     "date" to model.date,
                     "text" to model.text
                 )
-                database.collection("comments").add(map)
+                firestore.collection("comments").add(map)
                 bind.commentEditText.text.clear()
             }
-            database.collection("comments")
+            firestore.collection("comments")
                 .whereEqualTo("hero", hero)
                 .addSnapshotListener(eventListener)
         }
@@ -192,14 +193,14 @@ class CommentsFragment : Fragment() {
 
     private fun containsId() : Boolean {
         for (id in args.set.userLikeIds)
-            if (id == MAIN.prefs.getLogin())
+            if (id == MAIN.prefs.getEmail())
                 return true
         return false
     }
 
     private fun removeId() {
         for ((index, id) in args.set.userLikeIds.withIndex()) {
-            if (id == MAIN.prefs.getLogin()) {
+            if (id == MAIN.prefs.getEmail()) {
                 args.set.userLikeIds.removeAt(index)
             }
         }

@@ -4,20 +4,14 @@ import com.bulkapedia.R
 import com.bulkapedia.gears.Gear
 import com.bulkapedia.gears.GearsList
 import com.bulkapedia.heroes.Hero
+import com.bulkapedia.models.CounterpickModel
 import com.bulkapedia.sets.GearCell
+import com.bulkapedia.utils.HeroStats
 
 class Freddie : Hero() {
 
     override fun getName(): Int {
         return R.string.freddie
-    }
-
-    override fun getMenuItem(): Int {
-        return R.id.freddieItem
-    }
-
-    override fun getIcon(): Int {
-        return R.drawable.freddie_menu
     }
 
     override fun getBigIcon(): Int {
@@ -47,5 +41,37 @@ class Freddie : Hero() {
         }.toMap()
     }
 
+    override fun getCounterpicks(): List<CounterpickModel> {
+        return listOf(
+            CounterpickModel(R.drawable.arnie_icon),
+            CounterpickModel(R.drawable.sparkle_icon),
+            CounterpickModel(R.drawable.angel_icon),
+            CounterpickModel(R.drawable.satoshi_icon),
+        )
+    }
+
+    override fun getStats(): HeroStats {
+        return HeroStats(
+            1262, 288, 227,
+            400,
+            300,
+            188,
+            75,
+            4,
+            3.0,
+            15.0,
+            205,
+            205,
+            25,
+            15,
+            20,
+            28,
+            4,
+            1.0,
+            0.7,
+            20,
+            2.0
+        )
+    }
 
 }

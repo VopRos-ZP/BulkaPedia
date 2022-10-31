@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bulkapedia.MAIN
 import com.bulkapedia.R
 import com.bulkapedia.database.Database
-import com.bulkapedia.database.User
 import com.bulkapedia.databinding.DialogSetBinding
 import com.bulkapedia.databinding.TopSetItemBinding
 import com.bulkapedia.fragments.TopFragmentDirections
@@ -20,8 +19,6 @@ import com.bulkapedia.gears.Gear
 import com.bulkapedia.gears.GearsList
 import com.bulkapedia.models.TopModel
 import com.bulkapedia.sets.GearCell
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
 
 class TopRecyclerAdapter (
     private val topSto: List<TopModel>,
@@ -42,8 +39,8 @@ class TopRecyclerAdapter (
         val model = topSto[position]
         holder.binding.apply {
             topNumber.text = model.number.toString()
-            Database().getUserByNickname(model.nickname) { user ->
-                topName.text = user?.nickname!!
+            Database().retrieveUserByNickname(model.nickname) { user ->
+                topName.text = user.nickname
                 if (MAIN.prefs.getUser().nickname != user.nickname) {
                     topName.setOnClickListener {
                         val action = TopFragmentDirections.actionTopFragmentToUserClientFragment(user, true)

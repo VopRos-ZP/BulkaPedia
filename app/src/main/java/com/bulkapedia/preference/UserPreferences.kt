@@ -12,14 +12,14 @@ class UserPreferences : Application() {
         const val EN_LANGUAGE = "en"
         const val SIGNED = "signed"
         const val ID = "id"
-        const val LOGIN = "login"
+        const val EMAIL = "email"
         const val PASSWORD = "password"
         const val NICKNAME = "nickname"
     }
 
     private lateinit var language: String
     private var signed: Boolean = false
-    private var login: String? = null
+    private var email: String? = null
     private var password: String? = null
     private var nickname: String? = null
 
@@ -30,11 +30,11 @@ class UserPreferences : Application() {
     fun getLanguage() : String = language
 
 
-    fun setLogin(login: String?) {
-        this.login = login
+    fun setEmail(email: String?) {
+        this.email = email
     }
 
-    fun getLogin(): String? = login
+    fun getEmail(): String? = email
 
     fun setPassword(password: String?) {
         this.password = password
@@ -55,11 +55,11 @@ class UserPreferences : Application() {
     fun getSigned(): Boolean = signed
 
     fun setUser(user: User) {
-        setLogin(user.login)
+        setEmail(user.email)
         setPassword(user.password)
         setNickname(user.nickname)
     }
 
-    fun getUser(): User = User(login, password, nickname)
+    fun getUser(): User = User(email, password, nickname)
 
 }

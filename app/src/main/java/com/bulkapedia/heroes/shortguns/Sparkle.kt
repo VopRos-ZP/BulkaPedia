@@ -4,19 +4,15 @@ import com.bulkapedia.R
 import com.bulkapedia.gears.Gear
 import com.bulkapedia.gears.GearsList
 import com.bulkapedia.heroes.Hero
+import com.bulkapedia.models.CounterpickModel
 import com.bulkapedia.sets.GearCell
+import com.bulkapedia.utils.HeroStats
 
 class Sparkle : Hero() {
 
     override fun getName(): Int {
         return R.string.sparkle
     }
-
-    override fun getMenuItem(): Int {
-        return R.id.sparkleItem
-    }
-
-    override fun getIcon(): Int = R.drawable.sparkle_menu
 
     override fun getBigIcon(): Int = R.drawable.sparkle_icon
 
@@ -41,6 +37,40 @@ class Sparkle : Hero() {
         return cells.mapIndexed { i, cell ->
             cell to GearsList.SPARKLE_PERSONAL[i]
         }.toMap()
+    }
+
+    override fun getCounterpicks(): List<CounterpickModel> {
+        return listOf(
+            CounterpickModel(R.drawable.cyclops_icon),
+            CounterpickModel(R.drawable.hurricane_icon),
+            CounterpickModel(R.drawable.angel_icon),
+            CounterpickModel(R.drawable.bastion_icon),
+            CounterpickModel(R.drawable.satoshi_icon),
+        )
+    }
+
+    override fun getStats(): HeroStats {
+        return HeroStats(
+            2528, 578, 333,
+            400,
+            400,
+            180,
+            36,
+            7,
+            2.5,
+            4.0,
+            155,
+            155,
+            10,
+            12,
+            10,
+            2,
+            4,
+            1.0,
+            0.8,
+            5,
+            1.0
+        )
     }
 
 }

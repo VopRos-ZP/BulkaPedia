@@ -4,19 +4,13 @@ import com.bulkapedia.R
 import com.bulkapedia.gears.Gear
 import com.bulkapedia.gears.GearsList
 import com.bulkapedia.heroes.Hero
+import com.bulkapedia.models.CounterpickModel
 import com.bulkapedia.sets.GearCell
+import com.bulkapedia.utils.HeroStats
 
 class Doc : Hero() {
     override fun getName(): Int {
         return R.string.doc
-    }
-
-    override fun getMenuItem(): Int {
-        return R.id.docItem
-    }
-
-    override fun getIcon(): Int {
-        return R.drawable.doc_menu
     }
 
     override fun getBigIcon(): Int {
@@ -44,6 +38,41 @@ class Doc : Hero() {
         return cells.mapIndexed { i, cell ->
             cell to GearsList.DOC_PERSONAL[i]
         }.toMap()
+    }
+
+    override fun getCounterpicks(): List<CounterpickModel> {
+        return listOf(
+            CounterpickModel(R.drawable.arnie_icon),
+            CounterpickModel(R.drawable.freddie_icon),
+            CounterpickModel(R.drawable.sparkle_icon),
+            CounterpickModel(R.drawable.mirage_icon),
+            CounterpickModel(R.drawable.bertha_icon),
+            CounterpickModel(R.drawable.levi_icon),
+        )
+    }
+
+    override fun getStats(): HeroStats {
+        return HeroStats(
+            1805, 1445, 214,
+            400,
+            400,
+            150,
+            75,
+            5,
+            5.0,
+            12.0,
+            275,
+            275,
+            30,
+            40,
+            15,
+            70,
+            4,
+            1.0,
+            1.0,
+            40,
+            0.6
+        )
     }
 
 }

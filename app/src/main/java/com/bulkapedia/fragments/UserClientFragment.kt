@@ -65,7 +65,7 @@ class UserClientFragment : Fragment() {
             val edit: (UserSet) -> View.OnClickListener = { uSet ->
                 View.OnClickListener {
                     val hero = HeroList.getHeroByBigImage(uSet.hero)
-                    val heroModel = HeroModel(hero, hero.getBigIcon(), hero.getName())
+                    val heroModel = HeroModel(hero, hero.getBigIcon(), hero.getName(), hero.getCounterpicks())
                     val action = UserClientFragmentDirections.actionUserClientFragmentToCreateUserSetFragment(heroModel, uSet)
                     findNavController().navigate(action)
                 }

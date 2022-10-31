@@ -18,7 +18,7 @@ class TripleButtonUtils {
         val onClickEdit: (UserSet, (HeroModel) -> Unit) -> Unit = { set, f ->
             if (MAIN.prefs.getSigned()) {
                 val hero = HeroList.getHeroByBigImage(set.hero)
-                val model = HeroModel(hero, hero.getBigIcon(), hero.getName())
+                val model = HeroModel(hero, hero.getBigIcon(), hero.getName(), hero.getCounterpicks())
                 f.invoke(model)
             }
         }

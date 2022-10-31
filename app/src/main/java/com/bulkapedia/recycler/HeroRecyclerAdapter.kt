@@ -33,7 +33,7 @@ class HeroRecyclerAdapter(private val navController: NavController) : RecyclerVi
         holder.bind.apply {
             heroIcon.setImageResource(hero.getBigIcon())
             setBtn.setOnClickListener {
-                val model = HeroModel(hero, hero.getBigIcon(), hero.getName())
+                val model = HeroModel(hero, hero.getBigIcon(), hero.getName(), hero.getCounterpicks())
                 val action = HeroesFragmentDirections.actionGearsItemToHeroFragment(model)
                 navController.navigate(action)
             }

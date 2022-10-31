@@ -4,20 +4,14 @@ import com.bulkapedia.R
 import com.bulkapedia.gears.Gear
 import com.bulkapedia.gears.GearsList
 import com.bulkapedia.heroes.Hero
+import com.bulkapedia.models.CounterpickModel
 import com.bulkapedia.sets.GearCell
+import com.bulkapedia.utils.HeroStats
 
 class Hurricane : Hero() {
 
     override fun getName(): Int {
         return R.string.hurricane
-    }
-
-    override fun getMenuItem(): Int {
-        return R.id.hurricaneItem
-    }
-
-    override fun getIcon(): Int {
-        return R.drawable.hurricane_menu
     }
 
     override fun getBigIcon(): Int {
@@ -45,6 +39,40 @@ class Hurricane : Hero() {
         return cells.mapIndexed { i, cell ->
             cell to GearsList.HURRICANE_PERSONAL[i]
         }.toMap()
+    }
+
+    override fun getCounterpicks(): List<CounterpickModel> {
+        return listOf(
+            CounterpickModel(R.drawable.arnie_icon),
+            CounterpickModel(R.drawable.mirage_icon),
+            CounterpickModel(R.drawable.bastion_icon),
+            CounterpickModel(R.drawable.smog_icon),
+            CounterpickModel(R.drawable.doc_icon),
+        )
+    }
+
+    override fun getStats(): HeroStats {
+        return HeroStats(
+            1445, 2168, 92,
+            400,
+            400,
+            181,
+            36,
+            7,
+            1.8,
+            7.8,
+            180,
+            180,
+            30,
+            15,
+            25,
+            23,
+            4,
+            1.0,
+            0.5,
+            10,
+            1.0,
+        )
     }
 
 }

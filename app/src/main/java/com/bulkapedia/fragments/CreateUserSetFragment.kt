@@ -2,11 +2,17 @@ package com.bulkapedia.fragments
 
 import android.app.Activity.RESULT_OK
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
+import android.text.Spannable
+import android.text.SpannableStringBuilder
+import android.text.style.ForegroundColorSpan
+import android.text.style.StyleSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
@@ -24,6 +30,7 @@ import com.bulkapedia.sets.UserSet
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import kotlin.math.roundToInt
 
 class CreateUserSetFragment : Fragment() {
 
@@ -42,6 +49,11 @@ class CreateUserSetFragment : Fragment() {
     private var legIcon: Int = 0
     private var decorIcon: Int = 0
     private var deviceIcon: Int = 0
+
+    private var showingBuffs = false
+
+    private val effectsMap = mutableMapOf<Effect, Int>()
+    private val percentEffectsMap = mutableMapOf<Effect, Int>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -69,11 +81,14 @@ class CreateUserSetFragment : Fragment() {
             }
             bind.saveButton.setOnClickListener {
                 if (editSet != null) {
-                    val userSet = UserSet(editSet!!.setId,
+                    val userSet = UserSet(
+                        editSet!!.setId,
                         MAIN.prefs.getNickname()!!, editSet!!.hero,
-                        mapOf(GearCell.HEAD to headIcon, GearCell.BODY to bodyIcon,
+                        mapOf(
+                            GearCell.HEAD to headIcon, GearCell.BODY to bodyIcon,
                             GearCell.ARM to armIcon, GearCell.LEG to legIcon,
-                            GearCell.DECOR to decorIcon, GearCell.DEVICE to deviceIcon),
+                            GearCell.DECOR to decorIcon, GearCell.DEVICE to deviceIcon
+                        ),
                         editSet!!.likes, editSet!!.userLikeIds
                     )
                     Database().addUserSet(userSet)
@@ -93,6 +108,16 @@ class CreateUserSetFragment : Fragment() {
                 findNavController().navigateUp()
             }
         }
+        bind.showHideBuffs.setOnClickListener {
+            showingBuffs = !showingBuffs
+            if (!showingBuffs) {
+                bind.effectsTV.text = ""
+                bind.showHideBuffs.setText(R.string.show_buffs)
+            } else {
+                bind.showHideBuffs.setText(R.string.hide_buffs)
+                sumEffects()
+            }
+        }
         launcher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             if (it.resultCode == RESULT_OK) {
                 val data = it.data
@@ -107,7 +132,7 @@ class CreateUserSetFragment : Fragment() {
                         "decor" -> decorIcon = icon
                         else -> deviceIcon = icon
                     }
-                    sumEffects()
+                    if (showingBuffs) sumEffects()
                 }
             }
         }
@@ -142,117 +167,403 @@ class CreateUserSetFragment : Fragment() {
         customs.forEachIndexed { i, btn ->
             val icon = if (gearsIcons[i] != 0) gearsIcons[i]
             else icons[i]
-            val gears = when (btn.id) {
-                bind.customHeadBtn.id -> GearsList.headIcon.apply {
-                    val gears = getHeroSetItems(hero, GearCell.HEAD)
-                    if (!containsAll(gears))
-                        addAll(gears)
-                }
-                bind.customBodyBtn.id -> GearsList.bodyIcons.apply {
-                    val gears = getHeroSetItems(hero, GearCell.BODY)
-                    if (!containsAll(gears))
-                        addAll(gears)
-                }
-                bind.customArmBtn.id -> GearsList.armIcons.apply {
-                    val gears = getHeroSetItems(hero, GearCell.ARM)
-                    if (!containsAll(gears))
-                        addAll(gears)
-                }
-                bind.customLegBtn.id -> GearsList.legIcons.apply {
-                    val gears = getHeroSetItems(hero, GearCell.LEG)
-                    if (!containsAll(gears))
-                        addAll(gears)
-                }
-                bind.customDecorBtn.id -> GearsList.decorIcons.apply {
-                    val gears = getHeroSetItems(hero, GearCell.DECOR)
-                    if (!containsAll(gears))
-                        addAll(gears)
-                }
-                bind.customDeviceBtn.id -> GearsList.deviceIcons.apply {
-                    val gears = getHeroSetItems(hero, GearCell.DEVICE)
-                    if (!containsAll(gears))
-                        addAll(gears)
-                }
-                else -> listOf()
-            }
-            val gearType = when (btn.id) {
-                bind.customHeadBtn.id -> "head"
-                bind.customBodyBtn.id -> "body"
-                bind.customArmBtn.id -> "arm"
-                bind.customLegBtn.id -> "leg"
-                bind.customDecorBtn.id -> "decor"
-                else -> "device"
-            }
+            val buffer = getDefaultGearsByBtn(btn.id)
+            val insertedGears = mutableListOf<Gear>()
             btn.setImageResource(icon)
             btn.setOnClickListener {
                 clickedBtn = btn
+                val gears = when (btn.id) {
+                    bind.customHeadBtn.id -> {
+                        val gears = getHeroSetItems(hero, GearCell.HEAD)
+                        if (!buffer.containsAll(gears)) {
+                            buffer.addAll(gears)
+                            insertedGears.addAll(gears)
+                        }
+                        buffer
+                    }
+                    bind.customBodyBtn.id -> {
+                        val gears = getHeroSetItems(hero, GearCell.BODY)
+                        if (!buffer.containsAll(gears)) {
+                            buffer.addAll(gears)
+                            insertedGears.addAll(gears)
+                        }
+                        buffer
+                    }
+                    bind.customArmBtn.id -> {
+                        val gears = getHeroSetItems(hero, GearCell.ARM)
+                        if (!buffer.containsAll(gears)) {
+                            buffer.addAll(gears)
+                            insertedGears.addAll(gears)
+                        }
+                        buffer
+                    }
+                    bind.customLegBtn.id -> {
+                        val gears = getHeroSetItems(hero, GearCell.LEG)
+                        if (!buffer.containsAll(gears)) {
+                            buffer.addAll(gears)
+                            insertedGears.addAll(gears)
+                        }
+                        buffer
+                    }
+                    bind.customDecorBtn.id -> {
+                        val gears = getHeroSetItems(hero, GearCell.DECOR)
+                        if (!buffer.containsAll(gears)) {
+                            buffer.addAll(gears)
+                            insertedGears.addAll(gears)
+                        }
+                        buffer
+                    }
+                    bind.customDeviceBtn.id -> {
+                        val gears = getHeroSetItems(hero, GearCell.DEVICE)
+                        if (!buffer.containsAll(gears)) {
+                            buffer.addAll(gears)
+                            insertedGears.addAll(gears)
+                        }
+                        buffer
+                    }
+                    else -> listOf()
+                }
+                val gearType = when (btn.id) {
+                    bind.customHeadBtn.id -> "head"
+                    bind.customBodyBtn.id -> "body"
+                    bind.customArmBtn.id -> "arm"
+                    bind.customLegBtn.id -> "leg"
+                    bind.customDecorBtn.id -> "decor"
+                    else -> "device"
+                }
                 val gearIcons: IntArray = gears.map { it.icon }.toIntArray()
                 val intent = Intent(context, GearActivityDialog::class.java).apply {
                     putExtra("gearIcons", gearIcons)
                     putExtra("gearType", gearType)
                 }
+                buffer.removeAll(insertedGears)
                 launcher.launch(intent)
             }
         }
-        sumEffects()
     }
 
     private fun sumEffects() {
+        effectsMap.clear()
+        percentEffectsMap.clear()
+        val emptyIcons = listOf(
+            R.drawable.empty_head, R.drawable.empty_body,
+            R.drawable.empty_arm, R.drawable.empty_leg,
+            R.drawable.empty_decor, R.drawable.empty_device
+        )
         val customs = listOf(
             headIcon, bodyIcon,
             armIcon, legIcon,
             decorIcon, deviceIcon
         )
         val icons = mutableListOf<Int>()
-        val effectsMap = mutableMapOf<Effect, Int>()
         var i = 0
         while (i < 6) {
             val icon = customs[i]
             if (icon != 0) icons.add(icon)
             i++
         }
+        val effects = mutableListOf<Effect>()
         icons.forEach { icon ->
-            val index = GearsList.allGears.map(Gear::icon).indexOf(icon)
-            val effects = GearsList.allGears[index].effects
-            //
-            effects.forEach { e ->
-                val eDesc = effectsMap.map { it.key.description }
-                if (eDesc.contains(e.description)) {
-                    val eff = effectsMap.map { it.key }[eDesc.indexOf(e.description)]
-                    effectsMap.replace(eff, eff.number + e.number)
-                } else effectsMap += e to e.number
+            if (!emptyIcons.contains(icon)) {
+                val index = GearsList.allGears.map(Gear::icon).indexOf(icon)
+                effects.addAll(GearsList.allGears[index].effects)
             }
         }
         val gears = icons.map { icon ->
-            val index = GearsList.allGears.map(Gear::icon).indexOf(icon)
-            GearsList.allGears[index]
+            if (emptyIcons.contains(icon)) Gear(GearSet.NONE, icon, emptyList())
+            else {
+                val index = GearsList.allGears.map(Gear::icon).indexOf(icon)
+                GearsList.allGears[index]
+            }
         }
         val pgCount = gears.filter { it.gearSet == GearSet.PERSONAL }.size
-        val effects = GearsList.getEffectsFromSets(gears) + PersonalGears.getPersonalGears(args.heroModel.hero, pgCount)
-        effects.forEach { e ->
-            val eDesc = effectsMap.map { it.key.description }
-            if (eDesc.contains(e.description)) {
-                val eff = effectsMap.map { it.key }[eDesc.indexOf(e.description)]
-                effectsMap.replace(eff, eff.number + e.number)
-            } else effectsMap += e to e.number
-        }
+        effects.addAll(
+            GearsList.getEffectsFromSets(gears) +
+                    PersonalGears.getPersonalGears(args.heroModel.hero, pgCount)
+        )
+        fillEffects(effects)
+        val stats = getStats()
+        val spannable = SpannableStringBuilder()
+        var startGreen = 0
+        var startBold = 0
+        var endGreen = 0
+        var endBold = 0
 
-        val buffer = StringBuilder()
-        effectsMap.forEach { (effect, i) ->
-            if (i > 0) buffer.append("+")
-            buffer.append(i)
-            if (effect.percent) buffer.append("%")
-            buffer.append(" ${getString(effect.description)}\n")
+        stats.forEach { (eid, value) ->
+            val eff = effectsMap.mapKeys { it.key.description }[eid]
+            val pEff = percentEffectsMap.mapKeys { it.key.description }[eid]
+            val text = effectDescToStatsName(eid).plus(": ")
+            //  add text
+            spannable.append(text)
+            endBold += text.length
+            // double to int
+            val intOrDblValue = doubleToIntIfNotDouble(value) ?: value
+
+            var number = ""
+
+            if (eid == R.string.health_damage_effect ||
+                eid == R.string.armor_damage_effect
+            ) {
+                spannable.append("x")
+            }
+            spannable.append(intOrDblValue.toString())
+
+            if (eff != null) {
+                val numberDouble = sumValueEffects(eid, intOrDblValue, eff, false).toDouble()
+                number = (doubleToIntIfNotDouble(numberDouble) ?: numberDouble).toString()
+
+                startGreen = endBold
+                endGreen = startGreen
+
+                spannable.append(" -> ").append(number).append(" (")
+                if (eff > 0) {
+                    spannable.append("+")
+                    endGreen++
+                }
+                spannable.append("$eff").append(")")
+
+                endGreen += intOrDblValue.toString().length +
+                        " -> ".length + number.length + 4 + eff.toString().length
+
+                if (pEff != null) spannable.append(" ")
+                else spannable.append("\n")
+            }
+            if (pEff != null) {
+                val percent = percentEffectsMap.map {
+                    it.key.description to it.key.percent
+                }.toMap()[eid]!!
+                val numberDouble =
+                    sumValueEffects(
+                        eid,
+                        if (eff != null) number.toDouble()
+                        else intOrDblValue,
+                        pEff, percent
+                    ).toDouble()
+                val oldNumber = number
+                number = (doubleToIntIfNotDouble(numberDouble) ?: numberDouble).toString()
+
+                if (eff == null) {
+                    startGreen = endBold
+                    endGreen = startGreen
+                }
+                endGreen += if (eff != null) {
+                    val startIndex = startGreen + 5 + eff.toString().length
+                    spannable.replace(
+                        startIndex, startIndex + oldNumber.length,
+                        number
+                    )
+                    spannable.append("(")
+                    (number.length - oldNumber.length) + 1
+                } else {
+                    spannable.append(" -> ").append(number).append(" (")
+                    " -> ".length + number.length + 2 + intOrDblValue.toString().length
+                }
+                if (pEff > 0) {
+                    spannable.append("+")
+                    endGreen++
+                }
+                spannable.append("$pEff")
+                endGreen += pEff.toString().length
+                if (percent) {
+                    spannable.append("%")
+                    endGreen++
+                }
+                spannable.append(")\n")
+                endGreen += 2
+            }
+            if (eff == null && pEff == null) {
+                endBold += intOrDblValue.toString().length
+                if (eid == R.string.health_damage_effect ||
+                    eid == R.string.armor_damage_effect
+                ) {
+                    endBold++
+                }
+                spannable.append("\n")
+                endBold++
+            }
+            spannable.setSpan(
+                StyleSpan(android.graphics.Typeface.BOLD),
+                startBold, endBold,
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
+            if (endGreen - startGreen > 0) {
+                spannable.setSpan(
+                    ForegroundColorSpan(Color.GREEN),
+                    startGreen, endGreen,
+                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                )
+            }
+            startGreen = endGreen
+            startBold = if (startBold < endGreen) endGreen else startBold
+            endBold = if (endBold < startGreen) startGreen else endBold
         }
-        bind.effectsTV.text = buffer.toString()
+        bind.effectsTV.setText(spannable, TextView.BufferType.SPANNABLE)
         bind.effectsTV.invalidate()
     }
 
-    private fun getHeroSetItems(hero: Hero, cell: GearCell) : MutableList<Gear> {
+    private fun getHeroSetItems(hero: Hero, cell: GearCell): MutableList<Gear> {
         return mutableListOf(
             GearsList.getSetsGears(hero)[cell]!!,
             hero.getPersonalGears()[cell]!!
         )
+    }
+
+    private fun getDefaultGearsByBtn(btn: Int): MutableList<Gear> = when (btn) {
+        bind.customHeadBtn.id -> GearsList.headIcon
+        bind.customBodyBtn.id -> GearsList.bodyIcons
+        bind.customArmBtn.id -> GearsList.armIcons
+        bind.customLegBtn.id -> GearsList.legIcons
+        bind.customDecorBtn.id -> GearsList.decorIcons
+        bind.customDeviceBtn.id -> GearsList.deviceIcons
+        else -> mutableListOf()
+    }
+
+    private fun getStats(): MutableMap<Int, Double> {
+        val stats = args.heroModel.hero.getStats()
+        val map = mutableMapOf<Int, Double>()
+
+        map[R.string.max_health_effect] = stats.maxHealth.toDouble()
+        map[R.string.max_armor_effect] = stats.maxArmor.toDouble()
+        map[R.string.damage_effect] = stats.damage.toDouble()
+        map[R.string.visibility_effect] = stats.vision.toDouble()
+        map[R.string.running_volume_effect] = stats.maxSilence.toDouble()
+        map[R.string.speed_effect] = stats.maxSpeed.toDouble()
+        map[R.string.speed_in_focus_effect] = stats.maxSpeedInFocus.toDouble()
+        map[R.string.reloading_time_effect] = stats.reloadTime
+        map[R.string.fire_rate_effect] = stats.fireRate
+        map[R.string.fire_range_effect] = stats.fireRange.toDouble()
+        map[R.string.fire_range_focus_effect] = stats.fireRangeInFocus.toDouble()
+        map[R.string.spread_in_not_focus_effect] = stats.spreadOnStay.toDouble()
+        map[R.string.spread_in_move_effect] = stats.spreadInMove.toDouble()
+        map[R.string.spread_in_focus_effect] = stats.spreadInFocus.toDouble()
+        map[R.string.add_patrons_effect] = stats.patrons.toDouble()
+        map[R.string.piercing_power_effect] = stats.powerPenetration.toDouble()
+        map[R.string.health_damage_effect] = stats.damageOnHealth
+        map[R.string.armor_damage_effect] = stats.damageOnArmor
+        map[R.string.piercing_effect] = stats.armorPenetration.toDouble()
+        map[R.string.aiming_speed_effect] = stats.focusTime
+        return map
+    }
+
+    private fun effectDescToStatsName(effectDesc: Int): String {
+        val resId = when (effectDesc) {
+            R.string.max_health_effect -> R.string.health
+            R.string.max_armor_effect -> R.string.armor
+            R.string.damage_effect -> R.string.damage
+            R.string.visibility_effect -> R.string.vision
+            R.string.running_volume_effect -> R.string.max_silence
+            R.string.speed_effect -> R.string.max_speed
+            R.string.speed_in_focus_effect -> R.string.max_speed_in_focus
+            R.string.reloading_time_effect -> R.string.reloading_time
+            R.string.fire_rate_effect -> R.string.fire_rate
+            R.string.fire_range_effect -> R.string.fire_range
+            R.string.fire_range_focus_effect -> R.string.fire_range_in_focus
+            R.string.spread_in_not_focus_effect -> R.string.fire_spread
+            R.string.spread_in_move_effect -> R.string.fire_spread_while_moving
+            R.string.spread_in_focus_effect -> R.string.fire_spread_in_focus
+            R.string.add_patrons_effect -> R.string.magazine_size
+            R.string.piercing_power_effect -> R.string.piercing_power
+            R.string.health_damage_effect -> R.string.health_damage_mod
+            R.string.armor_damage_effect -> R.string.armor_damage_mod
+            R.string.piercing_effect -> R.string.armor_penetration
+            R.string.aiming_speed_effect -> R.string.aiming_time
+            else -> effectDesc
+        }
+        return if (resId != effectDesc) getString(resId)
+        else ""
+    }
+
+    private fun sumValueEffects(eff: Int, val1: Number, val2: Number, percent: Boolean): Number {
+        return when (eff) {
+            R.string.max_health_effect -> {
+                return if (!percent)
+                    val1.toInt() + val2.toInt()
+                else val1.toDouble() + (val1.toDouble() * (val2.toDouble() / 100))
+            }
+            R.string.max_armor_effect -> {
+                return if (!percent)
+                    val1.toInt() + val2.toInt()
+                else val1.toDouble() + (val1.toDouble() * (val2.toDouble() / 100))
+            }
+            R.string.damage_effect -> {
+                return if (!percent)
+                    val1.toInt() + val2.toInt()
+                else val1.toDouble() + (val1.toDouble() * (val2.toDouble() / 100))
+            }
+            R.string.visibility_effect -> {
+                return if (!percent)
+                    val1.toInt() + val2.toInt()
+                else val1.toDouble() + (val1.toDouble() * (val2.toDouble() / 100))
+            }
+            R.string.running_volume_effect -> {
+                return if (!percent)
+                    val1.toInt() + val2.toInt()
+                else val1.toDouble() + (val1.toDouble() * (val2.toDouble() / 100))
+            }
+            R.string.speed_effect -> {
+                return if (!percent)
+                    val1.toInt() + val2.toInt()
+                else val1.toDouble() + (val1.toDouble() * (val2.toDouble() / 100))
+            }
+            R.string.speed_in_focus_effect ->
+                val1.toDouble() + (val1.toDouble() * (val2.toDouble() / 100))
+            R.string.reloading_time_effect ->
+                val1.toDouble() + (val1.toDouble() * (val2.toDouble() / 100))
+            R.string.fire_rate_effect ->
+                val1.toDouble() + (val1.toDouble() * (val2.toDouble() / 100))
+            R.string.fire_range_effect -> {
+                return if (!percent)
+                    val1.toInt() + val2.toInt()
+                else val1.toDouble() + (val1.toDouble() * (val2.toDouble() / 100))
+            }
+            R.string.fire_range_focus_effect -> {
+                return if (!percent)
+                    val1.toInt() + val2.toInt()
+                else val1.toDouble() + (val1.toDouble() * (val2.toDouble() / 100))
+            }
+            R.string.spread_in_not_focus_effect ->
+                val1.toDouble() + (val1.toDouble() * (val2.toDouble() / 100))
+            R.string.spread_in_move_effect ->
+                val1.toDouble() + (val1.toDouble() * (val2.toDouble() / 100))
+            R.string.spread_in_focus_effect ->
+                val1.toDouble() + (val1.toDouble() * (val2.toDouble() / 100))
+            R.string.add_patrons_effect -> val1.toInt() + val2.toInt()
+            R.string.piercing_power_effect -> val1.toInt() + val2.toInt()
+            R.string.health_damage_effect ->
+                val1.toDouble() + (val1.toDouble() * (val2.toDouble() / 100))
+            R.string.armor_damage_effect ->
+                val1.toDouble() + (val1.toDouble() * (val2.toDouble() / 100))
+            R.string.piercing_effect -> {
+                return if (!percent) val1.toInt() + val2.toInt()
+                else val1.toDouble() + (val1.toDouble() * (val2.toDouble() / 100))
+            }
+            R.string.aiming_speed_effect ->
+                val1.toDouble() + (val1.toDouble() * (val2.toDouble() / 100))
+            else -> 0
+        }
+    }
+
+    private fun doubleToIntIfNotDouble(db: Double): Int? {
+        val round = db.roundToInt()
+        return if (db - round.toDouble() != 0.0)
+            null
+        else round
+    }
+
+    private fun fillEffects(effects: List<Effect>) {
+        effects.forEach { e ->
+            val eDesc = effectsMap.map { it.key.description }
+            val ePDesc = percentEffectsMap.map { it.key.description }
+            val percent = e.percent
+            val fill: (List<Int>, MutableMap<Effect, Int>) -> Unit = { desc, map ->
+                if (desc.contains(e.description)) {
+                    val eff = map[e]!!
+                    map.replace(e, eff + e.number)
+                } else map += e to e.number
+            }
+            if (percent) fill(ePDesc, percentEffectsMap)
+            else fill(eDesc, effectsMap)
+        }
     }
 
 }

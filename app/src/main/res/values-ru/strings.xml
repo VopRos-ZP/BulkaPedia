@@ -24,15 +24,20 @@
     <string name="login">Вход</string>
     <string name="change_login">Именить логин</string>
     <string name="change_nickname">Именить ник</string>
-    <string name="reset_password">Изменить пароль</string>
     <string name="logout">Выход</string>
-    <string name="hint_login">Введите логин</string>
+    <string name="hint_login">Введите эл. почту</string>
     <string name="hint_password">Введите пароль</string>
+    <string name="hint_new_password">Введите новый пароль</string>
     <string name="registration">Регистрация</string>
+    <string name="reset_password">Восстановление пароля</string>
+    <string name="forgot_password">Забыл пароль</string>
     <string name="error_registration">Логин уже существует</string>
     <string name="error_login">Пользователь не зарегистрирован</string>
     <string name="error_login_password">Неверный логин или пароль</string>
+    <string name="error_reset_password">Неверный пароль</string>
+    <string name="hint_reset_code">Введите код</string>
     <string name="invalid_passwords">Пароль должен совпадать</string>
+    <string name="email_send">Проверьте почту</string>
     <string name="empty_sets">Здесь пока ничего нет</string>
     <string name="edit">Редактировать</string>
     <string name="delete">Удалить</string>
@@ -139,6 +144,7 @@
     <string name="road_motel">Придорожный мотель</string>
     <string name="villa">Вилла</string>
     <string name="sawmill">Лесопилка</string>
+    <string name="fortress">Крепость</string>
     <!--   Цг -->
     <string name="hospital">Госпиталь</string>
     <string name="psychiatric_hospital">Психиатрическая больница</string>
@@ -185,6 +191,34 @@
     <string name="sabotage_mode">Саботаж</string>
     <string name="boarding">Абордаж</string>
 
+    <string name="counterpick">Контрпик</string>
+
     <string name="delete_set_text">Вы точно хотите удалить сет?</string>
+    <string name="show_buffs">Показать усиления</string>
+    <string name="hide_buffs">Скрыть усиления</string>
+    <string name="error_email">Введите электронную почту</string>
+
+    <string name="health">Здоровье</string>
+    <string name="armor">Броня</string>
+    <string name="damage">Урон</string>
+    <string name="vision">Дальность видимости</string>
+    <string name="max_silence">Макс. радиус шума при движении</string>
+    <string name="max_speed">Макс. скорость движения</string>
+    <string name="max_speed_in_focus">Макс. скорость движения в прицеле</string>
+    <string name="density">Сопротивление пробитию</string>
+    <string name="reloading_time">Время перезарядки</string>
+    <string name="fire_rate">Скорость стрельбы (в сек)</string>
+    <string name="fire_range">Дальность стрельбы</string>
+    <string name="fire_range_in_focus">Дальность прицельной стрельбы</string>
+    <string name="fire_spread">Угол разброса стрельбы</string>
+    <string name="fire_spread_while_moving">Угол разброса стрельбы в движении</string>
+    <string name="fire_spread_in_focus">Разброс прицельной стрельбы</string>
+    <string name="magazine_size">Количество патронов</string>
+    <string name="piercing_power">Пробивная способность</string>
+    <string name="health_damage_mod">Модификатор урона по здоровью</string>
+    <string name="armor_damage_mod">Модификатор урона по броне</string>
+    <string name="armor_penetration">Бронебойность</string>
+    <string name="aiming_time">Время прицеливания</string>
+    <string name="send_reset_code">Получить код сброса пароля</string>
 
 </resources>

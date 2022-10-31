@@ -22,6 +22,9 @@
         <action
             android:id="@+id/action_loginItem_to_registrationFragment"
             app:destination="@id/registrationFragment" />
+        <action
+            android:id="@+id/action_loginItem_to_resetPasswordFragment"
+            app:destination="@id/resetPasswordFragment" />
     </fragment>
     <fragment
         android:id="@+id/userClientFragment"
@@ -147,6 +150,17 @@
             app:destination="@id/createUserSetFragment" />
         <action
             android:id="@+id/action_commentsFragment_to_userClientFragment"
+            app:destination="@id/userClientFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/resetPasswordFragment"
+        android:name="com.bulkapedia.fragments.ResetPasswordFragment"
+        android:label="ResetPasswordFragment" >
+        <action
+            android:id="@+id/action_resetPasswordFragment_to_loginItem"
+            app:destination="@id/loginItem" />
+        <action
+            android:id="@+id/action_resetPasswordFragment_to_userClientFragment"
             app:destination="@id/userClientFragment" />
     </fragment>
 </navigation>

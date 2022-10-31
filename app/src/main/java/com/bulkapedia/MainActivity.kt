@@ -56,7 +56,7 @@ class MainActivity : AppCompatActivity() {
         }
         // User
         val signed = shared.getBoolean(UserPreferences.SIGNED, false)
-        val login = shared.getString(UserPreferences.LOGIN, "")
+        val login = shared.getString(UserPreferences.EMAIL, "")
         val password = shared.getString(UserPreferences.PASSWORD, "")
         val nickname = shared.getString(UserPreferences.NICKNAME, "")
         prefs.setSigned(signed)
@@ -66,7 +66,7 @@ class MainActivity : AppCompatActivity() {
                 setTitle(R.string.profile)
             }
         }
-        if (login != null) prefs.setLogin(login)
+        if (login != null) prefs.setEmail(login)
         if (password != null) prefs.setPassword(password)
         if (nickname != null) prefs.setNickname(nickname)
     }

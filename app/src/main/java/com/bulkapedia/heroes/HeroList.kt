@@ -33,13 +33,11 @@ class HeroList {
 
         val SHOTGUNS = listOf(ARNIE, CYCLOPS, SPARKLE, HURRICANE)
         val SCOUTS = listOf(GHOST, FREDDIE, ANGEL, RAVEN)
-        val SNIPERS = listOf(BLOT, FIREFLY, SLAYER, MIRAGE)
+        val SNIPERS = listOf(BLOT, FIREFLY, SLAYER, LYNX, MIRAGE)
         val TANKS = listOf(SMOG, BASTION, DRAGOON, BERTHA, LEVIATHAN)
         val TROOPERS = listOf(STALKER, DOC, LEVI, SATOSHI)
 
         val HEROES = SHOTGUNS + SCOUTS + SNIPERS + TANKS + TROOPERS
-
-        fun getHeroById(id: Int) : Hero = HEROES.filter { it.getMenuItem() == id }[0]
 
         fun getHeroByBigImage(image: Int) : Hero = HEROES.filter { it.getBigIcon() == image }[0]
 
