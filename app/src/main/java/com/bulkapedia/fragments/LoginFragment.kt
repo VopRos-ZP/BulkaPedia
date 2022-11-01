@@ -4,23 +4,18 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.edit
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.bulkapedia.MAIN
 import com.bulkapedia.R
 import com.bulkapedia.database.Database
-import com.bulkapedia.database.User
 import com.bulkapedia.databinding.LoginFragmentBinding
-import com.bulkapedia.preference.UserPreferences
 import com.bulkapedia.utils.addUserToShared
+import com.bulkapedia.views.OkErrorView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 
@@ -47,8 +42,8 @@ class LoginFragment : Fragment() {
 
         val cur = auth.currentUser
         if (cur != null) {
-            val action =
-                LoginFragmentDirections.actionLoginItemToUserClientFragment(MAIN.prefs.getUser())
+            val action = LoginFragmentDirections
+                    .actionLoginItemToUserClientFragment(MAIN.prefs.getUser())
             findNavController().navigate(action)
         }
     }
@@ -61,29 +56,35 @@ class LoginFragment : Fragment() {
             val login = bind.loginEt.text.toString()
             val password = bind.passwordEt.text.toString()
             if (!login.contains(Regex("@gmail\\.com"))) {
-                bind.loginEt.error = getString(R.string.error_email)
+                val dialog = OkErrorView(MAIN, R.string.error_login_title, R.string.error_email)
+                dialog.show()
                 return@setOnClickListener
             }
-
-            auth.signInWithEmailAndPassword(login, password).addOnCompleteListener {
-                if (it.isSuccessful) {
-                    val res = it.result
-                    if (res.user != null) {
-                        Database().retrieveUserByEmail(res.user?.email!!) { u ->
-                            if (u.email == login && u.password == password) {
-                                MAIN.prefs.setSigned(true)
-                                MAIN.prefs.setUser(u)
-                                addUserToShared(MAIN.getPreferences(), MAIN.prefs)
-                                val action =
-                                    LoginFragmentDirections.actionLoginItemToUserClientFragment(u)
-                                findNavController().navigate(action)
-                            }
-                        }
-                    } else {
-                        bind.passwordEt.error = getString(R.string.error_login_password)
-                    }
+            Database().containsEmail(login) {
+                if (!it) {
+                    val dialog = OkErrorView(MAIN, R.string.error_login_title, R.string.error_login)
+                    dialog.show()
                 } else {
-                    bind.passwordEt.error = getString(R.string.error_login)
+                    auth.signInWithEmailAndPassword(login, password).addOnCompleteListener {
+                        if (it.isSuccessful) {
+                            val res = it.result
+                            if (res.user != null) {
+                                Database().retrieveUserByEmail(res.user?.email!!) { u ->
+                                    if (u.email == login && u.password == password) {
+                                        MAIN.prefs.setSigned(true)
+                                        MAIN.prefs.setUser(u)
+                                        addUserToShared(MAIN.getPreferences(), MAIN.prefs)
+                                        val action =
+                                            LoginFragmentDirections.actionLoginItemToUserClientFragment(u)
+                                        findNavController().navigate(action)
+                                    }
+                                }
+                            }
+                        } else {
+                            val dialog = OkErrorView(MAIN, R.string.error_login_title, R.string.error_login_password)
+                            dialog.show()
+                        }
+                    }
                 }
             }
         }

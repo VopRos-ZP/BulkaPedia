@@ -62,6 +62,27 @@ class Database {
         })
     }
 
+    fun containsEmail(email: String, func: (Boolean) -> Unit) {
+        getUsersNode().addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                for (sd in snapshot.children) {
+                    val strings = mutableMapOf<String, String>()
+                    sd.children.forEach { data ->
+                        strings += data.key!! to (data.value as String)
+                    }
+                    val user = User(strings["email"], strings["password"], strings["nickname"])
+                    if (user.email == email) {
+                        func.invoke(true)
+                        return
+                    }
+                }
+                func.invoke(false)
+            }
+
+            override fun onCancelled(error: DatabaseError) {}
+        })
+    }
+
     /** User sets **/
     fun addUserSet(set: UserSet) {
         val userSet = mapOf(

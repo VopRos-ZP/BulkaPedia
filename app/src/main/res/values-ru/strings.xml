@@ -31,9 +31,14 @@
     <string name="registration">Регистрация</string>
     <string name="reset_password">Восстановление пароля</string>
     <string name="forgot_password">Забыл пароль</string>
+    <string name="error_forgot_pass_title">Ошибка восстановления пароля</string>
+    <string name="error_registration_title">Ошибка регистрации</string>
+    <string name="error_login_title">Ошибка входа</string>
+    <string name="error_fill_all_fields">Заполнены не все поля</string>
     <string name="error_registration">Логин уже существует</string>
     <string name="error_login">Пользователь не зарегистрирован</string>
-    <string name="error_login_password">Неверный логин или пароль</string>
+    <string name="error_email">Неверно указана почта</string>
+    <string name="error_login_password">Неверная почта или пароль</string>
     <string name="error_reset_password">Неверный пароль</string>
     <string name="hint_reset_code">Введите код</string>
     <string name="invalid_passwords">Пароль должен совпадать</string>
@@ -196,7 +201,7 @@
     <string name="delete_set_text">Вы точно хотите удалить сет?</string>
     <string name="show_buffs">Показать усиления</string>
     <string name="hide_buffs">Скрыть усиления</string>
-    <string name="error_email">Введите электронную почту</string>
+    <string name="enter_email">Введите электронную почту</string>
 
     <string name="health">Здоровье</string>
     <string name="armor">Броня</string>
@@ -220,5 +225,6 @@
     <string name="armor_penetration">Бронебойность</string>
     <string name="aiming_time">Время прицеливания</string>
     <string name="send_reset_code">Получить код сброса пароля</string>
+    <string name="ok">Ок</string>
 
 </resources>

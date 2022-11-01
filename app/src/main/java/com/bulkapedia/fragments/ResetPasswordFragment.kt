@@ -13,6 +13,7 @@ import com.bulkapedia.database.Database
 import com.bulkapedia.database.User
 import com.bulkapedia.databinding.ResetPasswordFragmentBinding
 import com.bulkapedia.utils.addUserToShared
+import com.bulkapedia.views.OkErrorView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DataSnapshot
@@ -52,8 +53,12 @@ class ResetPasswordFragment : Fragment() {
         bind.sendResetCodeBtn.setOnClickListener {
             // get email
             val email = bind.loginEt.text.toString()
+            if (email.isEmpty()) {
+                val dialog = OkErrorView(MAIN, R.string.error_forgot_pass_title, R.string.enter_email)
+                dialog.show()
+            } else
             // check on verify email
-            Database().getUsersNode().addListenerForSingleValueEvent(object : ValueEventListener {
+                Database().getUsersNode().addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     val emails = mutableListOf<String>()
                     for (sn in snapshot.children) {
@@ -63,7 +68,8 @@ class ResetPasswordFragment : Fragment() {
                         }
                     }
                     if (!emails.contains(email)) {
-                        bind.loginEt.error = getString(R.string.error_login)
+                        val dialog = OkErrorView(MAIN, R.string.error_forgot_pass_title, R.string.error_login)
+                        dialog.show()
                     } else {
                         // send reset code
                         auth.sendPasswordResetEmail(email)
@@ -107,7 +113,8 @@ class ResetPasswordFragment : Fragment() {
                                         findNavController().navigate(action)
                                     }
                                 } else {
-                                    bind.passwordEt.error = getString(R.string.invalid_passwords)
+                                    val dialog = OkErrorView(MAIN, R.string.error_forgot_pass_title, R.string.invalid_passwords)
+                                    dialog.show()
                                 }
                             }
                         }

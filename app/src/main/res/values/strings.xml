@@ -30,9 +30,14 @@
     <string name="logout">Logout</string>
     <string name="registration">Registration</string>
     <string name="forgot_password">Forgot password</string>
+    <string name="error_forgot_pass_title">Reset password error</string>
+    <string name="error_registration_title">Registration error</string>
+    <string name="error_login_title">Sing in error</string>
+    <string name="error_fill_all_fields">Not all fields are filled</string>
     <string name="error_registration">Login already exists</string>
     <string name="error_login">User is not registered</string>
-    <string name="error_login_password">Invalid login or password</string>
+    <string name="error_email">Invalid email</string>
+    <string name="error_login_password">Invalid email or password</string>
     <string name="error_reset_password">Invalid password</string>
     <string name="hint_reset_code">Enter reset code</string>
     <string name="invalid_passwords">The password must match</string>
@@ -195,7 +200,7 @@
     <string name="delete_set_text">Are you sure you want to delete the set?</string>
     <string name="show_buffs">Show buffs</string>
     <string name="hide_buffs">Hide buffs</string>
-    <string name="error_email">Enter email</string>
+    <string name="enter_email">Enter email</string>
 
     <string name="health">Health</string>
     <string name="armor">Armor</string>
@@ -219,6 +224,6 @@
     <string name="armor_penetration">Armor penetration</string>
     <string name="aiming_time">Aiming time</string>
     <string name="send_reset_code">Send reset code</string>
-
+    <string name="ok">Ok</string>
 
 </resources>

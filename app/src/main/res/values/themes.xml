@@ -3,9 +3,15 @@
     <style name="Theme.Bulkapedia" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/primary</item>
-        <item name="android:statusBarColor" tools:targetApi="l">@color/primary</item>
+        <item name="android:statusBarColor">@color/primary</item>
         <!-- Customize your theme here. -->
         <item name="android:windowFullscreen">true</item>
         <item name="windowNoTitle">true</item>
+    </style>
+    <style name="DialogStyle" parent="Base.Theme.AppCompat.Dialog">
+        <item name="android:windowMinWidthMajor">95%</item>
+        <item name="android:windowMinWidthMinor">95%</item>
+        <item name="windowFixedHeightMajor">95%</item>
+        <item name="windowFixedHeightMinor">95%</item>
     </style>
 </resources>
