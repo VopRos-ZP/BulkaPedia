@@ -4,9 +4,12 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bulkapedia.R
 import com.bulkapedia.databinding.ActivityGearDialogBinding
 import com.bulkapedia.gears.Gear
+import com.bulkapedia.gears.GearSet
 import com.bulkapedia.gears.GearsList
+import com.bulkapedia.labels.Ranks
 import com.bulkapedia.recycler.GearRecyclerAdapter
 
 class GearActivityDialog : AppCompatActivity(),
@@ -22,9 +25,13 @@ class GearActivityDialog : AppCompatActivity(),
         bind = ActivityGearDialogBinding.inflate(layoutInflater)
         setContentView(bind.root)
 
+        bind.toolbar.actionBar.setNavigationIcon(R.drawable.backspace)
+        bind.toolbar.actionBar.setTitle(R.string.back)
+        bind.toolbar.actionBar.setNavigationOnClickListener { onBackPressed() }
         val gearIcons = intent.getIntArrayExtra("gearIcons")
         gearType = intent.getStringExtra("gearType") ?: ""
         val mGears = mutableListOf<Gear>()
+        mGears.add(0, Gear(GearSet.NONE, getEmptyIconByGearType(), listOf(), emptyMap()))
         gearIcons?.forEach { icon ->
             val index = GearsList.allGears.map { it.icon }.indexOf(icon)
             if (index != -1) {
@@ -47,20 +54,32 @@ class GearActivityDialog : AppCompatActivity(),
         bind.gearsRecycler.layoutManager = LinearLayoutManager(this)
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
         super.onBackPressed()
         setResult(RESULT_CANCELED)
         finish()
     }
 
-    override fun onClick(position: Int) {
+    override fun onClick(position: Int, rank: Int) {
         val intent = Intent().apply {
             val icon = gears[position].icon
             putExtra("gear", icon)
             putExtra("gearType", gearType)
+            putExtra("rank", rank)
         }
         setResult(RESULT_OK, intent)
         finish()
+    }
+
+    private fun getEmptyIconByGearType(): Int = when (gearType) {
+        "head" -> R.drawable.empty_head
+        "body" -> R.drawable.empty_body
+        "arm" -> R.drawable.empty_arm
+        "leg" -> R.drawable.empty_leg
+        "decor" -> R.drawable.empty_decor
+        "device" -> R.drawable.empty_device
+        else -> 0
     }
 
 }

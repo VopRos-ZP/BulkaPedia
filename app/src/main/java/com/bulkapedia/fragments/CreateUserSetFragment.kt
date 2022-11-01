@@ -25,6 +25,7 @@ import com.bulkapedia.database.Database
 import com.bulkapedia.databinding.CreateUserSetFragmentBinding
 import com.bulkapedia.gears.*
 import com.bulkapedia.heroes.Hero
+import com.bulkapedia.labels.Ranks
 import com.bulkapedia.sets.GearCell
 import com.bulkapedia.sets.UserSet
 import com.google.firebase.firestore.FirebaseFirestore
@@ -49,6 +50,7 @@ class CreateUserSetFragment : Fragment() {
     private var legIcon: Int = 0
     private var decorIcon: Int = 0
     private var deviceIcon: Int = 0
+    private val rankMap = mutableMapOf<Int, Ranks>()
 
     private var showingBuffs = false
 
@@ -131,6 +133,17 @@ class CreateUserSetFragment : Fragment() {
                         "leg" -> legIcon = icon
                         "decor" -> decorIcon = icon
                         else -> deviceIcon = icon
+                    }
+                    rankMap += when (data.getIntExtra("rank", 0)) {
+                        R.id.common_tv -> icon to Ranks.COMMON
+                        R.id.rare_tv -> icon to Ranks.RARE
+                        R.id.epic_tv -> icon to Ranks.EPIC
+                        R.id.legendary_tv -> icon to Ranks.LEGENDARY
+                        R.id.mythic_tv -> icon to Ranks.MYTHIC
+                        R.id.supreme_tv -> icon to Ranks.SUPREME
+                        R.id.ultimate_tv -> icon to Ranks.ULTIMATE
+                        R.id.celestial_tv -> icon to Ranks.CELESTIAL
+                        else -> icon to Ranks.STELLAR
                     }
                     if (showingBuffs) sumEffects()
                 }
@@ -266,11 +279,15 @@ class CreateUserSetFragment : Fragment() {
         icons.forEach { icon ->
             if (!emptyIcons.contains(icon)) {
                 val index = GearsList.allGears.map(Gear::icon).indexOf(icon)
-                effects.addAll(GearsList.allGears[index].effects)
+                if (rankMap[icon] != null) {
+                    effects.addAll(GearsList.allGears[index].rankEffect[rankMap[icon]]!!)
+                } else {
+                    effects.addAll(GearsList.allGears[index].effects)
+                }
             }
         }
         val gears = icons.map { icon ->
-            if (emptyIcons.contains(icon)) Gear(GearSet.NONE, icon, emptyList())
+            if (emptyIcons.contains(icon)) Gear(GearSet.NONE, icon, emptyList(), emptyMap())
             else {
                 val index = GearsList.allGears.map(Gear::icon).indexOf(icon)
                 GearsList.allGears[index]
