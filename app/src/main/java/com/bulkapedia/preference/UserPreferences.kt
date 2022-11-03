@@ -11,7 +11,6 @@ class UserPreferences : Application() {
         const val RU_LANGUAGE = "ru"
         const val EN_LANGUAGE = "en"
         const val SIGNED = "signed"
-        const val ID = "id"
         const val EMAIL = "email"
         const val PASSWORD = "password"
         const val NICKNAME = "nickname"
