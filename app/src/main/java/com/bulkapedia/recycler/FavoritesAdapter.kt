@@ -1,0 +1,101 @@
+package com.bulkapedia.recycler
+
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.recyclerview.widget.RecyclerView
+import com.bulkapedia.MAIN
+import com.bulkapedia.R
+import com.bulkapedia.database.Database
+import com.bulkapedia.databinding.FavoriteSetItemBinding
+import com.bulkapedia.gears.GearsList
+import com.bulkapedia.sets.GearCell
+import com.bulkapedia.sets.UserSet
+
+class FavoritesAdapter (
+    private val favoriteSets: MutableList<UserSet>
+    ) : RecyclerView.Adapter<FavoritesAdapter.FavoriteViewHolder>() {
+
+    private val holders = mutableListOf<FavoriteViewHolder>()
+
+    class FavoriteViewHolder(view: View): RecyclerView.ViewHolder(view) {
+        val binding = FavoriteSetItemBinding.bind(view)
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FavoriteViewHolder {
+        val view = LayoutInflater.from(parent.context)
+            .inflate(R.layout.favorite_set_item, parent, false)
+        val holder = FavoriteViewHolder(view)
+        holders.add(holder)
+        return holder
+    }
+
+    override fun onBindViewHolder(holder: FavoriteViewHolder, position: Int) {
+        val set = favoriteSets[position]
+        holder.binding.apply {
+            setHeroIcon.setImageResource(set.hero)
+
+            val ivGears = listOf(
+                setFragmentInclude.ivHead, setFragmentInclude.ivBody,
+                setFragmentInclude.ivArm, setFragmentInclude.ivLeg,
+                setFragmentInclude.ivDecor, setFragmentInclude.ivDevice
+            )
+            val gears = set.gears.map { gs ->
+                val index = GearsList.allGears.map{ it.icon }.indexOf(gs.value)
+                if (index == -1)
+                    gs.key to null
+                else
+                    gs.key to GearsList.allGears[index]
+            }.toMap()
+            val cells = listOf(
+                GearCell.HEAD, GearCell.BODY,
+                GearCell.ARM, GearCell.LEG,
+                GearCell.DECOR, GearCell.DEVICE,
+            )
+            cells.forEachIndexed { i, cell ->
+                if (gears[cell] != null) {
+                    ivGears[i].setImageResource(gears[cell]!!.icon)
+                }
+            }
+            if (containsId(set))
+                likesBox.setImageResource(R.drawable.liked)
+
+            likesCount.text = set.likes.toString()
+            likesBox.setOnClickListener {
+                if (MAIN.prefs.getNickname() == set.from) return@setOnClickListener
+                if (containsId(set)) {
+                    set.likes -= 1
+                    removeId(set)
+                    Database().addUserSet(set)
+                    removeHolder(position)
+                }
+            }
+        }
+    }
+
+    private fun containsId(set: UserSet): Boolean {
+        for (id in set.userLikeIds) {
+            if (id == MAIN.prefs.getEmail()) {
+                return true
+            }
+        }
+        return false
+    }
+
+    private fun removeId(set: UserSet) {
+        for ((index, id) in set.userLikeIds.withIndex()) {
+            if (id == MAIN.prefs.getEmail()) {
+                set.userLikeIds.removeAt(index)
+            }
+        }
+    }
+
+    private fun removeHolder(position: Int) {
+        holders.removeAt(position)
+        favoriteSets.removeAt(position)
+        notifyItemRemoved(position)
+    }
+
+    override fun getItemCount(): Int = favoriteSets.size
+
+}

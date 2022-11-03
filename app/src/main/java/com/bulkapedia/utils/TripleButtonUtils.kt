@@ -30,14 +30,9 @@ class TripleButtonUtils {
             dialog.setCanceledOnTouchOutside(false)
             val bind = DialogDeleteBinding.bind(dialog.findViewById(R.id.dialog_delete_constrain))
             bind.confirmBtn.setOnClickListener {
-                Database().getSetsNode().get().addOnSuccessListener { query ->
-                    for (doc in query) {
-                        if (doc.id == uSet.setId) {
-                            sets.remove(uSet)
-                            code.invoke()
-                            break
-                        }
-                    }
+                Database().getSetsNode().document(uSet.setId).delete().addOnSuccessListener {
+                    sets.remove(uSet)
+                    code.invoke()
                 }
                 dialog.dismiss()
             }

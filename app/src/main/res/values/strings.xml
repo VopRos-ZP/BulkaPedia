@@ -225,5 +225,6 @@
     <string name="aiming_time">Aiming time</string>
     <string name="send_reset_code">Send reset code</string>
     <string name="ok">Ok</string>
+    <string name="favorites">Favorites</string>
 
 </resources>
