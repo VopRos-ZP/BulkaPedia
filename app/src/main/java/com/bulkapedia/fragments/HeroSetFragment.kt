@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.view.ContextThemeWrapper
+import androidx.appcompat.widget.PopupMenu
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import com.bulkapedia.MAIN
@@ -12,8 +14,6 @@ import com.bulkapedia.database.Database
 import com.bulkapedia.databinding.HeroSetFragmentBinding
 import com.bulkapedia.gears.Gear
 import com.bulkapedia.gears.GearsList
-import com.bulkapedia.heroes.HeroList
-import com.bulkapedia.models.HeroModel
 import com.bulkapedia.sets.GearCell
 import com.bulkapedia.sets.UserSet
 import com.bulkapedia.utils.TripleButtonUtils
@@ -54,12 +54,10 @@ class HeroSetFragment (
         }
 
         if (set.from != MAIN.prefs.getNickname() || !MAIN.prefs.getSigned()) {
-            bind.tripleBtnInclude.apply {
-                deleteButton.visibility = View.INVISIBLE
-                deleteButton.isClickable = false
+            bind.settingsProfileButton.apply {
                 // profile
-                editProfileButton.setImageResource(R.drawable.person)
-                editProfileButton.setOnClickListener {
+                setImageResource(R.drawable.person)
+                setOnClickListener {
                     Database().retrieveUserByNickname(set.from) {
                         val action = HeroFragmentDirections.actionHeroFragmentToUserClientFragment(it, true)
                         navController.navigate(action)
@@ -67,24 +65,42 @@ class HeroSetFragment (
                 }
             }
         } else {
-            bind.tripleBtnInclude.apply {
-                editProfileButton.setImageResource(R.drawable.edit)
-                editProfileButton.setOnClickListener {
+            bind.settingsProfileButton.apply {
+                setImageResource(R.drawable.settings)
+                setOnClickListener {
                     if (!MAIN.prefs.getSigned()) return@setOnClickListener
-                    val hero = HeroList.getHeroByBigImage(set.hero)
-                    val model = HeroModel(hero, hero.getBigIcon(), hero.getName(), hero.getCounterpicks())
-                    val action = HeroFragmentDirections.actionHeroFragmentToCreateUserSetFragment(model, set)
-                    navController.navigate(action)
-                }
-                deleteButton.visibility = View.VISIBLE
-                deleteButton.isClickable = true
-                deleteButton.setOnClickListener {
-                    TripleButtonUtils.onClickDelete(mutableListOf(set), set) {}
+                    val wrapper = ContextThemeWrapper(MAIN, R.style.menuStyle_PopupMenu)
+                    val popupMenu = PopupMenu(wrapper, it)
+                    popupMenu.inflate(R.menu.client_settings_menu)
+                    popupMenu.setOnMenuItemClickListener { item ->
+                        return@setOnMenuItemClickListener when (item.itemId) {
+                            R.id.editItem -> {
+                                TripleButtonUtils.onClickEdit(set) { model ->
+                                    val action = HeroFragmentDirections.actionHeroFragmentToCreateUserSetFragment(model, set)
+                                    navController.navigate(action)
+                                }
+                                true
+                            }
+                            R.id.deleteItem -> {
+                                TripleButtonUtils.onClickDelete(mutableListOf(set), set) {}
+                                true
+                            }
+                            else -> false
+                        }
+                    }
+                    try {
+                        val fieldPopup = PopupMenu::class.java.getDeclaredField("mPopup")
+                        fieldPopup.isAccessible = true
+                        val mPopup = fieldPopup.get(popupMenu)
+                        mPopup.javaClass.getDeclaredMethod("setForceShowIcon", Boolean::class.java)
+                            .invoke(mPopup, true)
+                    } catch (_: Exception) {}
+                    popupMenu.show()
                 }
             }
         }
 
-        bind.tripleBtnInclude.commentButton.setOnClickListener {
+        bind.commentButton.setOnClickListener {
             val action = HeroFragmentDirections.actionHeroFragmentToCommentsFragment(set)
             navController.navigate(action)
         }

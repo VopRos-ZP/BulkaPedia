@@ -6,6 +6,8 @@ import android.text.format.DateFormat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.view.ContextThemeWrapper
+import androidx.appcompat.widget.PopupMenu
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -70,36 +72,52 @@ class CommentsFragment : Fragment() {
                 }
             }
             if (args.set.from != MAIN.prefs.getNickname() || !MAIN.prefs.getSigned()) {
-                bind.heroSetInclude.tripleBtnInclude.apply {
-                    deleteButton.visibility = View.INVISIBLE
-                    deleteButton.isClickable = false
+                bind.heroSetInclude.settingsProfileButton.apply {
                     // profile
-                    editProfileButton.setImageResource(R.drawable.person)
-                    editProfileButton.setOnClickListener {
+                    setImageResource(R.drawable.person)
+                    setOnClickListener {
                         Database().retrieveUserByNickname(args.set.from) {
-                            val action = HeroFragmentDirections.actionHeroFragmentToUserClientFragment(it, true)
+                            val action = CommentsFragmentDirections.actionCommentsFragmentToUserClientFragment(it, true)
                             findNavController().navigate(action)
                         }
                     }
                 }
             } else {
-                bind.heroSetInclude.tripleBtnInclude.apply {
-                    editProfileButton.setImageResource(R.drawable.edit)
-                    editProfileButton.setOnClickListener {
-                        TripleButtonUtils.onClickEdit(args.set) {
-                            val action = CommentsFragmentDirections.actionCommentsFragmentToCreateUserSetFragment(it, args.set)
-                            findNavController().navigate(action)
+                bind.heroSetInclude.settingsProfileButton.apply {
+                    setImageResource(R.drawable.settings)
+                    setOnClickListener {
+                        val wrapper = ContextThemeWrapper(MAIN, R.style.menuStyle_PopupMenu)
+                        val popupMenu = PopupMenu(wrapper, it)
+                        popupMenu.inflate(R.menu.client_settings_menu)
+                        popupMenu.setOnMenuItemClickListener { item ->
+                            return@setOnMenuItemClickListener when (item.itemId) {
+                                R.id.editItem -> {
+                                    TripleButtonUtils.onClickEdit(args.set) {
+                                        val action = CommentsFragmentDirections.actionCommentsFragmentToCreateUserSetFragment(it, args.set)
+                                        findNavController().navigate(action)
+                                    }
+                                    true
+                                }
+                                R.id.deleteItem -> {
+                                    TripleButtonUtils.onClickDelete(mutableListOf(args.set), args.set) {}
+                                    true
+                                }
+                                else -> false
+                            }
                         }
-                    }
-                    deleteButton.visibility = View.VISIBLE
-                    deleteButton.isClickable = true
-                    deleteButton.setOnClickListener {
-                        TripleButtonUtils.onClickDelete(mutableListOf(args.set), args.set) {}
+                        try {
+                            val fieldPopup = PopupMenu::class.java.getDeclaredField("mPopup")
+                            fieldPopup.isAccessible = true
+                            val mPopup = fieldPopup.get(popupMenu)
+                            mPopup.javaClass.getDeclaredMethod("setForceShowIcon", Boolean::class.java)
+                                .invoke(mPopup, true)
+                        } catch (_: Exception) {}
+                        popupMenu.show()
                     }
                 }
             }
 
-            bind.heroSetInclude.tripleBtnInclude.commentButton.apply {
+            bind.heroSetInclude.commentButton.apply {
                 setImageResource(R.drawable.backspace)
                 setOnClickListener { findNavController().navigateUp() }
             }

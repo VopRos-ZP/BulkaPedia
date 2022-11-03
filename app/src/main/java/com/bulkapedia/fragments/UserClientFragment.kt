@@ -12,13 +12,10 @@ import com.bulkapedia.MAIN
 import com.bulkapedia.R
 import com.bulkapedia.database.Database
 import com.bulkapedia.databinding.UserClientFragmentBinding
-import com.bulkapedia.heroes.HeroList
 import com.bulkapedia.listeners.ViewPagerAdapter
-import com.bulkapedia.models.HeroModel
 import com.bulkapedia.recycler.FavoritesAdapter
 import com.bulkapedia.recycler.TextRecyclerAdapter
 import com.bulkapedia.recycler.UserSetsAdapter
-import com.bulkapedia.sets.UserSet
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import com.google.android.material.tabs.TabLayoutMediator
@@ -82,24 +79,16 @@ class UserClientFragment : Fragment() {
         bind.viewPager2.orientation = ORIENTATION_HORIZONTAL
         Database().getSets { sets ->
             val newSets = sets.filter { it.from == user.nickname }.toMutableList()
-            val edit: (UserSet) -> View.OnClickListener = { uSet ->
-                View.OnClickListener {
-                    val hero = HeroList.getHeroByBigImage(uSet.hero)
-                    val heroModel = HeroModel(hero, hero.getBigIcon(), hero.getName(), hero.getCounterpicks())
-                    val action = UserClientFragmentDirections.actionUserClientFragmentToCreateUserSetFragment(heroModel, uSet)
-                    findNavController().navigate(action)
-                }
-            }
 
             val yourSetsAdapter = if (newSets.isEmpty())
                 TextRecyclerAdapter(listOf(getString(R.string.empty_sets)))
-            else UserSetsAdapter(edit, newSets, findNavController())
+            else UserSetsAdapter(newSets, findNavController())
 
             val favSets = sets.filter { it.userLikeIds.contains(user.email) }.toMutableList()
 
             val favoritesAdapter = if (favSets.isEmpty())
                 TextRecyclerAdapter(listOf(getString(R.string.empty_sets)))
-            else FavoritesAdapter(favSets)
+            else FavoritesAdapter(favSets, findNavController())
             // 2 фрагмента с recycler view
             val fragments = listOf(
                 ClientRecyclerFragment(yourSetsAdapter),

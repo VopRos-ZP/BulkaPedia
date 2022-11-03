@@ -3,17 +3,20 @@ package com.bulkapedia.recycler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.NavController
 import androidx.recyclerview.widget.RecyclerView
 import com.bulkapedia.MAIN
 import com.bulkapedia.R
 import com.bulkapedia.database.Database
 import com.bulkapedia.databinding.FavoriteSetItemBinding
+import com.bulkapedia.fragments.UserClientFragmentDirections
 import com.bulkapedia.gears.GearsList
 import com.bulkapedia.sets.GearCell
 import com.bulkapedia.sets.UserSet
 
 class FavoritesAdapter (
-    private val favoriteSets: MutableList<UserSet>
+    private val favoriteSets: MutableList<UserSet>,
+    private val navController: NavController
     ) : RecyclerView.Adapter<FavoritesAdapter.FavoriteViewHolder>() {
 
     private val holders = mutableListOf<FavoriteViewHolder>()
@@ -59,6 +62,19 @@ class FavoritesAdapter (
             }
             if (containsId(set))
                 likesBox.setImageResource(R.drawable.liked)
+
+            profileBtn.setOnClickListener {
+                Database().retrieveUserByNickname(set.from) { user ->
+                    val action =
+                        UserClientFragmentDirections.actionUserClientFragmentSelf(user, true)
+                    navController.navigate(action)
+                }
+            }
+
+            commentBtn.setOnClickListener {
+                val action = UserClientFragmentDirections.actionUserClientFragmentToCommentsFragment(set)
+                navController.navigate(action)
+            }
 
             likesCount.text = set.likes.toString()
             likesBox.setOnClickListener {

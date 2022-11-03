@@ -46,6 +46,9 @@
         <action
             android:id="@+id/action_userClientFragment_to_commentsFragment"
             app:destination="@id/commentsFragment" />
+        <action
+            android:id="@+id/action_userClientFragment_self"
+            app:destination="@id/userClientFragment" />
     </fragment>
     <fragment
         android:id="@+id/registrationFragment"

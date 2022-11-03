@@ -1,9 +1,12 @@
 package com.bulkapedia.recycler
 
+import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.children
+import androidx.appcompat.view.ContextThemeWrapper
+import androidx.appcompat.widget.PopupMenu
+import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
 import androidx.recyclerview.widget.RecyclerView
 import com.bulkapedia.MAIN
@@ -16,9 +19,7 @@ import com.bulkapedia.sets.GearCell
 import com.bulkapedia.sets.UserSet
 import com.bulkapedia.utils.TripleButtonUtils
 
-class UserSetsAdapter (
-    private val edit: (UserSet) -> View.OnClickListener,
-    private val sets: MutableList<UserSet>,
+class UserSetsAdapter (private val sets: MutableList<UserSet>,
     private val navController: NavController
 ): RecyclerView.Adapter<UserSetsAdapter.UserSetsHolder>() {
 
@@ -61,26 +62,43 @@ class UserSetsAdapter (
             if (containsId(uSet))
                 likesBox.setImageResource(R.drawable.liked)
 
-            if (MAIN.prefs.getNickname() != uSet.from || !MAIN.prefs.getSigned()) {
-                toolsInclude.root.apply {
-                    visibility = View.INVISIBLE
-                    children.forEach { _ ->
-                        isClickable = false
-                    }
-                }
-            } else {
-                toolsInclude.root.visibility = View.VISIBLE
-                toolsInclude.editProfileButton.setOnClickListener(edit(uSet))
-                toolsInclude.commentButton.setOnClickListener {
-                    val action = UserClientFragmentDirections.actionUserClientFragmentToCommentsFragment(uSet)
-                    navController.navigate(action)
-                }
-                toolsInclude.deleteButton.setOnClickListener {
-                    TripleButtonUtils.onClickDelete(sets, uSet) {
-                        notifyItemRemoved(holder.adapterPosition)
-                    }
-                }
+            commentButton.setOnClickListener {
+                val action = UserClientFragmentDirections.actionUserClientFragmentToCommentsFragment(uSet)
+                navController.navigate(action)
             }
+
+            settingsButton.setOnClickListener {
+                val wrapper = ContextThemeWrapper(MAIN, R.style.menuStyle_PopupMenu)
+                val popupMenu = PopupMenu(wrapper, it)
+                popupMenu.inflate(R.menu.client_settings_menu)
+                popupMenu.setOnMenuItemClickListener { item ->
+                    return@setOnMenuItemClickListener when (item.itemId) {
+                        R.id.editItem -> {
+                            TripleButtonUtils.onClickEdit(uSet) { model ->
+                                val action = UserClientFragmentDirections.actionUserClientFragmentToCreateUserSetFragment(model, uSet)
+                                navController.navigate(action)
+                            }
+                            true
+                        }
+                        R.id.deleteItem -> {
+                            TripleButtonUtils.onClickDelete(sets, uSet) {
+                                notifyItemRemoved(holder.adapterPosition)
+                            }
+                            true
+                        }
+                        else -> false
+                    }
+                }
+                try {
+                    val fieldPopup = PopupMenu::class.java.getDeclaredField("mPopup")
+                    fieldPopup.isAccessible = true
+                    val mPopup = fieldPopup.get(popupMenu)
+                    mPopup.javaClass.getDeclaredMethod("setForceShowIcon", Boolean::class.java)
+                        .invoke(mPopup, true)
+                } catch (_: Exception) {}
+                popupMenu.show()
+            }
+            settingsButton.isClickable = MAIN.prefs.getNickname() == uSet.from
 
             likesCount.text = uSet.likes.toString()
             likesBox.setOnClickListener {

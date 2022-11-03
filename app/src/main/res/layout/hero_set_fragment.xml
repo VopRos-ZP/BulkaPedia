@@ -63,12 +63,31 @@
 
                 </LinearLayout>
 
-                <include
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="15dp"
-                    android:id="@+id/tripleBtnInclude"
-                    layout="@layout/triple_button" />
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:id="@+id/commentButton"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:padding="5dp"
+                        android:background="@drawable/rounded_primary_dark"
+                        app:srcCompat="@drawable/comment"
+                        app:tint="@color/white" />
+
+                    <ImageView
+                        android:id="@+id/settingsProfileButton"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:padding="5dp"
+                        android:layout_marginStart="10dp"
+                        android:background="@drawable/rounded_primary_dark"
+                        app:srcCompat="@drawable/settings"
+                        app:tint="@color/white" />
+
+                </LinearLayout>
 
             </LinearLayout>
 
