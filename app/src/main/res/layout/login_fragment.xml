@@ -74,7 +74,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="@string/registration"
-            android:textAllCaps="false"/>
+            android:textAllCaps="false"
+            android:textColor="@color/white"/>
 
         <Button
             android:id="@+id/forgot_password_btn"

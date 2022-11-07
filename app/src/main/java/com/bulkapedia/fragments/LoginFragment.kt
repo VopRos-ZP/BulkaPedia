@@ -55,7 +55,7 @@ class LoginFragment : Fragment() {
         bind.loginBtn.setOnClickListener {
             val login = bind.loginEt.text.toString()
             val password = bind.passwordEt.text.toString()
-            if (!login.contains(Regex("@gmail\\.com"))) {
+            if (!login.contains("@")) {
                 val dialog = OkErrorView(MAIN, R.string.error_login_title, R.string.error_email)
                 dialog.show()
                 return@setOnClickListener
@@ -65,9 +65,9 @@ class LoginFragment : Fragment() {
                     val dialog = OkErrorView(MAIN, R.string.error_login_title, R.string.error_login)
                     dialog.show()
                 } else {
-                    auth.signInWithEmailAndPassword(login, password).addOnCompleteListener {
-                        if (it.isSuccessful) {
-                            val res = it.result
+                    auth.signInWithEmailAndPassword(login, password).addOnCompleteListener { t ->
+                        if (t.isSuccessful) {
+                            val res = t.result
                             if (res.user != null) {
                                 Database().retrieveUserByEmail(res.user?.email!!) { u ->
                                     if (u.email == login && u.password == password) {

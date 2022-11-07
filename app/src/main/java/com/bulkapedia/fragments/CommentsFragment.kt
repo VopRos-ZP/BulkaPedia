@@ -156,7 +156,7 @@ class CommentsFragment : Fragment() {
                 val date = DateFormat.format("dd.MM.yyyy HH:mm:ss", calendar).toString()
                 val model = CommentModel(MAIN.prefs.getNickname()!!, date, text)
                 val map = mapOf(
-                    "hero" to hero,
+                    "set" to setId,
                     "from" to model.author,
                     "date" to model.date,
                     "text" to model.text
@@ -165,7 +165,7 @@ class CommentsFragment : Fragment() {
                 bind.commentEditText.text.clear()
             }
             firestore.collection("comments")
-                .whereEqualTo("hero", hero)
+                .whereEqualTo("set", setId)
                 .addSnapshotListener(eventListener)
         }
     }
