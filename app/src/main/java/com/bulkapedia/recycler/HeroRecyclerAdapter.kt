@@ -38,13 +38,15 @@ class HeroRecyclerAdapter(private val navController: NavController) : RecyclerVi
                 navController.navigate(action)
             }
             topStoBtn.setOnClickListener {
-                Database().getSets {
-                    val newset = it.filter { set -> set.hero == hero.getBigIcon() }
-                    val sorted = newset.sortedByDescending(UserSet::likes).take(100).mapIndexed { i, s ->
+                Database().getFilterSets({ set -> set.hero == hero.getBigIcon() }) { set ->
+                    val sorted = set.sortedByDescending(UserSet::likes).take(100).mapIndexed { i, s ->
                         TopModel(i + 1, s.from, s)
                     }
-                    val action = HeroesFragmentDirections.actionGearsItemToTopFragment(sorted.toTypedArray())
-                    navController.navigate(action)
+                    if (navController.currentDestination?.id == R.id.gearsItem) {
+                        val action =
+                            HeroesFragmentDirections.actionGearsItemToTopFragment(sorted.toTypedArray())
+                        navController.navigate(action)
+                    }
                 }
             }
         }

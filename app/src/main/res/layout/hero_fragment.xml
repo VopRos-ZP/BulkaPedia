@@ -99,6 +99,7 @@
                     android:layout_height="wrap_content"
                     android:background="@color/white"
                     app:tabIndicatorHeight="3dp"
+                    app:tabTextAppearance="@android:style/TextAppearance.Widget.TabWidget"
                     app:tabMode="auto" />
 
                 <androidx.viewpager2.widget.ViewPager2

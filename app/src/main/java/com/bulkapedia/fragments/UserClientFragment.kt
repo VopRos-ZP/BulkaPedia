@@ -11,10 +11,10 @@ import androidx.viewpager2.widget.ViewPager2.ORIENTATION_HORIZONTAL
 import com.bulkapedia.MAIN
 import com.bulkapedia.R
 import com.bulkapedia.database.Database
+import com.bulkapedia.database.User
 import com.bulkapedia.databinding.UserClientFragmentBinding
 import com.bulkapedia.listeners.ViewPagerAdapter
 import com.bulkapedia.recycler.FavoritesAdapter
-import com.bulkapedia.recycler.TextRecyclerAdapter
 import com.bulkapedia.recycler.UserSetsAdapter
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
@@ -30,6 +30,12 @@ class UserClientFragment : Fragment() {
     private val args: UserClientFragmentArgs by navArgs()
     private lateinit var database: FirebaseFirestore
 
+    private lateinit var user: User
+    private lateinit var textTab1: CharSequence
+    private lateinit var textTab2: CharSequence
+
+    private var selectedTab: Int = 0
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -41,61 +47,65 @@ class UserClientFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val user = args.user
+        user = args.user
         database = Firebase.firestore
         bind.actionBarInclude.actionBar.title = user.nickname
 
-        val tabListener: OnTabSelectedListener = object : OnTabSelectedListener {
-            override fun onTabSelected(tab: TabLayout.Tab?) {
-                if (tab!!.position == 1) {
-                    bind.tabLayout.selectTab(bind.tabLayout.getTabAt(0)!!)
-                }
-            }
-            override fun onTabUnselected(tab: TabLayout.Tab?) {}
-            override fun onTabReselected(tab: TabLayout.Tab?) {}
-        }
-
-        var textTab1 = getText(R.string.your_sets)
-        val textTab2 = getText(R.string.favorites)
+        textTab1 = getText(R.string.your_sets)
+        textTab2 = getText(R.string.favorites)
 
         if (args.see) {
             textTab1 = if (MAIN.prefs.getLanguage() == "ru")
                 "Сеты ${user.nickname}"
             else "${user.nickname} sets"
-            bind.tabLayout.addOnTabSelectedListener(tabListener)
+            bind.tabLayout.getTabAt(1)?.view?.isClickable = false
+            bind.viewPager2.isUserInputEnabled = false
             bind.actionBarInclude.actionBar.setNavigationIcon(R.drawable.backspace)
             bind.actionBarInclude.actionBar.setNavigationOnClickListener {
                 findNavController().navigateUp()
             }
         } else {
+            bind.viewPager2.isUserInputEnabled = true
             bind.actionBarInclude.actionBar.inflateMenu(R.menu.settings_menu)
             bind.actionBarInclude.actionBar.setOnMenuItemClickListener(this::onSettingsItemSelected)
             val menuItem = getMenuItem()!!
             menuItem.setTitle(R.string.profile)
             menuItem.setIcon(R.drawable.person)
-            bind.tabLayout.removeOnTabSelectedListener(tabListener)
+            bind.tabLayout.addOnTabSelectedListener(object : OnTabSelectedListener {
+                override fun onTabSelected(tab: TabLayout.Tab?) {
+                    selectedTab = bind.tabLayout.selectedTabPosition
+                }
+                override fun onTabUnselected(tab: TabLayout.Tab?) {}
+                override fun onTabReselected(tab: TabLayout.Tab?) {}
+            })
         }
         // Получаем сеты из БД
         bind.viewPager2.orientation = ORIENTATION_HORIZONTAL
+        setUserSets()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        textTab1 = getText(R.string.your_sets)
+        textTab2 = getText(R.string.favorites)
+        setUserSets()
+    }
+
+    private fun setUserSets() {
         Database().getSets { sets ->
-            val newSets = sets.filter { it.from == user.nickname }.toMutableList()
-
-            val yourSetsAdapter = if (newSets.isEmpty())
-                TextRecyclerAdapter(listOf(getString(R.string.empty_sets)))
-            else UserSetsAdapter(newSets, findNavController())
-
+            val yourSets = sets.filter { it.from == user.nickname }.toMutableList()
             val favSets = sets.filter { it.userLikeIds.contains(user.email) }.toMutableList()
+            val yourSetsAdapter = UserSetsAdapter(yourSets,
+                mutableListOf(getString(R.string.empty_sets)), findNavController())
 
-            val favoritesAdapter = if (favSets.isEmpty())
-                TextRecyclerAdapter(listOf(getString(R.string.empty_sets)))
-            else FavoritesAdapter(favSets, findNavController())
+            val favoritesAdapter = FavoritesAdapter(favSets,
+                mutableListOf(getString(R.string.empty_sets)), findNavController())
             // 2 фрагмента с recycler view
             val fragments = listOf(
                 ClientRecyclerFragment(yourSetsAdapter),
                 ClientRecyclerFragment(favoritesAdapter)
             )
             bind.viewPager2.adapter = ViewPagerAdapter(MAIN as AppCompatActivity, fragments)
-
             TabLayoutMediator(bind.tabLayout, bind.viewPager2) { tab, pos ->
                 tab.text = when (pos) {
                     0 -> textTab1
@@ -103,6 +113,28 @@ class UserClientFragment : Fragment() {
                 }
             }.attach()
         }
+
+//        Database().getFilter2Sets({ it.from == user.nickname }, { it.userLikeIds.contains(user.email) }) { yourSets, favSets ->
+//            if (!isVisible) return@getFilter2Sets
+//            bind.tabLayout.selectTab(bind.tabLayout.getTabAt(selectedTab))
+//            val yourSetsAdapter = UserSetsAdapter(yourSets,
+//                mutableListOf(getString(R.string.empty_sets)), findNavController())
+//
+//            val favoritesAdapter = FavoritesAdapter(favSets,
+//                mutableListOf(getString(R.string.empty_sets)), findNavController())
+//            // 2 фрагмента с recycler view
+//            val fragments = listOf(
+//                ClientRecyclerFragment(yourSetsAdapter),
+//                ClientRecyclerFragment(favoritesAdapter)
+//            )
+//            bind.viewPager2.adapter = ViewPagerAdapter(MAIN as AppCompatActivity, fragments)
+//            TabLayoutMediator(bind.tabLayout, bind.viewPager2) { tab, pos ->
+//                tab.text = when (pos) {
+//                    0 -> textTab1
+//                    else -> textTab2
+//                }
+//            }.attach()
+//        }
     }
 
     private fun onSettingsItemSelected(item: MenuItem): Boolean {

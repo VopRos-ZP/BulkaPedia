@@ -48,40 +48,42 @@ class TopRecyclerAdapter (
                     }
                 }
             }
-            topLikes.text = model.set.likes.toString()
-            commentView.setOnClickListener {
-                val action = TopFragmentDirections.actionTopFragmentToCommentsFragment(model.set)
-                navController.navigate(action)
-            }
-            book.setOnClickListener {
-                val dialog = Dialog(MAIN)
-                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-                dialog.setContentView(R.layout.dialog_set)
-                dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            Database().getSet(model.set.setId) { set ->
+                topLikes.text = set.likes.toString()
+                commentView.setOnClickListener {
+                    val action = TopFragmentDirections.actionTopFragmentToCommentsFragment(set)
+                    navController.navigate(action)
+                }
+                book.setOnClickListener {
+                    val dialog = Dialog(MAIN)
+                    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+                    dialog.setContentView(R.layout.dialog_set)
+                    dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
-                val bind = DialogSetBinding.bind(dialog.findViewById(R.id.dialog_constrain))
-                bind.setInclude.apply {
-                    val ivGears = listOf(
-                        ivHead, ivBody,
-                        ivArm, ivLeg,
-                        ivDecor, ivDevice
-                    )
-                    val gears = getGears(model.set.gears)
-                    val cells = listOf(
-                        GearCell.HEAD, GearCell.BODY,
-                        GearCell.ARM, GearCell.LEG,
-                        GearCell.DECOR, GearCell.DEVICE,
-                    )
-                    cells.forEachIndexed { i, cell ->
-                        if (gears[cell] != null) {
-                            ivGears[i].setImageResource(gears[cell]!!.icon)
+                    val bind = DialogSetBinding.bind(dialog.findViewById(R.id.dialog_constrain))
+                    bind.setInclude.apply {
+                        val ivGears = listOf(
+                            ivHead, ivBody,
+                            ivArm, ivLeg,
+                            ivDecor, ivDevice
+                        )
+                        val gears = getGears(set.gears)
+                        val cells = listOf(
+                            GearCell.HEAD, GearCell.BODY,
+                            GearCell.ARM, GearCell.LEG,
+                            GearCell.DECOR, GearCell.DEVICE,
+                        )
+                        cells.forEachIndexed { i, cell ->
+                            if (gears[cell] != null) {
+                                ivGears[i].setImageResource(gears[cell]!!.icon)
+                            }
                         }
                     }
+                    bind.close.setOnClickListener {
+                        dialog.dismiss()
+                    }
+                    dialog.show()
                 }
-                bind.close.setOnClickListener {
-                    dialog.dismiss()
-                }
-                dialog.show()
             }
         }
     }

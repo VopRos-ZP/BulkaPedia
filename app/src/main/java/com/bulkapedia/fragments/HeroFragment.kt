@@ -62,8 +62,8 @@ class HeroFragment : Fragment() {
                     hero.getDifficult()[i], null)
             }
             // Инициализируем фрагменты сетов
-            Database().getSets {
-                val list = it.filter { s -> s.hero == args.heroModel.heroIcon }
+            Database().getFilterSets({ s -> s.hero == args.heroModel.heroIcon }) { list ->
+                if (!isVisible) return@getFilterSets
                 val sorted = list.sortedByDescending(UserSet::likes).take(3)
                 initSetFragments(sorted)
             }
@@ -90,9 +90,10 @@ class HeroFragment : Fragment() {
     private fun initSetFragments(sets: List<UserSet>) {
         val fragments = mutableListOf<HeroSetFragment>()
         sets.forEach { fragments.add(HeroSetFragment(it, findNavController())) }
+        bind.viewPager.isSaveEnabled = false
         bind.viewPager.adapter = ViewPagerAdapter(MAIN as AppCompatActivity, fragments)
         TabLayoutMediator(bind.tabLayout, bind.viewPager) { tab, pos ->
-            tab.text = "Set №${pos + 1}"
+            tab.text = sets[pos].from
         }.attach()
     }
 

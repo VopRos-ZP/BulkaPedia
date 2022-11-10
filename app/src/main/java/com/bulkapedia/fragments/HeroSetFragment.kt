@@ -19,7 +19,7 @@ import com.bulkapedia.sets.UserSet
 import com.bulkapedia.utils.TripleButtonUtils
 
 class HeroSetFragment (
-    private val set: UserSet,
+    private val uSet: UserSet,
     private val navController: NavController
 ) : Fragment() {
 
@@ -36,98 +36,102 @@ class HeroSetFragment (
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val ivGears = listOf(
-            bind.setInclude.ivHead, bind.setInclude.ivBody,
-            bind.setInclude.ivArm, bind.setInclude.ivLeg,
-            bind.setInclude.ivDecor, bind.setInclude.ivDevice
-        )
-        val gears = getGears()
-        val cells = listOf(
-            GearCell.HEAD, GearCell.BODY,
-            GearCell.ARM, GearCell.LEG,
-            GearCell.DECOR, GearCell.DEVICE,
-        )
-        cells.forEachIndexed { i, cell ->
-            if (gears[cell] != null) {
-                ivGears[i].setImageResource(gears[cell]!!.icon)
-            }
-        }
-
-        if (set.from != MAIN.prefs.getNickname() || !MAIN.prefs.getSigned()) {
-            bind.settingsProfileButton.apply {
-                // profile
-                setImageResource(R.drawable.person)
-                setOnClickListener {
-                    Database().retrieveUserByNickname(set.from) {
-                        val action = HeroFragmentDirections.actionHeroFragmentToUserClientFragment(it, true)
-                        navController.navigate(action)
-                    }
+        Database().getSet(uSet.setId) { set ->
+            val ivGears = listOf(
+                bind.setInclude.ivHead, bind.setInclude.ivBody,
+                bind.setInclude.ivArm, bind.setInclude.ivLeg,
+                bind.setInclude.ivDecor, bind.setInclude.ivDevice
+            )
+            val gears = getGears(set)
+            val cells = listOf(
+                GearCell.HEAD, GearCell.BODY,
+                GearCell.ARM, GearCell.LEG,
+                GearCell.DECOR, GearCell.DEVICE,
+            )
+            cells.forEachIndexed { i, cell ->
+                if (gears[cell] != null) {
+                    ivGears[i].setImageResource(gears[cell]!!.icon)
                 }
             }
-        } else {
-            bind.settingsProfileButton.apply {
-                setImageResource(R.drawable.settings)
-                setOnClickListener {
-                    if (!MAIN.prefs.getSigned()) return@setOnClickListener
-                    val wrapper = ContextThemeWrapper(MAIN, R.style.menuStyle_PopupMenu)
-                    val popupMenu = PopupMenu(wrapper, it)
-                    popupMenu.inflate(R.menu.client_settings_menu)
-                    popupMenu.setOnMenuItemClickListener { item ->
-                        return@setOnMenuItemClickListener when (item.itemId) {
-                            R.id.editItem -> {
-                                TripleButtonUtils.onClickEdit(set) { model ->
-                                    val action = HeroFragmentDirections.actionHeroFragmentToCreateUserSetFragment(model, set)
-                                    navController.navigate(action)
-                                }
-                                true
-                            }
-                            R.id.deleteItem -> {
-                                TripleButtonUtils.onClickDelete(mutableListOf(set), set) {}
-                                true
-                            }
-                            else -> false
+
+            if (set.from != MAIN.prefs.getNickname() || !MAIN.prefs.getSigned()) {
+                bind.settingsProfileButton.apply {
+                    // profile
+                    setImageResource(R.drawable.person)
+                    setOnClickListener {
+                        Database().retrieveUserByNickname(set.from) {
+                            val action = HeroFragmentDirections.actionHeroFragmentToUserClientFragment(it, true)
+                            navController.navigate(action)
                         }
                     }
-                    try {
-                        val fieldPopup = PopupMenu::class.java.getDeclaredField("mPopup")
-                        fieldPopup.isAccessible = true
-                        val mPopup = fieldPopup.get(popupMenu)
-                        mPopup.javaClass.getDeclaredMethod("setForceShowIcon", Boolean::class.java)
-                            .invoke(mPopup, true)
-                    } catch (_: Exception) {}
-                    popupMenu.show()
+                }
+            } else {
+                bind.settingsProfileButton.apply {
+                    setImageResource(R.drawable.settings)
+                    setOnClickListener {
+                        if (!MAIN.prefs.getSigned()) return@setOnClickListener
+                        val wrapper = ContextThemeWrapper(MAIN, R.style.menuStyle_PopupMenu)
+                        val popupMenu = PopupMenu(wrapper, it)
+                        popupMenu.inflate(R.menu.client_settings_menu)
+                        popupMenu.setOnMenuItemClickListener { item ->
+                            return@setOnMenuItemClickListener when (item.itemId) {
+                                R.id.editItem -> {
+                                    TripleButtonUtils.onClickEdit(set) { model ->
+                                        val action = HeroFragmentDirections.actionHeroFragmentToCreateUserSetFragment(model, set)
+                                        navController.navigate(action)
+                                    }
+                                    true
+                                }
+                                R.id.deleteItem -> {
+                                    TripleButtonUtils.onClickDelete(mutableListOf(set), set) {}
+                                    true
+                                }
+                                else -> false
+                            }
+                        }
+                        try {
+                            val fieldPopup = PopupMenu::class.java.getDeclaredField("mPopup")
+                            fieldPopup.isAccessible = true
+                            val mPopup = fieldPopup.get(popupMenu)
+                            mPopup.javaClass.getDeclaredMethod("setForceShowIcon", Boolean::class.java)
+                                .invoke(mPopup, true)
+                        } catch (_: Exception) {}
+                        popupMenu.show()
+                    }
                 }
             }
-        }
 
-        bind.commentButton.setOnClickListener {
-            val action = HeroFragmentDirections.actionHeroFragmentToCommentsFragment(set)
-            navController.navigate(action)
-        }
+            bind.commentButton.setOnClickListener {
+                val action = HeroFragmentDirections.actionHeroFragmentToCommentsFragment(set)
+                navController.navigate(action)
+            }
 
-        if (containsId())
-            bind.likesBox.setImageResource(R.drawable.liked)
-
-        bind.likesCount.text = "${set.likes}"
-        bind.likesBox.setOnClickListener {
-            if (set.from == MAIN.prefs.getNickname()) return@setOnClickListener
-            if (containsId()) {
-                set.likes -= 1
-                removeId()
-                Database().addUserSet(set)
-                bind.likesCount.text = "${set.likes}"
-                bind.likesBox.setImageResource(R.drawable.unliked)
-            } else {
-                set.likes += 1
-                set.userLikeIds.add(MAIN.prefs.getEmail()!!)
-                Database().addUserSet(set)
-                bind.likesCount.text = "${set.likes}"
+            if (containsId(set))
                 bind.likesBox.setImageResource(R.drawable.liked)
+            else
+                bind.likesBox.setImageResource(R.drawable.unliked)
+
+            bind.likesCount.text = "${set.likes}"
+            bind.likesBox.setOnClickListener {
+                if ((MAIN.prefs.getNickname() == set.from) || !MAIN.prefs.getSigned()) return@setOnClickListener
+                if (containsId(set)) {
+                    set.likes -= 1
+                    removeId(set)
+                    Database().addUserSet(set)
+                    bind.likesCount.text = "${set.likes}"
+                    bind.likesBox.setImageResource(R.drawable.unliked)
+                } else {
+                    set.likes += 1
+                    set.userLikeIds.add(MAIN.prefs.getEmail()!!)
+                    Database().addUserSet(set)
+                    bind.likesCount.text = "${set.likes}"
+                    bind.likesBox.setImageResource(R.drawable.liked)
+                }
             }
         }
     }
 
-    private fun getGears(): Map<GearCell, Gear?> {
+    private fun getGears(set: UserSet): Map<GearCell, Gear?> {
         return set.gears.map { gs ->
             val index = GearsList.allGears.map{ it.icon }.indexOf(gs.value)
             if (index == -1)
@@ -137,14 +141,14 @@ class HeroSetFragment (
         }.toMap()
     }
 
-    private fun containsId() : Boolean {
+    private fun containsId(set: UserSet) : Boolean {
         for (id in set.userLikeIds)
             if (id == MAIN.prefs.getEmail())
                 return true
         return false
     }
 
-    private fun removeId() {
+    private fun removeId(set: UserSet) {
         for ((index, id) in set.userLikeIds.withIndex()) {
             if (id == MAIN.prefs.getEmail()) {
                 set.userLikeIds.removeAt(index)

@@ -8,6 +8,7 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.firestore.CollectionReference
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
@@ -120,6 +121,110 @@ class Database {
             code.invoke(sets)
         }
         return sets
+    }
+
+    fun getFilterSets(predicate: (UserSet) -> Boolean, func: (MutableList<UserSet>) -> Unit) {
+        getSetsNode().get().addOnSuccessListener { q ->
+            val filtered = mutableListOf<UserSet>()
+            val docs = mutableListOf<DocumentSnapshot>()
+            for (doc in q.documents) {
+                val set = getUserSetBySnapshot(doc.id, doc)
+                if (set.hero == 0) continue
+                if (predicate.invoke(set)) {
+                    filtered.add(set)
+                    docs.add(doc)
+                }
+            }
+            docs.forEach { doc ->
+                doc.reference.addSnapshotListener { v, _ ->
+                    if (v != null) {
+                        val set = getUserSetBySnapshot(v.id, v)
+                        if (set.hero == 0) return@addSnapshotListener
+                        val index = filtered.map { it.setId }.indexOf(set.setId)
+                        if (index >= 0) {
+                            filtered[index] = set
+                            func.invoke(filtered)
+                        }
+                    }
+                }
+            }
+        }
+//        getSetsNode().addSnapshotListener { v, _ ->
+//            val filtered = mutableListOf<UserSet>()
+//            if (v != null) {
+//                for (doc in v.documents) {
+//                    val set = getUserSetBySnapshot(doc.id, doc)
+//                    if (set.hero == 0) continue
+//                    if (predicate.invoke(set))
+//                        filtered.add(set)
+//                }
+//                func.invoke(filtered)
+//            }
+//        }
+    }
+
+
+    fun getFilter2Sets(predicate1: (UserSet) -> Boolean, predicate2: (UserSet) -> Boolean,
+                       func: (MutableList<UserSet>, MutableList<UserSet>) -> Unit) {
+//        getFilterSets(predicate1) { yourSets ->
+//            getFilterSets(predicate2) { favSets ->
+//                func.invoke(yourSets, favSets)
+//            }
+//        }
+        getSetsNode().addSnapshotListener { v, _ ->
+            val filtered1 = mutableListOf<UserSet>()
+            val filtered2 = mutableListOf<UserSet>()
+            if (v != null) {
+                for (doc in v.documents) {
+                    val set = getUserSetBySnapshot(doc.id, doc)
+                    if (set.hero == 0) continue
+                    if (predicate1.invoke(set))
+                        filtered1.add(set)
+                    else if (predicate2.invoke(set))
+                        filtered2.add(set)
+                }
+                func.invoke(filtered1, filtered2)
+            }
+        }
+    }
+
+    fun getSet(setId: String, func: (UserSet) -> Unit) {
+        getSetsNode().document(setId).addSnapshotListener { value, _ ->
+            if (value != null) {
+                val set = getUserSetBySnapshot(setId, value)
+                if (set.hero != 0)
+                    func.invoke(set)
+            }
+        }
+    }
+
+    private fun getUserSetBySnapshot(setId: String, value: DocumentSnapshot): UserSet {
+        try {
+            val gears = mapOf(
+                GearCell.HEAD to longToInt(value.getLong("head")!!),
+                GearCell.BODY to longToInt(value.getLong("body")!!),
+                GearCell.ARM to longToInt(value.getLong("arm")!!),
+                GearCell.LEG to longToInt(value.getLong("leg")!!),
+                GearCell.DECOR to longToInt(value.getLong("decor")!!),
+                GearCell.DEVICE to longToInt(value.getLong("device")!!),
+            )
+            val arr = value.get("user_like_ids") as MutableList<String>
+            return UserSet(setId,
+                value["author"] as String,
+                longToInt(value.getLong("hero")!!), gears,
+                longToInt(value.getLong("likes")!!), arr
+            )
+        } catch (_: java.lang.NullPointerException) {
+            return UserSet(setId, "",
+                0, emptyMap(),
+                0, mutableListOf()
+            )
+        }
+    }
+
+    private fun longToInt(l: Long): Int {
+        return if (l <= Int.MAX_VALUE) Integer.parseInt(l.toString())
+        else 0
     }
 
     /** Comments **/

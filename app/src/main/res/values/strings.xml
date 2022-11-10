@@ -226,5 +226,6 @@
     <string name="send_reset_code">Send reset code</string>
     <string name="ok">Ok</string>
     <string name="favorites">Favorites</string>
+    <string name="whats_new">What\'s new in the update:</string>
 
 </resources>

@@ -23,6 +23,17 @@ class TripleButtonUtils {
             }
         }
         val onClickDelete: (MutableList<UserSet>,  UserSet, () -> Unit) -> Unit = { sets, uSet, code ->
+            onClickConfirmAction {
+                Database().getSetsNode().document(uSet.setId).delete().addOnSuccessListener {
+                    sets.remove(uSet)
+                    Database().getCommentsNode().whereEqualTo("set", uSet.setId).get().addOnSuccessListener {
+                        it.documents.forEach { doc -> doc.reference.delete() }
+                    }
+                    code.invoke()
+                }
+            }
+        }
+        val onClickConfirmAction: (() -> Unit) -> Unit = { func ->
             val dialog = Dialog(MAIN)
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
             dialog.setContentView(R.layout.dialog_delete)
@@ -30,15 +41,13 @@ class TripleButtonUtils {
             dialog.setCanceledOnTouchOutside(false)
             val bind = DialogDeleteBinding.bind(dialog.findViewById(R.id.dialog_delete_constrain))
             bind.confirmBtn.setOnClickListener {
-                Database().getSetsNode().document(uSet.setId).delete().addOnSuccessListener {
-                    sets.remove(uSet)
-                    code.invoke()
-                }
+                func.invoke()
                 dialog.dismiss()
             }
             bind.cancelBtn.setOnClickListener { dialog.dismiss() }
             dialog.show()
         }
+
     }
 
 }

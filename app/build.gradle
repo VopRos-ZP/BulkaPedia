@@ -1,3 +1,17 @@
+buildscript {
+    repositories {
+        // ...
+        google()
+        mavenCentral()
+        maven { url 'https://plugins.gradle.org/m2/' } // Gradle Plugin Portal
+    }
+    dependencies {
+        // ...
+        // OneSignal-Gradle-Plugin
+        classpath 'gradle.plugin.com.onesignal:onesignal-gradle-plugin:0.14.0'
+    }
+}
+
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
@@ -12,8 +26,8 @@ android {
         applicationId "com.bulkapedia"
         minSdk 24
         targetSdk 33
-        versionCode 24
-        versionName "0.2.4"
+        versionCode 26
+        versionName "0.2.6"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -45,6 +59,8 @@ dependencies {
     implementation('androidx.navigation:navigation-runtime-ktx:2.5.3')
     implementation('androidx.navigation:navigation-fragment-ktx:2.5.3')
     implementation('androidx.navigation:navigation-ui-ktx:2.5.3')
+    implementation("com.google.android.play:app-update:2.0.1")
+    implementation("com.google.android.play:app-update-ktx:2.0.1")
     implementation 'com.google.firebase:firebase-database'
     implementation 'com.google.firebase:firebase-firestore-ktx'
     implementation 'com.google.firebase:firebase-auth-ktx'

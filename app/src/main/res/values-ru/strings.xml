@@ -227,5 +227,6 @@
     <string name="send_reset_code">Получить код сброса пароля</string>
     <string name="ok">Ок</string>
     <string name="favorites">Вам нравится</string>
+    <string name="whats_new">Что нового в обновлении:</string>
 
 </resources>

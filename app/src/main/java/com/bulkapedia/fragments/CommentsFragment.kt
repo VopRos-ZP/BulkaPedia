@@ -25,6 +25,7 @@ import com.google.firebase.firestore.EventListener
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.bulkapedia.databinding.CommentsFragmentBinding
+import com.bulkapedia.sets.UserSet
 import com.bulkapedia.utils.TripleButtonUtils
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ktx.database
@@ -41,6 +42,9 @@ class CommentsFragment : Fragment() {
 
     private val comments = mutableListOf<CommentModel>()
 
+    private var isEdit = false
+    private lateinit var editComment: CommentModel
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -54,13 +58,13 @@ class CommentsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         database = Firebase.database
         firestore = Firebase.firestore
-        args.set.apply {
+        Database().getSet(args.set.setId) { set ->
             val ivGears = listOf(
                 bind.heroSetInclude.setInclude.ivHead, bind.heroSetInclude.setInclude.ivBody,
                 bind.heroSetInclude.setInclude.ivArm, bind.heroSetInclude.setInclude.ivLeg,
                 bind.heroSetInclude.setInclude.ivDecor, bind.heroSetInclude.setInclude.ivDevice
             )
-            val gears = getGears()
+            val gears = getGears(set)
             val cells = listOf(
                 GearCell.HEAD, GearCell.BODY,
                 GearCell.ARM, GearCell.LEG,
@@ -71,12 +75,12 @@ class CommentsFragment : Fragment() {
                     ivGears[i].setImageResource(gears[cell]!!.icon)
                 }
             }
-            if (args.set.from != MAIN.prefs.getNickname() || !MAIN.prefs.getSigned()) {
+            if (set.from != MAIN.prefs.getNickname() || !MAIN.prefs.getSigned()) {
                 bind.heroSetInclude.settingsProfileButton.apply {
                     // profile
                     setImageResource(R.drawable.person)
                     setOnClickListener {
-                        Database().retrieveUserByNickname(args.set.from) {
+                        Database().retrieveUserByNickname(set.from) {
                             val action = CommentsFragmentDirections.actionCommentsFragmentToUserClientFragment(it, true)
                             findNavController().navigate(action)
                         }
@@ -92,14 +96,15 @@ class CommentsFragment : Fragment() {
                         popupMenu.setOnMenuItemClickListener { item ->
                             return@setOnMenuItemClickListener when (item.itemId) {
                                 R.id.editItem -> {
-                                    TripleButtonUtils.onClickEdit(args.set) {
-                                        val action = CommentsFragmentDirections.actionCommentsFragmentToCreateUserSetFragment(it, args.set)
+                                    TripleButtonUtils.onClickEdit(args.set) { m ->
+                                        val action = CommentsFragmentDirections.actionCommentsFragmentToCreateUserSetFragment(m, args.set)
                                         findNavController().navigate(action)
                                     }
                                     true
                                 }
                                 R.id.deleteItem -> {
                                     TripleButtonUtils.onClickDelete(mutableListOf(args.set), args.set) {}
+                                    findNavController().navigateUp()
                                     true
                                 }
                                 else -> false
@@ -122,28 +127,28 @@ class CommentsFragment : Fragment() {
                 setOnClickListener { findNavController().navigateUp() }
             }
 
-            if (containsId())
+            if (containsId(set))
                 bind.heroSetInclude.likesBox.setImageResource(R.drawable.liked)
 
-            bind.heroSetInclude.likesCount.text = "$likes"
+            bind.heroSetInclude.likesCount.text = "${set.likes}"
             bind.heroSetInclude.likesBox.setOnClickListener {
-                if (from == MAIN.prefs.getNickname()) return@setOnClickListener
-                if (containsId()) {
-                    likes -= 1
-                    removeId()
-                    Database().addUserSet(this)
-                    bind.heroSetInclude.likesCount.text = "$likes"
+                if ((MAIN.prefs.getNickname() == set.from) || !MAIN.prefs.getSigned()) return@setOnClickListener
+                if (containsId(set)) {
+                    set.likes -= 1
+                    removeId(set)
+                    Database().addUserSet(set)
+                    bind.heroSetInclude.likesCount.text = "${set.likes}"
                     bind.heroSetInclude.likesBox.setImageResource(R.drawable.unliked)
                 } else {
-                    likes += 1
-                    userLikeIds.add(MAIN.prefs.getEmail()!!)
-                    Database().addUserSet(this)
-                    bind.heroSetInclude.likesCount.text = "$likes"
+                    set.likes += 1
+                    set.userLikeIds.add(MAIN.prefs.getEmail()!!)
+                    Database().addUserSet(set)
+                    bind.heroSetInclude.likesCount.text = "${set.likes}"
                     bind.heroSetInclude.likesBox.setImageResource(R.drawable.liked)
                 }
             }
             bind.commentsRecycler.layoutManager = LinearLayoutManager(context)
-            commentAdapter = CommentsRecyclerAdapter(comments)
+            commentAdapter = CommentsRecyclerAdapter(comments, this)
             bind.commentsRecycler.adapter = commentAdapter
             if (!MAIN.prefs.getSigned()) {
                 bind.commentEditText.isEnabled = false
@@ -152,22 +157,45 @@ class CommentsFragment : Fragment() {
                 // send comment to recycler and view
                 val text = bind.commentEditText.text.toString()
                 if (text.isEmpty()) return@setOnClickListener
-                val calendar = Calendar.getInstance(Locale.getDefault())
-                val date = DateFormat.format("dd.MM.yyyy HH:mm:ss", calendar).toString()
-                val model = CommentModel(MAIN.prefs.getNickname()!!, date, text)
-                val map = mapOf(
-                    "set" to setId,
-                    "from" to model.author,
-                    "date" to model.date,
-                    "text" to model.text
-                )
-                firestore.collection("comments").add(map)
+                if (!isEdit) {
+                    val calendar = Calendar.getInstance(Locale.getDefault())
+                    val date = DateFormat.format("dd.MM.yyyy HH:mm:ss", calendar).toString()
+                    val model = CommentModel(MAIN.prefs.getNickname()!!, date, text, set.setId)
+                    val map = mapOf(
+                        "set" to set.setId,
+                        "from" to model.author,
+                        "date" to model.date,
+                        "text" to model.text
+                    )
+                    firestore.collection("comments").add(map)
+                } else {
+                    val map = mapOf(
+                        "set" to editComment.setId,
+                        "from" to editComment.author,
+                        "date" to editComment.date,
+                        "text" to text
+                    )
+                    Database().getCommentsNode()
+                        .get().addOnSuccessListener { q ->
+                            q.documents.find {
+                                it["date"] == editComment.date &&
+                                        it["set"] == editComment.setId &&
+                                        it["from"] == editComment.author
+                            }?.reference?.update(map)
+                        }
+                }
                 bind.commentEditText.text.clear()
             }
             firestore.collection("comments")
-                .whereEqualTo("set", setId)
+                .whereEqualTo("set", set.setId)
                 .addSnapshotListener(eventListener)
         }
+    }
+
+    fun editComment(comment: CommentModel) {
+        isEdit = true
+        editComment = comment
+        bind.commentEditText.setText(editComment.text)
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -175,16 +203,34 @@ class CommentsFragment : Fragment() {
         if (error != null) return@EventListener
         if (value != null) {
             val count = comments.size
+            var isModified = false
+            var isRemoved = false
+            var mIndex = -1
+            var rIndex = -1
             for (docChange in value.documentChanges) {
+                val model = getModelByDoc(docChange.document)
                 if (docChange.type == DocumentChange.Type.ADDED) {
-                    val doc = docChange.document
-                    val model = CommentModel(
-                        doc.getString("from")!!,
-                        doc.getString("date")!!,
-                        doc.getString("text")!!,
-                    )
                     if (!comments.contains(model))
                         comments.add(model)
+                } else if (docChange.type == DocumentChange.Type.REMOVED) {
+                    isRemoved = true
+                    rIndex = comments.indexOf(model)
+                    comments.remove(model)
+                } else if (docChange.type == DocumentChange.Type.MODIFIED) {
+                    isModified = true
+                    mIndex = comments.map {
+                        mapOf(
+                            "set" to it.setId,
+                            "date" to it.date,
+                            "from" to it.author
+                        )
+                    }.indexOf(mapOf(
+                        "set" to model.setId,
+                        "date" to model.date,
+                        "from" to model.author
+                    ))
+                    if (mIndex >= 0)
+                        comments[mIndex] = model
                 }
             }
             comments.sortWith { obj1, obj2 ->
@@ -192,6 +238,10 @@ class CommentsFragment : Fragment() {
             }
             if (count == 0) {
                 commentAdapter.notifyDataSetChanged()
+            } else if (isModified && mIndex >= 0) {
+                commentAdapter.notifyItemChanged(mIndex)
+            } else if (isRemoved && rIndex >= 0) {
+                commentAdapter.notifyItemRemoved(rIndex)
             } else {
                 commentAdapter.notifyItemRangeInserted(comments.size, comments.size)
                 bind.commentsRecycler.smoothScrollToPosition(comments.size - 1)
@@ -199,8 +249,17 @@ class CommentsFragment : Fragment() {
         }
     }
 
-    private fun getGears(): Map<GearCell, Gear?> {
-        return args.set.gears.map { gs ->
+    private fun getModelByDoc(doc: QueryDocumentSnapshot): CommentModel {
+        return CommentModel(
+            doc.getString("from")!!,
+            doc.getString("date")!!,
+            doc.getString("text")!!,
+            doc.getString("set")!!
+        )
+    }
+
+    private fun getGears(set: UserSet): Map<GearCell, Gear?> {
+        return set.gears.map { gs ->
             val index = GearsList.allGears.map{ it.icon }.indexOf(gs.value)
             if (index == -1)
                 gs.key to null
@@ -209,17 +268,17 @@ class CommentsFragment : Fragment() {
         }.toMap()
     }
 
-    private fun containsId() : Boolean {
-        for (id in args.set.userLikeIds)
+    private fun containsId(set: UserSet) : Boolean {
+        for (id in set.userLikeIds)
             if (id == MAIN.prefs.getEmail())
                 return true
         return false
     }
 
-    private fun removeId() {
-        for ((index, id) in args.set.userLikeIds.withIndex()) {
+    private fun removeId(set: UserSet) {
+        for ((index, id) in set.userLikeIds.withIndex()) {
             if (id == MAIN.prefs.getEmail()) {
-                args.set.userLikeIds.removeAt(index)
+                set.userLikeIds.removeAt(index)
             }
         }
     }
