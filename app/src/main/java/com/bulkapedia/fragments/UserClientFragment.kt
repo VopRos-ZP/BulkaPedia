@@ -113,28 +113,6 @@ class UserClientFragment : Fragment() {
                 }
             }.attach()
         }
-
-//        Database().getFilter2Sets({ it.from == user.nickname }, { it.userLikeIds.contains(user.email) }) { yourSets, favSets ->
-//            if (!isVisible) return@getFilter2Sets
-//            bind.tabLayout.selectTab(bind.tabLayout.getTabAt(selectedTab))
-//            val yourSetsAdapter = UserSetsAdapter(yourSets,
-//                mutableListOf(getString(R.string.empty_sets)), findNavController())
-//
-//            val favoritesAdapter = FavoritesAdapter(favSets,
-//                mutableListOf(getString(R.string.empty_sets)), findNavController())
-//            // 2 фрагмента с recycler view
-//            val fragments = listOf(
-//                ClientRecyclerFragment(yourSetsAdapter),
-//                ClientRecyclerFragment(favoritesAdapter)
-//            )
-//            bind.viewPager2.adapter = ViewPagerAdapter(MAIN as AppCompatActivity, fragments)
-//            TabLayoutMediator(bind.tabLayout, bind.viewPager2) { tab, pos ->
-//                tab.text = when (pos) {
-//                    0 -> textTab1
-//                    else -> textTab2
-//                }
-//            }.attach()
-//        }
     }
 
     private fun onSettingsItemSelected(item: MenuItem): Boolean {

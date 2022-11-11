@@ -9,11 +9,13 @@ import androidx.core.content.edit
 import androidx.core.view.allViews
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.bulkapedia.ADMIN_EMAIL
 import com.bulkapedia.MAIN
 import com.bulkapedia.R
 import com.bulkapedia.databinding.SettingsFragmentBinding
 import com.bulkapedia.preference.UserPreferences
 import com.bulkapedia.utils.Language
+import com.bulkapedia.views.OkErrorView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
@@ -64,6 +66,13 @@ class SettingsFragment : Fragment() {
                 apply()
             }
             findNavController().navigate(action)
+        }
+        bind.dashboardBtn.setOnClickListener {
+            if (MAIN.prefs.getEmail() == ADMIN_EMAIL) {
+                val action = SettingsFragmentDirections.actionSettingsFragmentToDashboardFragment()
+                findNavController().navigate(action)
+            } else
+                OkErrorView(MAIN, R.string.dashboard_error_title, R.string.dashboard_only_dev).show()
         }
     }
 

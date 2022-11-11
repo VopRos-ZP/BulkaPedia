@@ -228,5 +228,10 @@
     <string name="ok">Ок</string>
     <string name="favorites">Вам нравится</string>
     <string name="whats_new">Что нового в обновлении:</string>
+    <string name="dashboard">Доска управления</string>
+    <string name="users">Пользователи</string>
+    <string name="dashboard_error_title">Ошибка доски управления</string>
+    <string name="dashboard_only_dev">Пользоваться доской управления может только разработчик!</string>
+    <string name="search">Поиск</string>
 
 </resources>

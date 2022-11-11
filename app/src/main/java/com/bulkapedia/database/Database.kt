@@ -23,6 +23,21 @@ class Database {
 
     fun getCommentsNode(): CollectionReference = fs.collection("comments")
 
+    fun getAllUsers(func: (MutableList<User>) -> Unit) {
+        getUsersNode().get().addOnSuccessListener { snapshot ->
+            val users = mutableListOf<User>()
+            for (sd in snapshot.children) {
+                val strings = mutableMapOf<String, String>()
+                sd.children.forEach { data ->
+                    strings += data.key!! to (data.value as String)
+                }
+                val user = User(strings["email"], strings["password"], strings["nickname"])
+                users.add(user)
+            }
+            func.invoke(users)
+        }
+    }
+
     fun retrieveUserByNickname(nickname: String, func: (User) -> Unit) {
         getUsersNode().addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {

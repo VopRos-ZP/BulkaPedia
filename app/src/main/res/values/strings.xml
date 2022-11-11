@@ -227,5 +227,10 @@
     <string name="ok">Ok</string>
     <string name="favorites">Favorites</string>
     <string name="whats_new">What\'s new in the update:</string>
+    <string name="dashboard">Dashboard</string>
+    <string name="users">Users</string>
+    <string name="dashboard_error_title">Dashboard error</string>
+    <string name="dashboard_only_dev">Only the developer can use the dashboard!</string>
+    <string name="search">Search</string>
 
 </resources>
