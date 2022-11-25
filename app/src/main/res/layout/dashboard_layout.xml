@@ -42,7 +42,17 @@
                 android:overScrollMode="never"
                 android:text="@string/users" />
 
+            <com.google.android.material.tabs.TabItem
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:overScrollMode="never"
+                android:text="@string/sets" />
 
+            <com.google.android.material.tabs.TabItem
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:overScrollMode="never"
+                android:text="@string/dialogs" />
 
         </com.google.android.material.tabs.TabLayout>
 

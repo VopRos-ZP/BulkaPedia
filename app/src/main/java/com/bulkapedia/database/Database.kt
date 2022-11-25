@@ -1,5 +1,6 @@
 package com.bulkapedia.database
 
+import com.bulkapedia.labels.Stats
 import com.bulkapedia.sets.GearCell
 import com.bulkapedia.sets.UserSet
 import com.google.firebase.database.DataSnapshot
@@ -28,10 +29,23 @@ class Database {
             val users = mutableListOf<User>()
             for (sd in snapshot.children) {
                 val strings = mutableMapOf<String, String>()
+                val mains = mutableMapOf<String, Stats>()
                 sd.children.forEach { data ->
-                    strings += data.key!! to (data.value as String)
+                    if (data.key!! == "mains"){
+                        data.children.forEach { main ->
+                            val statsMap = mutableMapOf<String, Double>()
+                            main.children.forEach { mainData ->
+                                statsMap += mainData.key!! to mainData.value!!.toString().toDouble()
+                            }
+                            mains += main.key!! to Stats(statsMap["kills"]!!.toInt(),
+                                statsMap["winrate"]!!,
+                                statsMap["revives"]!!.toInt()
+                            )
+                        }
+                    } else
+                        strings += data.key!! to (data.value as String)
                 }
-                val user = User(strings["email"], strings["password"], strings["nickname"])
+                val user = User(strings["email"], strings["password"], strings["nickname"], mains)
                 users.add(user)
             }
             func.invoke(users)
@@ -43,10 +57,23 @@ class Database {
             override fun onDataChange(snapshot: DataSnapshot) {
                 for (sd in snapshot.children) {
                     val strings = mutableMapOf<String, String>()
+                    val mains = mutableMapOf<String, Stats>()
                     sd.children.forEach { data ->
-                        strings += data.key!! to (data.value as String)
+                        if (data.key!! == "mains"){
+                            data.children.forEach { main ->
+                                val statsMap = mutableMapOf<String, Double>()
+                                main.children.forEach { mainData ->
+                                    statsMap += mainData.key!! to mainData.value!!.toString().toDouble()
+                                }
+                                mains += main.key!! to Stats(statsMap["kills"]!!.toInt(),
+                                    statsMap["winrate"]!!,
+                                    statsMap["revives"]!!.toInt()
+                                )
+                            }
+                        } else
+                            strings += data.key!! to (data.value as String)
                     }
-                    val user = User(strings["login"], strings["password"], strings["nickname"])
+                    val user = User(strings["email"], strings["password"], strings["nickname"], mains)
                     if (user.nickname == nickname) {
                         func.invoke(user)
                         break
@@ -63,10 +90,23 @@ class Database {
             override fun onDataChange(snapshot: DataSnapshot) {
                 for (sd in snapshot.children) {
                     val strings = mutableMapOf<String, String>()
+                    val mains = mutableMapOf<String, Stats>()
                     sd.children.forEach { data ->
-                        strings += data.key!! to (data.value as String)
+                        if (data.key!! == "mains") {
+                            data.children.forEach { main ->
+                                val statsMap = mutableMapOf<String, Double>()
+                                main.children.forEach { mainData ->
+                                    statsMap += mainData.key!! to mainData.value!!.toString().toDouble()
+                                }
+                                mains += main.key!! to Stats(statsMap["kills"]!!.toInt(),
+                                    statsMap["winrate"]!!,
+                                    statsMap["revives"]!!.toInt()
+                                )
+                            }
+                        } else
+                            strings += data.key!! to (data.value as String)
                     }
-                    val user = User(strings["email"], strings["password"], strings["nickname"])
+                    val user = User(strings["email"], strings["password"], strings["nickname"], mains)
                     if (user.email == email) {
                         func.invoke(user)
                         break
@@ -83,16 +123,50 @@ class Database {
             override fun onDataChange(snapshot: DataSnapshot) {
                 for (sd in snapshot.children) {
                     val strings = mutableMapOf<String, String>()
+                    val mains = mutableMapOf<String, Stats>()
                     sd.children.forEach { data ->
-                        strings += data.key!! to (data.value as String)
+                        if (data.key!! == "mains"){
+                            data.children.forEach { main ->
+                                val statsMap = mutableMapOf<String, Double>()
+                                main.children.forEach { mainData ->
+                                    statsMap += mainData.key!! to mainData.value!!.toString().toDouble()
+                                }
+                                if (!main.key.isNullOrEmpty() && !statsMap.containsKey("kills")) {
+                                    mains += main.key!! to Stats(
+                                        statsMap["kills"]!!.toInt(),
+                                        statsMap["winrate"]!!,
+                                        statsMap["revives"]!!.toInt()
+                                    )
+                                }
+                            }
+                        } else
+                            strings += data.key!! to (data.value as String)
                     }
-                    val user = User(strings["email"], strings["password"], strings["nickname"])
+                    val user = User(strings["email"], strings["password"],
+                        strings["nickname"], mains)
                     if (user.email == email) {
                         func.invoke(true)
                         return
                     }
                 }
                 func.invoke(false)
+            }
+
+            override fun onCancelled(error: DatabaseError) {}
+        })
+    }
+
+    fun addMainsToUser(user: User) {
+        getUsersNode().addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                for (sd in snapshot.children) {
+                    for (data in sd.children) {
+                        if (data.key!! == "email" && (data.value as String) == user.email) {
+                            getUsersNode().child(sd.key!!).setValue(user)
+                            break
+                        }
+                    }
+                }
             }
 
             override fun onCancelled(error: DatabaseError) {}
@@ -164,28 +238,11 @@ class Database {
                 }
             }
         }
-//        getSetsNode().addSnapshotListener { v, _ ->
-//            val filtered = mutableListOf<UserSet>()
-//            if (v != null) {
-//                for (doc in v.documents) {
-//                    val set = getUserSetBySnapshot(doc.id, doc)
-//                    if (set.hero == 0) continue
-//                    if (predicate.invoke(set))
-//                        filtered.add(set)
-//                }
-//                func.invoke(filtered)
-//            }
-//        }
     }
 
 
     fun getFilter2Sets(predicate1: (UserSet) -> Boolean, predicate2: (UserSet) -> Boolean,
                        func: (MutableList<UserSet>, MutableList<UserSet>) -> Unit) {
-//        getFilterSets(predicate1) { yourSets ->
-//            getFilterSets(predicate2) { favSets ->
-//                func.invoke(yourSets, favSets)
-//            }
-//        }
         getSetsNode().addSnapshotListener { v, _ ->
             val filtered1 = mutableListOf<UserSet>()
             val filtered2 = mutableListOf<UserSet>()

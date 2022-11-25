@@ -233,5 +233,11 @@
     <string name="dashboard_error_title">Ошибка доски управления</string>
     <string name="dashboard_only_dev">Пользоваться доской управления может только разработчик!</string>
     <string name="search">Поиск</string>
+    <string name="dialogs">Диалоги</string>
+    <string name="mains">Мейн герои:</string>
+    <string name="kills">Килы</string>
+    <string name="winrate">Процент побед</string>
+    <string name="revives">Воскрешения</string>
+    <string name="hide">Нажмите чтобы скрыть</string>
 
 </resources>

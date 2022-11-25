@@ -12,6 +12,7 @@ import com.bulkapedia.R
 import com.bulkapedia.database.Database
 import com.bulkapedia.database.User
 import com.bulkapedia.databinding.ResetPasswordFragmentBinding
+import com.bulkapedia.labels.Stats
 import com.bulkapedia.utils.addUserToShared
 import com.bulkapedia.views.OkErrorView
 import com.google.firebase.auth.FirebaseAuth
@@ -84,15 +85,29 @@ class ResetPasswordFragment : Fragment() {
                                             var user: User? = null
                                             for (sn in snapshot.children) {
                                                 val strings = mutableMapOf<String, String>()
+                                                val mains = mutableMapOf<String, Stats>()
                                                 sn.children.forEach { data ->
-                                                    strings += data.key!! to (data.value as String)
+                                                    if (data.key!! == "mains"){
+                                                        data.children.forEach { main ->
+                                                            val statsMap = mutableMapOf<String, Double>()
+                                                            main.children.forEach { mainData ->
+                                                                statsMap += mainData.key!! to mainData.value as Double
+                                                            }
+                                                            mains += main.key!! to
+                                                                    Stats(statsMap["kills"]!!.toInt(),
+                                                                        statsMap["winrate"]!!,
+                                                                        statsMap["revives"]!!.toInt()
+                                                                    )
+                                                        }
+                                                    } else
+                                                        strings += data.key!! to (data.value as String)
                                                 }
                                                 if (strings["email"] == email) {
                                                     doc = sn.key!!
                                                     user = User(
                                                         strings["email"],
                                                         bind.passwordEt.text.toString(),
-                                                        strings["nickname"]
+                                                        strings["nickname"], mains
                                                     )
                                                     break
                                                 }

@@ -232,5 +232,11 @@
     <string name="dashboard_error_title">Dashboard error</string>
     <string name="dashboard_only_dev">Only the developer can use the dashboard!</string>
     <string name="search">Search</string>
+    <string name="dialogs">Dialogs</string>
+    <string name="mains">Main heroes:</string>
+    <string name="kills">Kills</string>
+    <string name="winrate">Win rate</string>
+    <string name="revives">Revives</string>
+    <string name="hide">Click to hide</string>
 
 </resources>

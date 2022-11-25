@@ -7,6 +7,7 @@ import androidx.core.view.iterator
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager2.widget.ViewPager2.ORIENTATION_HORIZONTAL
 import com.bulkapedia.MAIN
 import com.bulkapedia.R
@@ -15,6 +16,7 @@ import com.bulkapedia.database.User
 import com.bulkapedia.databinding.UserClientFragmentBinding
 import com.bulkapedia.listeners.ViewPagerAdapter
 import com.bulkapedia.recycler.FavoritesAdapter
+import com.bulkapedia.recycler.MainsRecyclerAdapter
 import com.bulkapedia.recycler.UserSetsAdapter
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
@@ -78,6 +80,11 @@ class UserClientFragment : Fragment() {
                 override fun onTabUnselected(tab: TabLayout.Tab?) {}
                 override fun onTabReselected(tab: TabLayout.Tab?) {}
             })
+        }
+        // Инициализируем теги мейнов
+        bind.mainsRecycler.layoutManager = LinearLayoutManager(MAIN, LinearLayoutManager.HORIZONTAL, false)
+        Database().retrieveUserByEmail(user.email!!) { newU ->
+            bind.mainsRecycler.adapter = MainsRecyclerAdapter(newU.mains)
         }
         // Получаем сеты из БД
         bind.viewPager2.orientation = ORIENTATION_HORIZONTAL

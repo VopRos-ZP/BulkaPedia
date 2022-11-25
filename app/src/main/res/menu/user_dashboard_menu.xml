@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/arnieItem"
+        android:title="@string/arnie"
+        android:checkable="true"
+        app:actionViewClass="android.widget.CheckBox" />
+
+    <item
+        android:id="@+id/sparkleItem"
+        android:title="@string/sparkle"
+        android:checkable="true"
+        app:actionViewClass="android.widget.CheckBox" />
+
+    <item
+        android:id="@+id/cyclopsItem"
+        android:title="@string/cyclops"
+        android:checkable="true"
+        app:actionViewClass="android.widget.CheckBox" />
+
+    <item
+        android:id="@+id/hurricaneItem"
+        android:title="@string/hurricane"
+        android:checkable="true"
+        app:actionViewClass="android.widget.CheckBox" />
+
+    <item
+        android:id="@+id/ghostItem"
+        android:title="@string/ghost"
+        android:checkable="true"
+        app:actionViewClass="android.widget.CheckBox" />
+
+    <item
+        android:id="@+id/angelItem"
+        android:title="@string/angel"
+        android:checkable="true"
+        app:actionViewClass="android.widget.CheckBox" />
+
+    <item
+        android:id="@+id/freddieItem"
+        android:title="@string/freddie"
+        android:checkable="true"
+        app:actionViewClass="android.widget.CheckBox" />
+
+    <item
+        android:id="@+id/ravenItem"
+        android:title="@string/raven"
+        android:checkable="true"
+        app:actionViewClass="android.widget.CheckBox" />
+
+    <item
+        android:id="@+id/blotItem"
+        android:title="@string/blot"
+        android:checkable="true"
+        app:actionViewClass="android.widget.CheckBox" />
+
+    <item
+        android:id="@+id/fireflyItem"
+        android:title="@string/firefly"
+        android:checkable="true"
+        app:actionViewClass="android.widget.CheckBox" />
+
+    <item
+        android:id="@+id/lynxItem"
+        android:title="@string/lynx"
+        android:checkable="true"
+        app:actionViewClass="android.widget.CheckBox" />
+
+    <item
+        android:id="@+id/slayerItem"
+        android:title="@string/slayer"
+        android:checkable="true"
+        app:actionViewClass="android.widget.CheckBox" />
+
+    <item
+        android:id="@+id/mirageItem"
+        android:title="@string/mirage"
+        android:checkable="true"
+        app:actionViewClass="android.widget.CheckBox" />
+
+    <item
+        android:id="@+id/smogItem"
+        android:title="@string/smog"
+        android:checkable="true"
+        app:actionViewClass="android.widget.CheckBox" />
+
+    <item
+        android:id="@+id/dragoonItem"
+        android:title="@string/dragoon"
+        android:checkable="true"
+        app:actionViewClass="android.widget.CheckBox" />
+
+    <item
+        android:id="@+id/bastionItem"
+        android:title="@string/bastion"
+        android:checkable="true"
+        app:actionViewClass="android.widget.CheckBox" />
+
+    <item
+        android:id="@+id/berthaItem"
+        android:title="@string/bertha"
+        android:checkable="true"
+        app:actionViewClass="android.widget.CheckBox" />
+
+    <item
+        android:id="@+id/leviathanItem"
+        android:title="@string/leviathan"
+        android:checkable="true"
+        app:actionViewClass="android.widget.CheckBox" />
+
+    <item
+        android:id="@+id/stalkerItem"
+        android:title="@string/stalker"
+        android:checkable="true"
+        app:actionViewClass="android.widget.CheckBox" />
+
+    <item
+        android:id="@+id/docItem"
+        android:title="@string/doc"
+        android:checkable="true"
+        app:actionViewClass="android.widget.CheckBox" />
+
+    <item
+        android:id="@+id/leviItem"
+        android:title="@string/levi"
+        android:checkable="true"
+        app:actionViewClass="android.widget.CheckBox" />
+
+    <item
+        android:id="@+id/satoshiItem"
+        android:title="@string/satoshi"
+        android:checkable="true"
+        app:actionViewClass="android.widget.CheckBox" />
+
+</menu>
