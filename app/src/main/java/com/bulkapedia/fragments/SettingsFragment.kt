@@ -12,6 +12,7 @@ import androidx.navigation.fragment.findNavController
 import com.bulkapedia.ADMIN_EMAIL
 import com.bulkapedia.MAIN
 import com.bulkapedia.R
+import com.bulkapedia.database.Database
 import com.bulkapedia.databinding.SettingsFragmentBinding
 import com.bulkapedia.preference.UserPreferences
 import com.bulkapedia.utils.Language
@@ -73,6 +74,16 @@ class SettingsFragment : Fragment() {
                 findNavController().navigate(action)
             } else
                 OkErrorView(MAIN, R.string.dashboard_error_title, R.string.dashboard_only_dev).show()
+        }
+        bind.callDev.setOnClickListener {
+            if (MAIN.prefs.getEmail() == ADMIN_EMAIL) return@setOnClickListener
+            Database().retrieveUserByEmail(MAIN.prefs.getEmail()!!) { user ->
+                Database().retrieveUserByEmail(ADMIN_EMAIL) { admin ->
+                    val action = SettingsFragmentDirections
+                        .actionSettingsFragmentToDevChatFragment(sender = user, receiver = admin)
+                    findNavController().navigate(action)
+                }
+            }
         }
     }
 

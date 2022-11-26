@@ -74,6 +74,9 @@
         <action
             android:id="@+id/action_settingsFragment_to_dashboardFragment"
             app:destination="@id/dashboardFragment" />
+        <action
+            android:id="@+id/action_settingsFragment_to_devChatFragment"
+            app:destination="@id/devChatFragment" />
     </fragment>
     <fragment
         android:id="@+id/heroFragment"
@@ -176,5 +179,25 @@
         <action
             android:id="@+id/action_dashboardFragment_to_settingsFragment"
             app:destination="@id/settingsFragment" />
+        <action
+            android:id="@+id/action_dashboardFragment_to_devChatFragment"
+            app:destination="@id/devChatFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/devChatFragment"
+        android:name="com.bulkapedia.fragments.DevChatFragment"
+        android:label="DevChatFragment" >
+        <action
+            android:id="@+id/action_devChatFragment_to_settingsFragment"
+            app:destination="@id/settingsFragment" />
+        <action
+            android:id="@+id/action_devChatFragment_to_dashboardFragment"
+            app:destination="@id/dashboardFragment" />
+        <argument
+            android:name="sender"
+            app:argType="com.bulkapedia.database.User" />
+        <argument
+            android:name="receiver"
+            app:argType="com.bulkapedia.database.User" />
     </fragment>
 </navigation>

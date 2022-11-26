@@ -239,5 +239,8 @@
     <string name="winrate">Процент побед</string>
     <string name="revives">Воскрешения</string>
     <string name="hide">Нажмите чтобы скрыть</string>
+    <string name="call_with_dev">Связь с\n разработчиком</string>
+    <string name="enter_text">Введите текст</string>
+    <string name="chat">Чат</string>
 
 </resources>

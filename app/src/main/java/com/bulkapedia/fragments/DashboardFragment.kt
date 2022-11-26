@@ -38,12 +38,16 @@ class DashboardFragment : Fragment() {
         }
         Database().getAllUsers { users ->
             val fragments = listOf(
-                UserDashboardRecyclerFragment(users)
+                UserDashboardRecyclerFragment(users),
+                DialogDashboardRecyclerFragment(users, findNavController())
             )
             bind.viewPager2.orientation = ViewPager2.ORIENTATION_HORIZONTAL
             bind.viewPager2.adapter = ViewPagerAdapter(MAIN as AppCompatActivity, fragments)
-            TabLayoutMediator(bind.tabLayout, bind.viewPager2) { tab, _ ->
-                tab.text = getString(R.string.users)
+            TabLayoutMediator(bind.tabLayout, bind.viewPager2) { tab, pos ->
+                when (pos) {
+                    0 -> tab.text = getString(R.string.users)
+                    1 -> tab.text = getString(R.string.dialogs)
+                }
             }.attach()
         }
     }
