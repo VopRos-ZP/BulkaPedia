@@ -3,7 +3,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.bulkapedia">
 
+    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE"
+        tools:ignore="ScopedStorage" />
+
     <application
+        android:requestLegacyExternalStorage="true"
         android:name="com.bulkapedia.preference.UserPreferences"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
