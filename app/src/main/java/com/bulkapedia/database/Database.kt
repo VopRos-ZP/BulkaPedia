@@ -1,3 +1,5 @@
+@file:Suppress("UNCHECKED_CAST")
+
 package com.bulkapedia.database
 
 import com.bulkapedia.labels.Stats
@@ -53,39 +55,18 @@ class Database {
     }
 
     fun retrieveUserByNickname(nickname: String, func: (User) -> Unit) {
-        getUsersNode().addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                for (sd in snapshot.children) {
-                    val strings = mutableMapOf<String, String>()
-                    val mains = mutableMapOf<String, Stats>()
-                    sd.children.forEach { data ->
-                        if (data.key!! == "mains"){
-                            data.children.forEach { main ->
-                                val statsMap = mutableMapOf<String, Double>()
-                                main.children.forEach { mainData ->
-                                    statsMap += mainData.key!! to mainData.value!!.toString().toDouble()
-                                }
-                                mains += main.key!! to Stats(statsMap["kills"]!!.toInt(),
-                                    statsMap["winrate"]!!,
-                                    statsMap["revives"]!!.toInt()
-                                )
-                            }
-                        } else
-                            strings += data.key!! to (data.value as String)
-                    }
-                    val user = User(strings["email"], strings["password"], strings["nickname"], mains)
-                    if (user.nickname == nickname) {
-                        func.invoke(user)
-                        break
-                    }
-                }
-            }
-
-            override fun onCancelled(error: DatabaseError) {}
-        })
+        retrieveUser({ it.nickname == nickname }, func)
     }
 
     fun retrieveUserByEmail(email: String, func: (User) -> Unit) {
+        retrieveUser({ it.email == email }, func)
+    }
+
+    fun containsEmail(email: String, func: (Boolean) -> Unit) {
+        workConditionWithUser({ it.email == email }, func)
+    }
+
+    private fun retrieveUser(condition: (User) -> Boolean, func: (User) -> Unit) {
         getUsersNode().addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 for (sd in snapshot.children) {
@@ -98,7 +79,8 @@ class Database {
                                 main.children.forEach { mainData ->
                                     statsMap += mainData.key!! to mainData.value!!.toString().toDouble()
                                 }
-                                mains += main.key!! to Stats(statsMap["kills"]!!.toInt(),
+                                mains += main.key!! to Stats(
+                                    statsMap["kills"]!!.toInt(),
                                     statsMap["winrate"]!!,
                                     statsMap["revives"]!!.toInt()
                                 )
@@ -107,7 +89,7 @@ class Database {
                             strings += data.key!! to (data.value as String)
                     }
                     val user = User(strings["email"], strings["password"], strings["nickname"], mains)
-                    if (user.email == email) {
+                    if (condition.invoke(user)) {
                         func.invoke(user)
                         break
                     }
@@ -118,7 +100,7 @@ class Database {
         })
     }
 
-    fun containsEmail(email: String, func: (Boolean) -> Unit) {
+    private fun workConditionWithUser(condition: (User) -> Boolean, func: (Boolean) -> Unit) {
         getUsersNode().addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 for (sd in snapshot.children) {
@@ -144,7 +126,7 @@ class Database {
                     }
                     val user = User(strings["email"], strings["password"],
                         strings["nickname"], mains)
-                    if (user.email == email) {
+                    if (condition.invoke(user)) {
                         func.invoke(true)
                         return
                     }
@@ -187,29 +169,14 @@ class Database {
         getSetsNode().document(set.setId).set(userSet)
     }
 
-    fun getSets(code: (MutableList<UserSet>) -> Unit): MutableList<UserSet> {
-        val sets = mutableListOf<UserSet>()
+    fun getSets(code: (MutableList<UserSet>) -> Unit) {
         getSetsNode().get().addOnSuccessListener { query ->
+            val sets = mutableListOf<UserSet>()
             query.documents.forEach { doc ->
-                val gears = mapOf(
-                    GearCell.HEAD to doc.getLong("head")!!.toInt(),
-                    GearCell.BODY to doc.getLong("body")!!.toInt(),
-                    GearCell.ARM to doc.getLong("arm")!!.toInt(),
-                    GearCell.LEG to doc.getLong("leg")!!.toInt(),
-                    GearCell.DECOR to doc.getLong("decor")!!.toInt(),
-                    GearCell.DEVICE to doc.getLong("device")!!.toInt()
-                )
-                sets.add(UserSet(
-                    doc.id,
-                    doc.getString("author")!!,
-                    doc.getLong("hero")!!.toInt(),
-                    gears, doc.getLong("likes")!!.toInt(),
-                    doc.get("user_like_ids") as MutableList<String>
-                ))
+                sets.add(getUserSetBySnapshot(doc.id, doc))
             }
             code.invoke(sets)
         }
-        return sets
     }
 
     fun getFilterSets(predicate: (UserSet) -> Boolean, func: (MutableList<UserSet>) -> Unit) {
@@ -240,26 +207,6 @@ class Database {
         }
     }
 
-
-    fun getFilter2Sets(predicate1: (UserSet) -> Boolean, predicate2: (UserSet) -> Boolean,
-                       func: (MutableList<UserSet>, MutableList<UserSet>) -> Unit) {
-        getSetsNode().addSnapshotListener { v, _ ->
-            val filtered1 = mutableListOf<UserSet>()
-            val filtered2 = mutableListOf<UserSet>()
-            if (v != null) {
-                for (doc in v.documents) {
-                    val set = getUserSetBySnapshot(doc.id, doc)
-                    if (set.hero == 0) continue
-                    if (predicate1.invoke(set))
-                        filtered1.add(set)
-                    else if (predicate2.invoke(set))
-                        filtered2.add(set)
-                }
-                func.invoke(filtered1, filtered2)
-            }
-        }
-    }
-
     fun getSet(setId: String, func: (UserSet) -> Unit) {
         getSetsNode().document(setId).addSnapshotListener { value, _ ->
             if (value != null) {
@@ -273,18 +220,18 @@ class Database {
     private fun getUserSetBySnapshot(setId: String, value: DocumentSnapshot): UserSet {
         try {
             val gears = mapOf(
-                GearCell.HEAD to longToInt(value.getLong("head")!!),
-                GearCell.BODY to longToInt(value.getLong("body")!!),
-                GearCell.ARM to longToInt(value.getLong("arm")!!),
-                GearCell.LEG to longToInt(value.getLong("leg")!!),
-                GearCell.DECOR to longToInt(value.getLong("decor")!!),
-                GearCell.DEVICE to longToInt(value.getLong("device")!!),
+                GearCell.HEAD to getIntValue(value,"head"),
+                GearCell.BODY to getIntValue(value,"body"),
+                GearCell.ARM to getIntValue(value,"arm"),
+                GearCell.LEG to getIntValue(value,"leg"),
+                GearCell.DECOR to getIntValue(value,"decor"),
+                GearCell.DEVICE to getIntValue(value,"device"),
             )
             val arr = value.get("user_like_ids") as MutableList<String>
             return UserSet(setId,
-                value["author"] as String,
-                longToInt(value.getLong("hero")!!), gears,
-                longToInt(value.getLong("likes")!!), arr
+                (value["author"] as String),
+                getIntValue(value,"hero"), gears,
+                getIntValue(value,"likes"), arr
             )
         } catch (_: java.lang.NullPointerException) {
             return UserSet(setId, "",
@@ -294,12 +241,16 @@ class Database {
         }
     }
 
+    private fun getIntValue(value: DocumentSnapshot, field: String): Int {
+        return try {
+            longToInt(value.getLong(field)!!)
+        } catch (_: NullPointerException) {
+            0
+        }
+    }
+
     private fun longToInt(l: Long): Int {
         return if (l <= Int.MAX_VALUE) Integer.parseInt(l.toString())
         else 0
     }
-
-    /** Comments **/
-    // nothing
-
 }
