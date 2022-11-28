@@ -17,6 +17,8 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bulkapedia.ADMIN_EMAIL
+import com.bulkapedia.MAIN
 import com.bulkapedia.R
 import com.bulkapedia.databinding.CallDevViewBinding
 import com.bulkapedia.models.ChatModel
@@ -102,7 +104,7 @@ class DevChatFragment : Fragment() {
     }
 
     private fun sendMessage(author: String, receiver: String, date: String, text: String, image: String) {
-        chatRef.add(ChatModel(author, receiver, date, text, image))
+        chatRef.add(ChatModel(author, receiver, date, text, image, false))
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -110,24 +112,13 @@ class DevChatFragment : Fragment() {
         if (error != null) return@EventListener
         if (value != null) {
             val count = messages.size
-            var isModified = false
-            var isRemoved = false
-            var mIndex = -1
-            var rIndex = -1
             for (docChange in value.documentChanges) {
                 val model = getModelByDoc(docChange.document)
                 if (docChange.type == DocumentChange.Type.ADDED) {
-                    if (!messages.contains(model))
+                    if (!messages.contains(model)) {
+                        model.read = isVisible && MAIN.prefs.getSigned() && MAIN.prefs.getEmail() == ADMIN_EMAIL
                         messages.add(model)
-                } else if (docChange.type == DocumentChange.Type.REMOVED) {
-                    isRemoved = true
-                    rIndex = messages.indexOf(model)
-                    messages.remove(model)
-                } else if (docChange.type == DocumentChange.Type.MODIFIED) {
-                    isModified = true
-                    mIndex = messages.map { it.date }.indexOf(model.date)
-                    if (mIndex >= 0)
-                        messages[mIndex] = model
+                    }
                 }
             }
             messages.sortWith { obj1, obj2 ->
@@ -135,10 +126,6 @@ class DevChatFragment : Fragment() {
             }
             if (count == 0) {
                 messagesAdapter.notifyDataSetChanged()
-            } else if (isModified && mIndex >= 0) {
-                messagesAdapter.notifyItemChanged(mIndex)
-            } else if (isRemoved && rIndex >= 0) {
-                messagesAdapter.notifyItemRemoved(rIndex)
             } else {
                 messagesAdapter.notifyItemRangeInserted(messages.size, messages.size)
                 bind.chatRecycler.smoothScrollToPosition(messages.size - 1)
@@ -152,7 +139,8 @@ class DevChatFragment : Fragment() {
             doc.getString("receiver")!!,
             doc.getString("date")!!,
             doc.getString("text")!!,
-            doc.getString("image")!!
+            doc.getString("image")!!,
+            doc.getBoolean("read")!!
         )
     }
 

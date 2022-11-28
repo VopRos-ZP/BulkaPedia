@@ -3,6 +3,7 @@
 package com.bulkapedia.database
 
 import com.bulkapedia.labels.Stats
+import com.bulkapedia.models.ChatModel
 import com.bulkapedia.sets.GearCell
 import com.bulkapedia.sets.UserSet
 import com.google.firebase.database.DataSnapshot
@@ -25,6 +26,8 @@ class Database {
     fun getSetsNode(): CollectionReference = fs.collection("sets")
 
     fun getCommentsNode(): CollectionReference = fs.collection("comments")
+
+    fun getChatNode(): CollectionReference = fs.collection("chat")
 
     fun getAllUsers(func: (MutableList<User>) -> Unit) {
         getUsersNode().get().addOnSuccessListener { snapshot ->
@@ -217,6 +220,19 @@ class Database {
         }
     }
 
+    fun getChatInfoBySnapshot(value: DocumentSnapshot): ChatModel {
+        val model = ChatModel("", "", "", "", "", false)
+        try {
+            model.author = getStringValue(value, "author")
+            model.receiver = getStringValue(value, "receiver")
+            model.date = getStringValue(value, "date")
+            model.text = getStringValue(value, "text")
+            model.image = getStringValue(value, "image")
+            model.read = value.getBoolean("read") == true
+        } catch (_: Exception) {}
+        return model
+    }
+
     private fun getUserSetBySnapshot(setId: String, value: DocumentSnapshot): UserSet {
         try {
             val gears = mapOf(
@@ -229,7 +245,7 @@ class Database {
             )
             val arr = value.get("user_like_ids") as MutableList<String>
             return UserSet(setId,
-                (value["author"] as String),
+                getStringValue(value, "author"),
                 getIntValue(value,"hero"), gears,
                 getIntValue(value,"likes"), arr
             )
@@ -238,6 +254,14 @@ class Database {
                 0, emptyMap(),
                 0, mutableListOf()
             )
+        }
+    }
+
+    private fun getStringValue(value: DocumentSnapshot, field: String): String {
+        return try {
+            value[field] as String
+        } catch (_: NullPointerException) {
+            ""
         }
     }
 

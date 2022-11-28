@@ -1,11 +1,11 @@
 package com.bulkapedia.recycler
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.navigation.NavController
 import androidx.recyclerview.widget.RecyclerView
 import com.bulkapedia.ADMIN_EMAIL
-import com.bulkapedia.MAIN
 import com.bulkapedia.R
 import com.bulkapedia.database.Database
 import com.bulkapedia.database.User
@@ -40,6 +40,7 @@ class DialogsDashboardRecycler (
         }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     fun filter(filtered: MutableList<User>) {
         users = filtered
         notifyDataSetChanged()

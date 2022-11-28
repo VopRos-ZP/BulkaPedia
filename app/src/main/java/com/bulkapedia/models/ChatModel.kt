@@ -5,5 +5,6 @@ data class ChatModel (
     var receiver: String,
     var date: String,
     var text: String,
-    var image: String
+    var image: String,
+    var read: Boolean
 ): java.io.Serializable
