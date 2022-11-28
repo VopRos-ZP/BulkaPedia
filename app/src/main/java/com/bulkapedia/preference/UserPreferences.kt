@@ -14,6 +14,7 @@ class UserPreferences : Application() {
         const val EMAIL = "email"
         const val PASSWORD = "password"
         const val NICKNAME = "nickname"
+        const val NEWS = "news"
     }
 
     private lateinit var language: String
@@ -21,13 +22,13 @@ class UserPreferences : Application() {
     private var email: String? = null
     private var password: String? = null
     private var nickname: String? = null
+    private var showNews: Boolean = true
 
     fun setLanguage(lang: String) {
         language = lang
     }
 
     fun getLanguage() : String = language
-
 
     fun setEmail(email: String?) {
         this.email = email
@@ -60,5 +61,11 @@ class UserPreferences : Application() {
     }
 
     fun getUser(): User = User(email, password, nickname)
+
+    fun getNews(): Boolean = showNews
+
+    fun setNews(news: Boolean) {
+        this.showNews = news
+    }
 
 }

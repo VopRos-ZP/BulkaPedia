@@ -8,9 +8,9 @@ import com.bulkapedia.MAIN
 import com.bulkapedia.R
 import com.bulkapedia.database.Database
 import com.bulkapedia.databinding.DialogDeleteBinding
-import com.bulkapedia.heroes.HeroList
-import com.bulkapedia.models.HeroModel
-import com.bulkapedia.sets.UserSet
+import com.bulkapedia.data.heroes.HeroList
+import com.bulkapedia.views.temps.models.HeroModel
+import com.bulkapedia.data.sets.UserSet
 
 class TripleButtonUtils {
 

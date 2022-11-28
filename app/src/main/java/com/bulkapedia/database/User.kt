@@ -1,6 +1,6 @@
 package com.bulkapedia.database
 
-import com.bulkapedia.labels.Stats
+import com.bulkapedia.data.labels.Stats
 import java.io.Serializable
 
 data class User(

@@ -2,10 +2,10 @@
 
 package com.bulkapedia.database
 
-import com.bulkapedia.labels.Stats
-import com.bulkapedia.models.ChatModel
-import com.bulkapedia.sets.GearCell
-import com.bulkapedia.sets.UserSet
+import com.bulkapedia.data.labels.Stats
+import com.bulkapedia.views.temps.models.ChatModel
+import com.bulkapedia.data.sets.GearCell
+import com.bulkapedia.data.sets.UserSet
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
@@ -28,6 +28,8 @@ class Database {
     fun getCommentsNode(): CollectionReference = fs.collection("comments")
 
     fun getChatNode(): CollectionReference = fs.collection("chat")
+
+    private fun getServerNode(): CollectionReference = fs.collection("server")
 
     fun getAllUsers(func: (MutableList<User>) -> Unit) {
         getUsersNode().get().addOnSuccessListener { snapshot ->
@@ -158,7 +160,6 @@ class Database {
         })
     }
 
-    /** User sets **/
     fun addUserSet(set: UserSet) {
         val userSet = mapOf(
             "author" to set.from,
@@ -217,6 +218,13 @@ class Database {
                 if (set.hero != "0")
                     func.invoke(set)
             }
+        }
+    }
+
+    fun getCurrentBuildName(func: (String) -> Unit) {
+        getServerNode().document("version").get().addOnSuccessListener { doc ->
+            val version = getStringValue(doc, "current")
+            if (version.isNotEmpty()) func.invoke(version)
         }
     }
 
