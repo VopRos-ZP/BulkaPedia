@@ -1,5 +1,6 @@
 package com.bulkapedia.recycler
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -30,6 +31,7 @@ class HeroTagRecyclerAdapter (private val tags: List<TagModel>,
         return holder
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     override fun onBindViewHolder(holder: HeroTagRecyclerHolder, position: Int) {
         val tag = tags[position]
         holder.bind.apply {

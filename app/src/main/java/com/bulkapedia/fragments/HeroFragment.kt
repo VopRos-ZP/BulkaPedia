@@ -17,6 +17,7 @@ import com.bulkapedia.databinding.HeroFragmentBinding
 import com.bulkapedia.listeners.ViewPagerAdapter
 import com.bulkapedia.recycler.CounterpickRecyclerAdapter
 import com.bulkapedia.sets.UserSet
+import com.bulkapedia.utils.heroResourceToString
 import com.google.android.material.tabs.TabLayoutMediator
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
@@ -62,7 +63,7 @@ class HeroFragment : Fragment() {
                     hero.getDifficult()[i], null)
             }
             // Инициализируем фрагменты сетов
-            Database().getFilterSets({ s -> s.hero == args.heroModel.heroIcon }) { list ->
+            Database().getFilterSets({ s -> s.hero == heroResourceToString(args.heroModel.heroIcon) }) { list ->
                 if (!isVisible) return@getFilterSets
                 val sorted = list.sortedByDescending(UserSet::likes).take(3)
                 initSetFragments(sorted)

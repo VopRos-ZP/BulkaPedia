@@ -17,6 +17,8 @@ import com.bulkapedia.gears.GearsList
 import com.bulkapedia.sets.GearCell
 import com.bulkapedia.sets.UserSet
 import com.bulkapedia.utils.TripleButtonUtils
+import com.bulkapedia.utils.gearStringToResource
+import com.bulkapedia.utils.heroStringToResource
 
 class UserSetsAdapter (
     private val sets: MutableList<UserSet>,
@@ -63,14 +65,14 @@ class UserSetsAdapter (
             val uSet = sets[position]
             Database().getSet(uSet.setId) { set ->
                 (holder as UserSetsHolder).binding.apply {
-                    setHeroIcon.setImageResource(set.hero)
+                    setHeroIcon.setImageResource(heroStringToResource(set.hero))
                     val ivGears = listOf(
                         setFragmentInclude.ivHead, setFragmentInclude.ivBody,
                         setFragmentInclude.ivArm, setFragmentInclude.ivLeg,
                         setFragmentInclude.ivDecor, setFragmentInclude.ivDevice
                     )
                     val gears = set.gears.map { gs ->
-                        val index = GearsList.allGears.map{ it.icon }.indexOf(gs.value)
+                        val index = GearsList.allGears.map{ it.icon }.indexOf(gearStringToResource(gs.value))
                         if (index == -1)
                             gs.key to null
                         else

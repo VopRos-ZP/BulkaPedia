@@ -28,6 +28,7 @@ import com.bulkapedia.heroes.Hero
 import com.bulkapedia.labels.Ranks
 import com.bulkapedia.sets.GearCell
 import com.bulkapedia.sets.UserSet
+import com.bulkapedia.utils.*
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -87,9 +88,9 @@ class CreateUserSetFragment : Fragment() {
                         editSet!!.setId,
                         MAIN.prefs.getNickname()!!, editSet!!.hero,
                         mapOf(
-                            GearCell.HEAD to headIcon, GearCell.BODY to bodyIcon,
-                            GearCell.ARM to armIcon, GearCell.LEG to legIcon,
-                            GearCell.DECOR to decorIcon, GearCell.DEVICE to deviceIcon
+                            GearCell.HEAD to gearResourceToString(headIcon), GearCell.BODY to gearResourceToString(bodyIcon),
+                            GearCell.ARM to gearResourceToString(armIcon), GearCell.LEG to gearResourceToString(legIcon),
+                            GearCell.DECOR to gearResourceToString(decorIcon), GearCell.DEVICE to gearResourceToString(deviceIcon)
                         ),
                         editSet!!.likes, editSet!!.userLikeIds
                     )
@@ -164,12 +165,12 @@ class CreateUserSetFragment : Fragment() {
         )
         editSet?.gears?.forEach { (cell, gear) ->
             when (cell) {
-                GearCell.HEAD -> headIcon = gear
-                GearCell.BODY -> bodyIcon = gear
-                GearCell.ARM -> armIcon = gear
-                GearCell.LEG -> legIcon = gear
-                GearCell.DECOR -> decorIcon = gear
-                else -> deviceIcon = gear
+                GearCell.HEAD -> headIcon = gearStringToResource(gear)
+                GearCell.BODY -> bodyIcon = gearStringToResource(gear)
+                GearCell.ARM -> armIcon = gearStringToResource(gear)
+                GearCell.LEG -> legIcon = gearStringToResource(gear)
+                GearCell.DECOR -> decorIcon = gearStringToResource(gear)
+                else -> deviceIcon = gearStringToResource(gear)
             }
         }
         val gearsIcons = listOf(

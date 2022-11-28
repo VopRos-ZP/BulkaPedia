@@ -10,6 +10,7 @@ import com.bulkapedia.databinding.SetFragmentBinding
 import com.bulkapedia.gears.Gear
 import com.bulkapedia.gears.GearsList
 import com.bulkapedia.sets.UserSet
+import com.bulkapedia.utils.gearStringToResource
 
 class SetFragment (private val set: UserSet) : Fragment() {
 
@@ -35,7 +36,7 @@ class SetFragment (private val set: UserSet) : Fragment() {
         val gears = mutableListOf<Gear>()
         val listIcons = set.gears.map { it.value }
         listIcons.forEach { icon ->
-            val index = GearsList.allDefaultGears.map { it.icon }.indexOf(icon)
+            val index = GearsList.allDefaultGears.map { it.icon }.indexOf(gearStringToResource(icon))
             gears.add(GearsList.allDefaultGears[index])
         }
         return gears

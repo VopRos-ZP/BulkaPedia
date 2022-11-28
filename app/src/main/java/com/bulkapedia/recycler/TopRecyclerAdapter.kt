@@ -19,6 +19,7 @@ import com.bulkapedia.gears.Gear
 import com.bulkapedia.gears.GearsList
 import com.bulkapedia.models.TopModel
 import com.bulkapedia.sets.GearCell
+import com.bulkapedia.utils.gearStringToResource
 
 class TopRecyclerAdapter (
     private val topSto: List<TopModel>,
@@ -88,9 +89,9 @@ class TopRecyclerAdapter (
         }
     }
 
-    private fun getGears(gears: Map<GearCell, Int>): Map<GearCell, Gear?> {
+    private fun getGears(gears: Map<GearCell, String>): Map<GearCell, Gear?> {
         return gears.map { gs ->
-            val index = GearsList.allGears.map{ it.icon }.indexOf(gs.value)
+            val index = GearsList.allGears.map{ it.icon }.indexOf(gearStringToResource(gs.value))
             if (index == -1)
                 gs.key to null
             else

@@ -27,6 +27,7 @@ import com.google.firebase.ktx.Firebase
 import com.bulkapedia.databinding.CommentsFragmentBinding
 import com.bulkapedia.sets.UserSet
 import com.bulkapedia.utils.TripleButtonUtils
+import com.bulkapedia.utils.gearStringToResource
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ktx.database
 import java.util.*
@@ -260,7 +261,7 @@ class CommentsFragment : Fragment() {
 
     private fun getGears(set: UserSet): Map<GearCell, Gear?> {
         return set.gears.map { gs ->
-            val index = GearsList.allGears.map{ it.icon }.indexOf(gs.value)
+            val index = GearsList.allGears.map{ it.icon }.indexOf(gearStringToResource(gs.value))
             if (index == -1)
                 gs.key to null
             else

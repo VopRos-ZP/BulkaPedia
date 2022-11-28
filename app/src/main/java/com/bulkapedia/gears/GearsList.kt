@@ -5,6 +5,7 @@ import com.bulkapedia.heroes.Hero
 import com.bulkapedia.heroes.HeroList
 import com.bulkapedia.sets.GearCell
 import com.bulkapedia.utils.autoFillGearEffects
+import java.util.*
 
 class GearsList {
 
@@ -2657,6 +2658,24 @@ class GearsList {
                 }
             }
             return effects
+        }
+
+        fun getMapGearStringToResource(): Map<String, Int> {
+            val ignoreFieldNames = listOf("personal", "gear", "icon")
+            val isTrueField: (String) -> Boolean = { name ->
+                for (ifn in ignoreFieldNames) {
+                    if (name.contains(ifn)) {
+                        false
+                    }
+                }
+                true
+            }
+            return Companion::class.java.declaredFields.mapIndexed { i, f ->
+                val name = f.name.lowercase(Locale.getDefault())
+                if (isTrueField(name))
+                    name to allGears[i].icon
+                else "" to 0
+            }.toMap().filter { it.key.isNotEmpty() }
         }
 
     }

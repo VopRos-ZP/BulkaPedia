@@ -188,7 +188,7 @@ class Database {
             val docs = mutableListOf<DocumentSnapshot>()
             for (doc in q.documents) {
                 val set = getUserSetBySnapshot(doc.id, doc)
-                if (set.hero == 0) continue
+                if (set.hero == "0") continue
                 if (predicate.invoke(set)) {
                     filtered.add(set)
                     docs.add(doc)
@@ -198,7 +198,7 @@ class Database {
                 doc.reference.addSnapshotListener { v, _ ->
                     if (v != null) {
                         val set = getUserSetBySnapshot(v.id, v)
-                        if (set.hero == 0) return@addSnapshotListener
+                        if (set.hero == "0") return@addSnapshotListener
                         val index = filtered.map { it.setId }.indexOf(set.setId)
                         if (index >= 0) {
                             filtered[index] = set
@@ -214,7 +214,7 @@ class Database {
         getSetsNode().document(setId).addSnapshotListener { value, _ ->
             if (value != null) {
                 val set = getUserSetBySnapshot(setId, value)
-                if (set.hero != 0)
+                if (set.hero != "0")
                     func.invoke(set)
             }
         }
@@ -236,22 +236,22 @@ class Database {
     private fun getUserSetBySnapshot(setId: String, value: DocumentSnapshot): UserSet {
         try {
             val gears = mapOf(
-                GearCell.HEAD to getIntValue(value,"head"),
-                GearCell.BODY to getIntValue(value,"body"),
-                GearCell.ARM to getIntValue(value,"arm"),
-                GearCell.LEG to getIntValue(value,"leg"),
-                GearCell.DECOR to getIntValue(value,"decor"),
-                GearCell.DEVICE to getIntValue(value,"device"),
+                GearCell.HEAD to getStringValue(value,"head"),
+                GearCell.BODY to getStringValue(value,"body"),
+                GearCell.ARM to getStringValue(value,"arm"),
+                GearCell.LEG to getStringValue(value,"leg"),
+                GearCell.DECOR to getStringValue(value,"decor"),
+                GearCell.DEVICE to getStringValue(value,"device"),
             )
             val arr = value.get("user_like_ids") as MutableList<String>
             return UserSet(setId,
                 getStringValue(value, "author"),
-                getIntValue(value,"hero"), gears,
+                getStringValue(value,"hero"), gears,
                 getIntValue(value,"likes"), arr
             )
         } catch (_: java.lang.NullPointerException) {
             return UserSet(setId, "",
-                0, emptyMap(),
+                "0", emptyMap(),
                 0, mutableListOf()
             )
         }

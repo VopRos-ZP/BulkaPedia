@@ -17,6 +17,7 @@ import com.bulkapedia.gears.GearsList
 import com.bulkapedia.sets.GearCell
 import com.bulkapedia.sets.UserSet
 import com.bulkapedia.utils.TripleButtonUtils
+import com.bulkapedia.utils.gearStringToResource
 
 class HeroSetFragment (
     private val uSet: UserSet,
@@ -133,7 +134,7 @@ class HeroSetFragment (
 
     private fun getGears(set: UserSet): Map<GearCell, Gear?> {
         return set.gears.map { gs ->
-            val index = GearsList.allGears.map{ it.icon }.indexOf(gs.value)
+            val index = GearsList.allGears.map{ it.icon }.indexOf(gearStringToResource(gs.value))
             if (index == -1)
                 gs.key to null
             else
