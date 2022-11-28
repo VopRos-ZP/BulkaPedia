@@ -20,6 +20,8 @@ import com.bulkapedia.databinding.ActivityMainBinding
 import com.bulkapedia.preference.UserPreferences
 import com.bulkapedia.utils.BottomMenuUtils
 import com.bulkapedia.utils.Language
+import com.bulkapedia.utils.updateBoolShared
+import com.bulkapedia.views.dialogs.NewsView
 import com.google.firebase.firestore.DocumentChange
 
 class MainActivity : AppCompatActivity() {
@@ -78,6 +80,15 @@ class MainActivity : AppCompatActivity() {
                     }
             }
         }
+        // show news view
+        Database().getCurrentBuildName { build ->
+            if (build == BuildConfig.VERSION_NAME && prefs.getNews()) {
+                NewsView().show()
+            } else if (build != BuildConfig.VERSION_NAME) {
+                prefs.setNews(true)
+                updateBoolShared()
+            }
+        }
     }
 
     fun updateViews() {
@@ -90,7 +101,7 @@ class MainActivity : AppCompatActivity() {
     private fun initPreferences() {
         prefs = application as UserPreferences
         val shared = getPreferences()
-        val lang = shared.getString(UserPreferences.LANGUAGE, UserPreferences.EN_LANGUAGE)
+        val lang = shared.getString(UserPreferences.LANGUAGE, UserPreferences.RU_LANGUAGE)
         if (lang != null) {
             prefs.setLanguage(lang)
             Language.update(baseContext, prefs.getLanguage())
@@ -100,7 +111,9 @@ class MainActivity : AppCompatActivity() {
         val login = shared.getString(UserPreferences.EMAIL, "")
         val password = shared.getString(UserPreferences.PASSWORD, "")
         val nickname = shared.getString(UserPreferences.NICKNAME, "")
+        val isShowNews = shared.getBoolean(UserPreferences.NEWS, true)
         prefs.setSigned(signed)
+        prefs.setNews(isShowNews)
         if (signed) {
             bind.bottomNav.menu[2].apply {
                 setIcon(R.drawable.person)

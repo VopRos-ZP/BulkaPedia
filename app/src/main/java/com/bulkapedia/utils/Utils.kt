@@ -2,10 +2,11 @@ package com.bulkapedia.utils
 
 import android.content.SharedPreferences
 import androidx.core.content.edit
+import com.bulkapedia.MAIN
 import com.bulkapedia.R
-import com.bulkapedia.gears.Effect
-import com.bulkapedia.gears.GearsList
-import com.bulkapedia.labels.Ranks
+import com.bulkapedia.data.gears.Effect
+import com.bulkapedia.data.gears.GearsList
+import com.bulkapedia.data.labels.Ranks
 import com.bulkapedia.preference.UserPreferences
 
 val HEROES_RES = mapOf(
@@ -46,6 +47,14 @@ fun addUserToShared(shared: SharedPreferences, prefs: UserPreferences) {
         putString(UserPreferences.EMAIL, prefs.getEmail())
         putString(UserPreferences.PASSWORD, prefs.getPassword())
         putString(UserPreferences.NICKNAME, prefs.getNickname())
+        apply()
+    }
+}
+
+fun updateBoolShared() {
+    MAIN.getPreferences().edit {
+        putBoolean(UserPreferences.SIGNED, MAIN.prefs.getSigned())
+        putBoolean(UserPreferences.NEWS, MAIN.prefs.getNews())
         apply()
     }
 }
