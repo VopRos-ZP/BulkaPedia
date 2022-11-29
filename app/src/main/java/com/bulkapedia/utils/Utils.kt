@@ -2,10 +2,10 @@ package com.bulkapedia.utils
 
 import android.content.SharedPreferences
 import androidx.core.content.edit
+import com.bulkapedia.ICON_LIST
 import com.bulkapedia.MAIN
 import com.bulkapedia.R
 import com.bulkapedia.data.gears.Effect
-import com.bulkapedia.data.gears.GearsList
 import com.bulkapedia.data.labels.Ranks
 import com.bulkapedia.preference.UserPreferences
 
@@ -39,7 +39,7 @@ val HEROES_RES = mapOf(
     // "tess" to R.drawable.arnie_icon // new hero
 )
 
-val GEARS_RES = GearsList.getMapGearStringToResource()
+lateinit var GEARS_RES: Map<String, Int>
 
 fun addUserToShared(shared: SharedPreferences, prefs: UserPreferences) {
     shared.edit {
@@ -69,15 +69,8 @@ fun autoFillGearEffects(effects: List<Effect>, ints: Map<Int, List<Int>>): Map<R
     return m
 }
 
-fun heroStringToResource(hero: String): Int = HEROES_RES[hero]!!
+fun stringToResource(str: String): Int = ICON_LIST[str]!!
 
-fun heroResourceToString(res: Int): String {
-    return HEROES_RES.map { it.value to it.key }.toMap()[res] ?: ""
+fun resourceToString(res: Int): String {
+    return ICON_LIST.map { it.value to it.key }.toMap()[res] ?: ""
 }
-
-fun gearStringToResource(gear: String): Int = GEARS_RES[gear]!!
-
-fun gearResourceToString(gear: Int): String {
-    return GEARS_RES.map { it.value to it.key }.toMap()[gear]!!
-}
-

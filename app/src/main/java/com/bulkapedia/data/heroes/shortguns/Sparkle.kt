@@ -2,7 +2,7 @@ package com.bulkapedia.data.heroes.shortguns
 
 import com.bulkapedia.R
 import com.bulkapedia.data.gears.Gear
-import com.bulkapedia.data.gears.GearsList
+import com.bulkapedia.GEARS_LIST
 import com.bulkapedia.data.heroes.Hero
 import com.bulkapedia.views.temps.models.CounterpickModel
 import com.bulkapedia.data.sets.GearCell
@@ -35,7 +35,7 @@ class Sparkle : Hero() {
             GearCell.DECOR, GearCell.DEVICE
         )
         return cells.mapIndexed { i, cell ->
-            cell to GearsList.SPARKLE_PERSONAL[i]
+            cell to GEARS_LIST.SPARKLE_PERSONAL[i]
         }.toMap()
     }
 

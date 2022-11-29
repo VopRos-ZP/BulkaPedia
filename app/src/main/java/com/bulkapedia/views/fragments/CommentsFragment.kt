@@ -16,7 +16,7 @@ import com.bulkapedia.MAIN
 import com.bulkapedia.R
 import com.bulkapedia.database.Database
 import com.bulkapedia.data.gears.Gear
-import com.bulkapedia.data.gears.GearsList
+import com.bulkapedia.GEARS_LIST
 import com.bulkapedia.views.temps.models.CommentModel
 import com.bulkapedia.views.temps.recycler.CommentsRecyclerAdapter
 import com.bulkapedia.data.sets.GearCell
@@ -27,7 +27,7 @@ import com.google.firebase.ktx.Firebase
 import com.bulkapedia.databinding.CommentsFragmentBinding
 import com.bulkapedia.data.sets.UserSet
 import com.bulkapedia.utils.TripleButtonUtils
-import com.bulkapedia.utils.gearStringToResource
+import com.bulkapedia.utils.stringToResource
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ktx.database
 import java.util.*
@@ -261,11 +261,11 @@ class CommentsFragment : Fragment() {
 
     private fun getGears(set: UserSet): Map<GearCell, Gear?> {
         return set.gears.map { gs ->
-            val index = GearsList.allGears.map{ it.icon }.indexOf(gearStringToResource(gs.value))
+            val index = GEARS_LIST.allGears.map{ it.icon }.indexOf(stringToResource(gs.value))
             if (index == -1)
                 gs.key to null
             else
-                gs.key to GearsList.allGears[index]
+                gs.key to GEARS_LIST.allGears[index]
         }.toMap()
     }
 

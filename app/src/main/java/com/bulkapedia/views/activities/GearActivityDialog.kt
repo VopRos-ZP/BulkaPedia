@@ -8,7 +8,7 @@ import com.bulkapedia.R
 import com.bulkapedia.databinding.ActivityGearDialogBinding
 import com.bulkapedia.data.gears.Gear
 import com.bulkapedia.data.gears.GearSet
-import com.bulkapedia.data.gears.GearsList
+import com.bulkapedia.GEARS_LIST
 import com.bulkapedia.views.temps.recycler.GearRecyclerAdapter
 
 class GearActivityDialog : AppCompatActivity(),
@@ -32,9 +32,9 @@ class GearActivityDialog : AppCompatActivity(),
         val mGears = mutableListOf<Gear>()
         mGears.add(0, Gear(GearSet.NONE, getEmptyIconByGearType(), listOf(), emptyMap()))
         gearIcons?.forEach { icon ->
-            val index = GearsList.allGears.map { it.icon }.indexOf(icon)
+            val index = GEARS_LIST.allGears.map { it.icon }.indexOf(icon)
             if (index != -1) {
-                val g = GearsList.allGears[index]
+                val g = GEARS_LIST.allGears[index]
                 mGears.add(g)
             }
         }

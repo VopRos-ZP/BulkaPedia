@@ -242,5 +242,7 @@
     <string name="call_with_dev">Связь с\n разработчиком</string>
     <string name="enter_text">Введите текст</string>
     <string name="chat">Чат</string>
+    <string name="update_title">Ошибка версии</string>
+    <string name="update_content">Доступна новая версия приложения</string>
 
 </resources>

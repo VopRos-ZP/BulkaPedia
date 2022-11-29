@@ -29,6 +29,8 @@ class Database {
 
     fun getChatNode(): CollectionReference = fs.collection("chat")
 
+    fun getIconsNode(): CollectionReference = fs.collection("icons")
+
     private fun getServerNode(): CollectionReference = fs.collection("server")
 
     fun getAllUsers(func: (MutableList<User>) -> Unit) {

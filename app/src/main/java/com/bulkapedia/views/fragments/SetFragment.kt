@@ -6,11 +6,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.fragment.app.Fragment
+import com.bulkapedia.GEARS_LIST
 import com.bulkapedia.databinding.SetFragmentBinding
 import com.bulkapedia.data.gears.Gear
-import com.bulkapedia.data.gears.GearsList
 import com.bulkapedia.data.sets.UserSet
-import com.bulkapedia.utils.gearStringToResource
+import com.bulkapedia.utils.stringToResource
 
 class SetFragment (private val set: UserSet) : Fragment() {
 
@@ -36,8 +36,8 @@ class SetFragment (private val set: UserSet) : Fragment() {
         val gears = mutableListOf<Gear>()
         val listIcons = set.gears.map { it.value }
         listIcons.forEach { icon ->
-            val index = GearsList.allDefaultGears.map { it.icon }.indexOf(gearStringToResource(icon))
-            gears.add(GearsList.allDefaultGears[index])
+            val index = GEARS_LIST.allDefaultGears.map { it.icon }.indexOf(stringToResource(icon))
+            gears.add(GEARS_LIST.allDefaultGears[index])
         }
         return gears
     }

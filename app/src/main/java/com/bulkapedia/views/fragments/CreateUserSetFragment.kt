@@ -18,6 +18,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.bulkapedia.GEARS_LIST
 import com.bulkapedia.MAIN
 import com.bulkapedia.R
 import com.bulkapedia.views.activities.GearActivityDialog
@@ -88,9 +89,9 @@ class CreateUserSetFragment : Fragment() {
                         editSet!!.setId,
                         MAIN.prefs.getNickname()!!, editSet!!.hero,
                         mapOf(
-                            GearCell.HEAD to gearResourceToString(headIcon), GearCell.BODY to gearResourceToString(bodyIcon),
-                            GearCell.ARM to gearResourceToString(armIcon), GearCell.LEG to gearResourceToString(legIcon),
-                            GearCell.DECOR to gearResourceToString(decorIcon), GearCell.DEVICE to gearResourceToString(deviceIcon)
+                            GearCell.HEAD to resourceToString(headIcon), GearCell.BODY to resourceToString(bodyIcon),
+                            GearCell.ARM to resourceToString(armIcon), GearCell.LEG to resourceToString(legIcon),
+                            GearCell.DECOR to resourceToString(decorIcon), GearCell.DEVICE to resourceToString(deviceIcon)
                         ),
                         editSet!!.likes, editSet!!.userLikeIds
                     )
@@ -98,10 +99,10 @@ class CreateUserSetFragment : Fragment() {
                 } else {
                     val userSet = mapOf(
                         "author" to MAIN.prefs.getNickname(),
-                        "hero" to heroResourceToString(heroIcon),
-                        "head" to gearResourceToString(headIcon), "body" to gearResourceToString(bodyIcon),
-                        "arm" to gearResourceToString(armIcon), "leg" to gearResourceToString(legIcon),
-                        "decor" to gearResourceToString(decorIcon), "device" to gearResourceToString(deviceIcon),
+                        "hero" to resourceToString(heroIcon),
+                        "head" to resourceToString(headIcon), "body" to resourceToString(bodyIcon),
+                        "arm" to resourceToString(armIcon), "leg" to resourceToString(legIcon),
+                        "decor" to resourceToString(decorIcon), "device" to resourceToString(deviceIcon),
                         "likes" to 0,
                         "user_like_ids" to listOf<String>()
                     )
@@ -165,12 +166,12 @@ class CreateUserSetFragment : Fragment() {
         )
         editSet?.gears?.forEach { (cell, gear) ->
             when (cell) {
-                GearCell.HEAD -> headIcon = gearStringToResource(gear)
-                GearCell.BODY -> bodyIcon = gearStringToResource(gear)
-                GearCell.ARM -> armIcon = gearStringToResource(gear)
-                GearCell.LEG -> legIcon = gearStringToResource(gear)
-                GearCell.DECOR -> decorIcon = gearStringToResource(gear)
-                else -> deviceIcon = gearStringToResource(gear)
+                GearCell.HEAD -> headIcon = stringToResource(gear)
+                GearCell.BODY -> bodyIcon = stringToResource(gear)
+                GearCell.ARM -> armIcon = stringToResource(gear)
+                GearCell.LEG -> legIcon = stringToResource(gear)
+                GearCell.DECOR -> decorIcon = stringToResource(gear)
+                else -> deviceIcon = stringToResource(gear)
             }
         }
         val gearsIcons = listOf(
@@ -279,24 +280,24 @@ class CreateUserSetFragment : Fragment() {
         val effects = mutableListOf<Effect>()
         icons.forEach { icon ->
             if (!emptyIcons.contains(icon)) {
-                val index = GearsList.allGears.map(Gear::icon).indexOf(icon)
+                val index = GEARS_LIST.allGears.map(Gear::icon).indexOf(icon)
                 if (rankMap[icon] != null) {
-                    effects.addAll(GearsList.allGears[index].rankEffect[rankMap[icon]]!!)
+                    effects.addAll(GEARS_LIST.allGears[index].rankEffect[rankMap[icon]]!!)
                 } else {
-                    effects.addAll(GearsList.allGears[index].effects)
+                    effects.addAll(GEARS_LIST.allGears[index].effects)
                 }
             }
         }
         val gears = icons.map { icon ->
             if (emptyIcons.contains(icon)) Gear(GearSet.NONE, icon, emptyList(), emptyMap())
             else {
-                val index = GearsList.allGears.map(Gear::icon).indexOf(icon)
-                GearsList.allGears[index]
+                val index = GEARS_LIST.allGears.map(Gear::icon).indexOf(icon)
+                GEARS_LIST.allGears[index]
             }
         }
         val pgCount = gears.filter { it.gearSet == GearSet.PERSONAL }.size
         effects.addAll(
-            GearsList.getEffectsFromSets(gears) +
+            GEARS_LIST.getEffectsFromSets(gears) +
                     PersonalGears.getPersonalGears(args.heroModel.hero, pgCount)
         )
         fillEffects(effects)
@@ -421,18 +422,18 @@ class CreateUserSetFragment : Fragment() {
 
     private fun getHeroSetItems(hero: Hero, cell: GearCell): MutableList<Gear> {
         return mutableListOf(
-            GearsList.getSetsGears(hero)[cell]!!,
+            GEARS_LIST.getSetsGears(hero)[cell]!!,
             hero.getPersonalGears()[cell]!!
         )
     }
 
     private fun getDefaultGearsByBtn(btn: Int): MutableList<Gear> = when (btn) {
-        bind.customHeadBtn.id -> GearsList.headIcon
-        bind.customBodyBtn.id -> GearsList.bodyIcons
-        bind.customArmBtn.id -> GearsList.armIcons
-        bind.customLegBtn.id -> GearsList.legIcons
-        bind.customDecorBtn.id -> GearsList.decorIcons
-        bind.customDeviceBtn.id -> GearsList.deviceIcons
+        bind.customHeadBtn.id -> GEARS_LIST.headIcon
+        bind.customBodyBtn.id -> GEARS_LIST.bodyIcons
+        bind.customArmBtn.id -> GEARS_LIST.armIcons
+        bind.customLegBtn.id -> GEARS_LIST.legIcons
+        bind.customDecorBtn.id -> GEARS_LIST.decorIcons
+        bind.customDeviceBtn.id -> GEARS_LIST.deviceIcons
         else -> mutableListOf()
     }
 

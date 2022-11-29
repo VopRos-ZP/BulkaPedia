@@ -5,17 +5,16 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.NavController
 import androidx.recyclerview.widget.RecyclerView
+import com.bulkapedia.GEARS_LIST
 import com.bulkapedia.MAIN
 import com.bulkapedia.R
 import com.bulkapedia.database.Database
 import com.bulkapedia.databinding.FavoriteSetItemBinding
 import com.bulkapedia.databinding.TextRecyclerItemBinding
 import com.bulkapedia.views.fragments.UserClientFragmentDirections
-import com.bulkapedia.data.gears.GearsList
 import com.bulkapedia.data.sets.GearCell
 import com.bulkapedia.data.sets.UserSet
-import com.bulkapedia.utils.gearStringToResource
-import com.bulkapedia.utils.heroStringToResource
+import com.bulkapedia.utils.stringToResource
 
 class FavoritesAdapter (
     private val favoriteSets: MutableList<UserSet>,
@@ -62,7 +61,7 @@ class FavoritesAdapter (
             val uSet = favoriteSets[position]
             Database().getSet(uSet.setId) { set ->
                 (holder as FavoriteViewHolder).binding.apply {
-                    setHeroIcon.setImageResource(heroStringToResource(set.hero))
+                    setHeroIcon.setImageResource(stringToResource(set.hero))
 
                     val ivGears = listOf(
                         setFragmentInclude.ivHead, setFragmentInclude.ivBody,
@@ -70,11 +69,11 @@ class FavoritesAdapter (
                         setFragmentInclude.ivDecor, setFragmentInclude.ivDevice
                     )
                     val gears = set.gears.map { gs ->
-                        val index = GearsList.allGears.map{ it.icon }.indexOf(gearStringToResource(gs.value))
+                        val index = GEARS_LIST.allGears.map{ it.icon }.indexOf(stringToResource(gs.value))
                         if (index == -1)
                             gs.key to null
                         else
-                            gs.key to GearsList.allGears[index]
+                            gs.key to GEARS_LIST.allGears[index]
                     }.toMap()
                     val cells = listOf(
                         GearCell.HEAD, GearCell.BODY,

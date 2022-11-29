@@ -5,9 +5,9 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
 import android.content.SharedPreferences
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.view.allViews
 import androidx.core.view.forEach
@@ -15,13 +15,13 @@ import androidx.core.view.get
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
+import com.bulkapedia.data.gears.GearsList
 import com.bulkapedia.database.Database
 import com.bulkapedia.databinding.ActivityMainBinding
 import com.bulkapedia.preference.UserPreferences
-import com.bulkapedia.utils.BottomMenuUtils
-import com.bulkapedia.utils.Language
-import com.bulkapedia.utils.updateBoolShared
+import com.bulkapedia.utils.*
 import com.bulkapedia.views.dialogs.NewsView
+import com.bulkapedia.views.dialogs.OkErrorView
 import com.google.firebase.firestore.DocumentChange
 
 class MainActivity : AppCompatActivity() {
@@ -37,6 +37,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         MAIN = this
+        GEARS_LIST = GearsList()
+        GEARS_RES = GEARS_LIST.getMapGearStringToResource()
         createNotificationChannelId()
         bind = ActivityMainBinding.inflate(layoutInflater)
         setContentView(bind.root)
@@ -87,8 +89,12 @@ class MainActivity : AppCompatActivity() {
             } else if (build != BuildConfig.VERSION_NAME) {
                 prefs.setNews(true)
                 updateBoolShared()
+                // show alert view
+                OkErrorView(this, R.string.update_title, R.string.update_content).show()
             }
         }
+        // init icons
+        initIcons()
     }
 
     fun updateViews() {
@@ -140,6 +146,23 @@ class MainActivity : AppCompatActivity() {
         val notificationManager: NotificationManager =
             getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.createNotificationChannel(channel)
+    }
+
+    private fun initIcons() {
+        Database().getIconsNode().document("all").get().addOnSuccessListener { doc ->
+            doc.data?.forEach {
+                ICON_LIST += it.key to (it.value as Int)
+            }
+        }
+        if (ICON_LIST.isEmpty()) {
+            HEROES_RES.forEach { h -> ICON_LIST += h.key to h.value }
+            GEARS_RES.forEach { g -> ICON_LIST += g.key to g.value }
+        }
+    }
+
+    override fun onDestroy() {
+        Database().getIconsNode().document("all").set(ICON_LIST)
+        super.onDestroy()
     }
 
 }

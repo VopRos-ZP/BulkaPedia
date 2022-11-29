@@ -13,11 +13,11 @@ import com.bulkapedia.R
 import com.bulkapedia.database.Database
 import com.bulkapedia.databinding.HeroSetFragmentBinding
 import com.bulkapedia.data.gears.Gear
-import com.bulkapedia.data.gears.GearsList
+import com.bulkapedia.GEARS_LIST
 import com.bulkapedia.data.sets.GearCell
 import com.bulkapedia.data.sets.UserSet
 import com.bulkapedia.utils.TripleButtonUtils
-import com.bulkapedia.utils.gearStringToResource
+import com.bulkapedia.utils.stringToResource
 
 class HeroSetFragment (
     private val uSet: UserSet,
@@ -134,11 +134,11 @@ class HeroSetFragment (
 
     private fun getGears(set: UserSet): Map<GearCell, Gear?> {
         return set.gears.map { gs ->
-            val index = GearsList.allGears.map{ it.icon }.indexOf(gearStringToResource(gs.value))
+            val index = GEARS_LIST.allGears.map{ it.icon }.indexOf(stringToResource(gs.value))
             if (index == -1)
                 gs.key to null
             else
-                gs.key to GearsList.allGears[index]
+                gs.key to GEARS_LIST.allGears[index]
         }.toMap()
     }
 

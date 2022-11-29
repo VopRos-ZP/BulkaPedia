@@ -241,5 +241,7 @@
     <string name="call_with_dev">Developer\ncontact</string>
     <string name="enter_text">Enter text</string>
     <string name="chat">Chat</string>
+    <string name="update_title">Version error</string>
+    <string name="update_content">New version available</string>
 
 </resources>

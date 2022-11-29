@@ -13,7 +13,7 @@ import com.bulkapedia.data.heroes.HeroList
 import com.bulkapedia.views.temps.models.HeroModel
 import com.bulkapedia.views.temps.models.TopModel
 import com.bulkapedia.data.sets.UserSet
-import com.bulkapedia.utils.heroStringToResource
+import com.bulkapedia.utils.stringToResource
 
 class HeroRecyclerAdapter(private val navController: NavController) : RecyclerView.Adapter<HeroRecyclerAdapter.HeroHolder>() {
 
@@ -39,7 +39,7 @@ class HeroRecyclerAdapter(private val navController: NavController) : RecyclerVi
                 navController.navigate(action)
             }
             topStoBtn.setOnClickListener {
-                Database().getFilterSets({ set -> heroStringToResource(set.hero) == hero.getBigIcon() }) { set ->
+                Database().getFilterSets({ set -> stringToResource(set.hero) == hero.getBigIcon() }) { set ->
                     val sorted = set.sortedByDescending(UserSet::likes).take(100).mapIndexed { i, s ->
                         TopModel(i + 1, s.from, s)
                     }

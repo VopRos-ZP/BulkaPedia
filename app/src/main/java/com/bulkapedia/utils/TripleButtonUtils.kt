@@ -17,7 +17,7 @@ class TripleButtonUtils {
     companion object {
         val onClickEdit: (UserSet, (HeroModel) -> Unit) -> Unit = { set, f ->
             if (MAIN.prefs.getSigned()) {
-                val hero = HeroList.getHeroByBigImage(heroStringToResource(set.hero))
+                val hero = HeroList.getHeroByBigImage(stringToResource(set.hero))
                 val model = HeroModel(hero, hero.getBigIcon(), hero.getName(), hero.getCounterpicks())
                 f.invoke(model)
             }
