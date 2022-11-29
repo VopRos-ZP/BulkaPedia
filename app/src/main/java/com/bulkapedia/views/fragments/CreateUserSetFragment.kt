@@ -98,10 +98,10 @@ class CreateUserSetFragment : Fragment() {
                 } else {
                     val userSet = mapOf(
                         "author" to MAIN.prefs.getNickname(),
-                        "hero" to heroIcon,
-                        "head" to headIcon, "body" to bodyIcon,
-                        "arm" to armIcon, "leg" to legIcon,
-                        "decor" to decorIcon, "device" to deviceIcon,
+                        "hero" to heroResourceToString(heroIcon),
+                        "head" to gearResourceToString(headIcon), "body" to gearResourceToString(bodyIcon),
+                        "arm" to gearResourceToString(armIcon), "leg" to gearResourceToString(legIcon),
+                        "decor" to gearResourceToString(decorIcon), "device" to gearResourceToString(deviceIcon),
                         "likes" to 0,
                         "user_like_ids" to listOf<String>()
                     )

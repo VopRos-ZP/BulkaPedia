@@ -6,6 +6,7 @@ import android.content.ContentResolver
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import android.provider.OpenableColumns
 import android.text.format.DateFormat
 import android.view.LayoutInflater
@@ -78,7 +79,7 @@ class DevChatFragment : Fragment() {
                 }
             }
             bind.addPictureBtn.setOnClickListener {
-                val intent = Intent(Intent.ACTION_PICK)
+                val intent = Intent(MediaStore.ACTION_PICK_IMAGES)
                 intent.type = "image/*"
                 launcher.launch(intent)
             }
