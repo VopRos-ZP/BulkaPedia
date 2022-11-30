@@ -283,7 +283,7 @@ class Database {
         }
     }
 
-    private fun longToInt(l: Long): Int {
+    fun longToInt(l: Long): Int {
         return if (l <= Int.MAX_VALUE) Integer.parseInt(l.toString())
         else 0
     }

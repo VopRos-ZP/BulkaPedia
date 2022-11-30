@@ -151,7 +151,7 @@ class MainActivity : AppCompatActivity() {
     private fun initIcons() {
         Database().getIconsNode().document("all").get().addOnSuccessListener { doc ->
             doc.data?.forEach {
-                ICON_LIST += it.key to (it.value as Int)
+                ICON_LIST += it.key to Database().longToInt(it.value as Long)
             }
         }
         if (ICON_LIST.isEmpty()) {
