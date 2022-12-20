@@ -29,8 +29,6 @@ class Database {
 
     fun getChatNode(): CollectionReference = fs.collection("chat")
 
-    fun getIconsNode(): CollectionReference = fs.collection("icons")
-
     private fun getServerNode(): CollectionReference = fs.collection("server")
 
     fun getAllUsers(func: (MutableList<User>) -> Unit) {
@@ -259,7 +257,7 @@ class Database {
                 getStringValue(value,"hero"), gears,
                 getIntValue(value,"likes"), arr
             )
-        } catch (_: java.lang.NullPointerException) {
+        } catch (_: Exception) {
             return UserSet(setId, "",
                 "0", emptyMap(),
                 0, mutableListOf()
@@ -268,22 +266,18 @@ class Database {
     }
 
     private fun getStringValue(value: DocumentSnapshot, field: String): String {
-        return try {
-            value[field] as String
-        } catch (_: NullPointerException) {
-            ""
-        }
+        return value[field] as String
     }
 
     private fun getIntValue(value: DocumentSnapshot, field: String): Int {
         return try {
             longToInt(value.getLong(field)!!)
-        } catch (_: NullPointerException) {
+        } catch (_: Exception) {
             0
         }
     }
 
-    fun longToInt(l: Long): Int {
+    private fun longToInt(l: Long): Int {
         return if (l <= Int.MAX_VALUE) Integer.parseInt(l.toString())
         else 0
     }

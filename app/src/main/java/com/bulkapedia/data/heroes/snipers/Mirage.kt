@@ -50,6 +50,7 @@ class Mirage : Hero() {
             CounterpickModel(R.drawable.bertha_icon),
             CounterpickModel(R.drawable.dragoon_icon),
             CounterpickModel(R.drawable.levi_icon),
+//            CounterpickModel(R.drawable.tess_icon),
         )
     }
 

@@ -48,7 +48,7 @@ class Leviathan : Hero() {
             CounterpickModel(R.drawable.blot_icon),
             CounterpickModel(R.drawable.firefly_icon),
             CounterpickModel(R.drawable.bertha_icon),
-            CounterpickModel(R.drawable.doc_icon),
+//            CounterpickModel(R.drawable.tess_icon),
         )
     }
 

@@ -2,26 +2,25 @@ package com.bulkapedia.data.heroes.troopers
 
 import com.bulkapedia.R
 import com.bulkapedia.data.gears.Gear
-import com.bulkapedia.GEARS_LIST
 import com.bulkapedia.data.heroes.Hero
-import com.bulkapedia.views.temps.models.CounterpickModel
 import com.bulkapedia.data.sets.GearCell
 import com.bulkapedia.utils.HeroStats
+import com.bulkapedia.views.temps.models.CounterpickModel
 
-class Doc : Hero() {
+class Tess : Hero() {
     override fun getName(): Int {
-        return R.string.doc
+        return R.string.tess
     }
 
     override fun getBigIcon(): Int {
-        return R.drawable.doc_icon
+        return 0
     }
 
     override fun getDifficult(): List<Int> {
         return listOf(
             R.drawable.dif_indicator_yellow,
             R.drawable.dif_indicator_yellow,
-            R.drawable.dif_indicator_white
+            R.drawable.dif_indicator_yellow
         )
     }
 
@@ -30,47 +29,38 @@ class Doc : Hero() {
     }
 
     override fun getPersonalGears(): Map<GearCell, Gear> {
-        val cells = listOf(
-            GearCell.HEAD, GearCell.BODY,
-            GearCell.ARM, GearCell.LEG,
-            GearCell.DECOR, GearCell.DEVICE
-        )
-        return cells.mapIndexed { i, cell ->
-            cell to GEARS_LIST.DOC_PERSONAL[i]
-        }.toMap()
+        return emptyMap()
     }
 
     override fun getCounterpicks(): List<CounterpickModel> {
         return listOf(
             CounterpickModel(R.drawable.arnie_icon),
-            CounterpickModel(R.drawable.freddie_icon),
             CounterpickModel(R.drawable.sparkle_icon),
-            CounterpickModel(R.drawable.mirage_icon),
-            CounterpickModel(R.drawable.bertha_icon),
-            CounterpickModel(R.drawable.levi_icon),
+            CounterpickModel(R.drawable.freddie_icon),
+            CounterpickModel(R.drawable.dragoon_icon),
         )
     }
 
     override fun getStats(): HeroStats {
         return HeroStats(
-            1805, 1445, 214,
-            450,
+            911, 1855, 333,
+            470,
             400,
-            150,
-            75,
+            155,
+            78,
             5,
-            5.0,
-            12.0,
-            275,
-            275,
+            3.0,
+            9.0,
+            325,
+            350,
+            50,
+            10,
+            25,
+            40,
+            0,
+            1.0,
+            2.5,
             30,
-            40,
-            15,
-            70,
-            4,
-            1.0,
-            1.0,
-            40,
             0.6
         )
     }

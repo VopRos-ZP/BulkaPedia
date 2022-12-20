@@ -30,6 +30,7 @@ class HeroList {
         val DOC = Doc()
         val LEVI = Levi()
         val SATOSHI = Satoshi()
+        val TESS = Tess()
 
         val SHOTGUNS = listOf(ARNIE, CYCLOPS, SPARKLE, HURRICANE)
         val SCOUTS = listOf(GHOST, FREDDIE, ANGEL, RAVEN)

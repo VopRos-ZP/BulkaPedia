@@ -63,7 +63,8 @@
     <string name="speed_effect">к скорости движения</string>
     <string name="speed_in_focus_effect">к скорости движения с прицельной стрельбой</string>
     <string name="spread_in_move_effect">к разбросу во время движения</string>
-    <string name="spread_in_focus_effect">к разбросу при стрельбе</string>
+    <string name="spread_in_focus_effect">к разбросу прицельной стрельбе</string>
+    <string name="spread_recoil_effect">к отдаче при стрельбе</string>
     <string name="spread_in_not_focus_effect">к разбросу стрельбы не прицеливаясь</string>
     <string name="visibility_effect">к дальности видимости</string>
     <string name="piercing_effect">к бронебойности стрельбы</string>
@@ -134,6 +135,7 @@
     <string name="leviathan">Левиафан</string>
     <string name="stalker">Сталкер</string>
     <string name="doc">Док</string>
+    <string name="tess">Тесс</string>
     <string name="levi">Леви</string>
     <string name="satoshi">Сатоши</string>
     <!--   названия карт -->

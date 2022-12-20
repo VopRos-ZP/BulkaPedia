@@ -25,7 +25,7 @@ class MainsRecyclerAdapter(
 
     override fun onBindViewHolder(holder: MainsViewHolder, position: Int) {
         val pair = mains[mains.keys.elementAt(position)]!!
-        holder.bind.mainsText.setText(mains.keys.elementAt(position).toInt())
+        holder.bind.mainsText.text = mains.keys.elementAt(position)
         holder.itemView.setOnClickListener {
             ShowStatsView(pair).show()
         }

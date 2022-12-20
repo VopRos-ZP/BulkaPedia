@@ -56,7 +56,7 @@ class CreateUserSetFragment : Fragment() {
 
     private var showingBuffs = false
 
-    private val effectsMap = mutableMapOf<Effect, Int>()
+    private var effectsMap = mutableMapOf<Effect, Int>()
     private val percentEffectsMap = mutableMapOf<Effect, Int>()
 
     override fun onCreateView(
@@ -307,6 +307,8 @@ class CreateUserSetFragment : Fragment() {
         var startBold = 0
         var endGreen = 0
         var endBold = 0
+        var startNumberIndex = 0
+        var endNumberIndex = 0
 
         stats.forEach { (eid, value) ->
             val eff = effectsMap.mapKeys { it.key.description }[eid]
@@ -335,6 +337,8 @@ class CreateUserSetFragment : Fragment() {
                 endGreen = startGreen
 
                 spannable.append(" -> ").append(number).append(" (")
+                startNumberIndex = spannable.length - (2 + number.length)
+                endNumberIndex = spannable.length - 2
                 if (eff > 0) {
                     spannable.append("+")
                     endGreen++
@@ -366,11 +370,7 @@ class CreateUserSetFragment : Fragment() {
                     endGreen = startGreen
                 }
                 endGreen += if (eff != null) {
-                    val startIndex = startGreen + 5 + eff.toString().length
-                    spannable.replace(
-                        startIndex, startIndex + oldNumber.length,
-                        number
-                    )
+                    spannable.replace(startNumberIndex, endNumberIndex, number)
                     spannable.append("(")
                     (number.length - oldNumber.length) + 1
                 } else {
@@ -576,8 +576,7 @@ class CreateUserSetFragment : Fragment() {
             val percent = e.percent
             val fill: (List<Int>, MutableMap<Effect, Int>) -> Unit = { desc, map ->
                 if (desc.contains(e.description)) {
-                    val eff = map[e]!!
-                    map.replace(e, eff + e.number)
+                    map.replace(e, map[e]!! + e.number)
                 } else map += e to e.number
             }
             if (percent) fill(ePDesc, percentEffectsMap)

@@ -64,6 +64,7 @@
     <string name="speed_in_focus_effect">to the speed of movement with aimed shooting</string>
     <string name="spread_in_move_effect">to fire spread while moving</string>
     <string name="spread_in_focus_effect">to aimed fire spread</string>
+    <string name="spread_recoil_effect">to recoil</string>
     <string name="spread_in_not_focus_effect">to bullet spread without aiming</string>
     <string name="visibility_effect">to hero\'s vision range</string>
     <string name="piercing_effect">to armor penetration</string>
@@ -134,6 +135,7 @@
     <string name="leviathan">Leviathan</string>
     <string name="stalker">Stalker</string>
     <string name="doc">Doc</string>
+    <string name="tess">Tess</string>
     <string name="levi">Levi</string>
     <string name="satoshi">Satoshi</string>
     <!--   названия карт -->

@@ -48,6 +48,7 @@ class Blot : Hero() {
             CounterpickModel(R.drawable.lynx_icon),
             CounterpickModel(R.drawable.smog_icon),
             CounterpickModel(R.drawable.doc_icon),
+//            CounterpickModel(R.drawable.tess_icon),
         )
     }
 

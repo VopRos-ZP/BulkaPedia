@@ -1,13 +1,10 @@
 buildscript {
     repositories {
-        // ...
         google()
         mavenCentral()
-        maven { url 'https://plugins.gradle.org/m2/' } // Gradle Plugin Portal
+        maven { url 'https://plugins.gradle.org/m2/' }
     }
     dependencies {
-        // ...
-        // OneSignal-Gradle-Plugin
         classpath 'gradle.plugin.com.onesignal:onesignal-gradle-plugin:0.14.0'
     }
 }
@@ -26,8 +23,8 @@ android {
         applicationId "com.bulkapedia"
         minSdk 26
         targetSdk 33
-        versionCode 31
-        versionName "0.3.1"
+        versionCode 33
+        versionName "0.3.3"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 

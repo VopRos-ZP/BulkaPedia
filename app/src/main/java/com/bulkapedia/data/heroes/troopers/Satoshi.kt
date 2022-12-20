@@ -43,9 +43,10 @@ class Satoshi : Hero() {
     override fun getCounterpicks(): List<CounterpickModel> {
         return listOf(
             CounterpickModel(R.drawable.mirage_icon),
-//            CounterpickModel(R.drawable.lynx_icon),
+            CounterpickModel(R.drawable.lynx_icon),
             CounterpickModel(R.drawable.smog_icon),
             CounterpickModel(R.drawable.doc_icon),
+//            CounterpickModel(R.drawable.tess_icon),
         )
     }
 

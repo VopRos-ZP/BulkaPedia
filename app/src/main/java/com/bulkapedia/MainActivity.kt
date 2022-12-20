@@ -38,7 +38,7 @@ class MainActivity : AppCompatActivity() {
 
         MAIN = this
         GEARS_LIST = GearsList()
-        GEARS_RES = GEARS_LIST.getMapGearStringToResource()
+        ICON_LIST.clear()
         createNotificationChannelId()
         bind = ActivityMainBinding.inflate(layoutInflater)
         setContentView(bind.root)
@@ -149,20 +149,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initIcons() {
-        Database().getIconsNode().document("all").get().addOnSuccessListener { doc ->
-            doc.data?.forEach {
-                ICON_LIST += it.key to Database().longToInt(it.value as Long)
-            }
-        }
         if (ICON_LIST.isEmpty()) {
             HEROES_RES.forEach { h -> ICON_LIST += h.key to h.value }
             GEARS_RES.forEach { g -> ICON_LIST += g.key to g.value }
         }
-    }
-
-    override fun onDestroy() {
-        Database().getIconsNode().document("all").set(ICON_LIST)
-        super.onDestroy()
     }
 
 }

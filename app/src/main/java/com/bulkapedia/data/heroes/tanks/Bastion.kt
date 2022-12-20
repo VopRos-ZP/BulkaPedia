@@ -46,6 +46,7 @@ class Bastion : Hero() {
             CounterpickModel(R.drawable.smog_icon),
             CounterpickModel(R.drawable.arnie_icon),
             CounterpickModel(R.drawable.mirage_icon),
+//            CounterpickModel(R.drawable.tess_icon),
         )
     }
 

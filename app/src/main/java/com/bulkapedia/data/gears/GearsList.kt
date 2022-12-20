@@ -5,8 +5,6 @@ import com.bulkapedia.data.heroes.Hero
 import com.bulkapedia.data.heroes.HeroList
 import com.bulkapedia.data.sets.GearCell
 import com.bulkapedia.utils.autoFillGearEffects
-import java.lang.reflect.Field
-import java.util.*
 
 class GearsList {
 
@@ -85,12 +83,12 @@ class GearsList {
     )
     val EYE_PART = Gear(
         GearSet.PARTS, R.drawable.eye_part, listOf(
-            Effect(-36, true, R.string.spread_in_focus_effect),
+            Effect(-36, true, R.string.spread_recoil_effect),
             Effect(11, true, R.string.speed_effect)
         ),
         autoFillGearEffects(
             listOf(
-                Effect(-36, true, R.string.spread_in_focus_effect),
+                Effect(-36, true, R.string.spread_recoil_effect),
                 Effect(11, true, R.string.speed_effect)
             ),
             mapOf(
@@ -156,11 +154,11 @@ class GearsList {
     /** Вещи на тело **/
     val REFLEX_IMPLANT = Gear(
         GearSet.NONE, R.drawable.reflex_implant, listOf(
-            Effect(-37, true, R.string.spread_in_focus_effect)
+            Effect(-37, true, R.string.spread_recoil_effect)
         ),
         autoFillGearEffects(
             listOf(
-                Effect(-37, true, R.string.spread_in_focus_effect)
+                Effect(-37, true, R.string.spread_recoil_effect)
             ),
             mapOf(
                 0 to listOf(-5, -10, -15, -20, -25, -30, -35, -36, -37)
@@ -549,8 +547,8 @@ class GearsList {
         ),
         autoFillGearEffects(
             listOf(
-                Effect(-36, true, R.string.spread_in_focus_effect),
-                Effect(11, true, R.string.speed_effect)
+                Effect(11, true, R.string.max_health_effect),
+                Effect(-25, true, R.string.running_volume_effect)
             ),
             mapOf(
                 0 to listOf(3, 5, 6, 7, 8, 9, 10, 10, 11),
@@ -561,12 +559,12 @@ class GearsList {
     val LEG_DARK_IMPLANT = Gear(
         GearSet.DARK_IMPLANT, R.drawable.dark_boot, listOf(
             Effect(9, false, R.string.piercing_power_effect),
-            Effect(-24, true, R.string.spread_in_focus_effect)
+            Effect(-24, true, R.string.spread_recoil_effect)
         ),
         autoFillGearEffects(
             listOf(
                 Effect(9, false, R.string.piercing_power_effect),
-                Effect(-24, true, R.string.spread_in_focus_effect)
+                Effect(-24, true, R.string.spread_recoil_effect)
             ),
             mapOf(
                 0 to listOf(2, 3, 4, 5, 6, 7, 8, 8, 9),
@@ -576,12 +574,12 @@ class GearsList {
     )
     val LEG_HEAVY_PORT = Gear(
         GearSet.HEAVY_PORT, R.drawable.leg_heavy_port, listOf(
-            Effect(-37, true, R.string.spread_in_focus_effect),
+            Effect(-37, true, R.string.spread_recoil_effect),
             Effect(-24, true, R.string.spread_in_move_effect)
         ),
         autoFillGearEffects(
             listOf(
-                Effect(-37, true, R.string.spread_in_focus_effect),
+                Effect(-37, true, R.string.spread_recoil_effect),
                 Effect(-24, true, R.string.spread_in_move_effect)
             ),
             mapOf(
@@ -1156,12 +1154,12 @@ class GearsList {
     val SPARKLE_BELT = Gear(
         GearSet.PERSONAL, R.drawable.sparkle_belt, listOf(
             Effect(12, true, R.string.max_armor_effect),
-            Effect(-37, true, R.string.spread_in_focus_effect)
+            Effect(-37, true, R.string.spread_recoil_effect)
         ),
         autoFillGearEffects(
             listOf(
                 Effect(12, true, R.string.max_armor_effect),
-                Effect(-37, true, R.string.spread_in_focus_effect)
+                Effect(-37, true, R.string.spread_recoil_effect)
             ),
             mapOf(
                 0 to listOf(6, 6, 7, 7, 9, 9, 10, 10, 12),
@@ -1259,12 +1257,12 @@ class GearsList {
     val HURRICANE_BELT = Gear(
         GearSet.PERSONAL, R.drawable.hurricane_belt, listOf(
             Effect(12, true, R.string.max_health_effect),
-            Effect(-37, true, R.string.spread_in_focus_effect)
+            Effect(-37, true, R.string.spread_recoil_effect)
         ),
         autoFillGearEffects(
             listOf(
                 Effect(12, true, R.string.max_health_effect),
-                Effect(-37, true, R.string.spread_in_focus_effect)
+                Effect(-37, true, R.string.spread_recoil_effect)
             ),
             mapOf(
                 0 to listOf(6, 6, 7, 7, 9, 9, 10, 10, 12),
@@ -1449,12 +1447,12 @@ class GearsList {
     val FREDDIE_MASK = Gear(
         GearSet.PERSONAL, R.drawable.freddie_mask, listOf(
             Effect(11, true, R.string.armor_damage_effect),
-            Effect(-37, true, R.string.spread_in_focus_effect)
+            Effect(-37, true, R.string.spread_recoil_effect)
         ),
         autoFillGearEffects(
             listOf(
                 Effect(11, true, R.string.armor_damage_effect),
-                Effect(-37, true, R.string.spread_in_focus_effect)
+                Effect(-37, true, R.string.spread_recoil_effect)
             ),
             mapOf(
                 0 to listOf(5, 5, 6, 6, 8, 8, 9, 9, 11),
@@ -1773,12 +1771,12 @@ class GearsList {
     )
     val BLOT_HEART = Gear(
         GearSet.PERSONAL, R.drawable.blot_heart, listOf(
-            Effect(-37, true, R.string.spread_in_focus_effect),
+            Effect(-37, true, R.string.spread_recoil_effect),
             Effect(12, true, R.string.max_health_effect)
         ),
         autoFillGearEffects(
             listOf(
-                Effect(-37, true, R.string.spread_in_focus_effect),
+                Effect(-37, true, R.string.spread_recoil_effect),
                 Effect(12, true, R.string.max_health_effect)
             ),
             mapOf(
@@ -1925,12 +1923,12 @@ class GearsList {
     val FIREFLY_NECKLACE = Gear(
         GearSet.PERSONAL, R.drawable.firefly_necklace, listOf(
             Effect(-26, true, R.string.aiming_speed_effect),
-            Effect(-37, true, R.string.spread_in_focus_effect)
+            Effect(-37, true, R.string.spread_recoil_effect)
         ),
         autoFillGearEffects(
             listOf(
                 Effect(-26, true, R.string.aiming_speed_effect),
-                Effect(-37, true, R.string.spread_in_focus_effect)
+                Effect(-37, true, R.string.spread_recoil_effect)
             ),
             mapOf(
                 0 to listOf(-14, -14, -17, -17, -20, -20, -23, -23, -26),
@@ -2011,12 +2009,12 @@ class GearsList {
     )
     val SLAYER_BOOTS = Gear(
         GearSet.PERSONAL, R.drawable.slayer_boot, listOf(
-            Effect(-37, true, R.string.spread_in_focus_effect),
+            Effect(-37, true, R.string.spread_recoil_effect),
             Effect(10, false, R.string.piercing_power_effect)
         ),
         autoFillGearEffects(
             listOf(
-                Effect(-37, true, R.string.spread_in_focus_effect),
+                Effect(-37, true, R.string.spread_recoil_effect),
                 Effect(10, false, R.string.piercing_power_effect)
             ),
             mapOf(
@@ -2186,12 +2184,12 @@ class GearsList {
     val LYNX_QUIVER = Gear(
         GearSet.PERSONAL, R.drawable.lynx_quiver, listOf(
             Effect(12, true, R.string.max_health_effect),
-            Effect(-37, true, R.string.spread_in_focus_effect)
+            Effect(-37, true, R.string.spread_recoil_effect)
         ),
         autoFillGearEffects(
             listOf(
                 Effect(12, true, R.string.max_health_effect),
-                Effect(-37, true, R.string.spread_in_focus_effect)
+                Effect(-37, true, R.string.spread_recoil_effect)
             ),
             mapOf(
                 0 to listOf(6, 6, 7, 7, 9, 9, 10, 10, 12),
@@ -2543,12 +2541,12 @@ class GearsList {
     val DRAGOON_CHAIN = Gear(
         GearSet.PERSONAL, R.drawable.dragoon_chain, listOf(
             Effect(10, true, R.string.health_damage_effect),
-            Effect(-37, true, R.string.spread_in_focus_effect)
+            Effect(-37, true, R.string.spread_recoil_effect)
         ),
         autoFillGearEffects(
             listOf(
                 Effect(10, true, R.string.health_damage_effect),
-                Effect(-37, true, R.string.spread_in_focus_effect)
+                Effect(-37, true, R.string.spread_recoil_effect)
             ),
             mapOf(
                 0 to listOf(4, 4, 5, 5, 7, 7, 8, 8, 10),
@@ -2701,12 +2699,12 @@ class GearsList {
     val LEVIATHAN_IMPLANT = Gear(
         GearSet.PERSONAL, R.drawable.leviathan_implant, listOf(
             Effect(12, true, R.string.max_armor_effect),
-            Effect(-37, true, R.string.spread_in_focus_effect)
+            Effect(-37, true, R.string.spread_recoil_effect)
         ),
         autoFillGearEffects(
             listOf(
                 Effect(12, true, R.string.max_armor_effect),
-                Effect(-37, true, R.string.spread_in_focus_effect)
+                Effect(-37, true, R.string.spread_recoil_effect)
             ),
             mapOf(
                 0 to listOf(6, 6, 7, 7, 9, 9, 10, 10, 12),
@@ -2868,12 +2866,12 @@ class GearsList {
     val STALKER_RAZOR = Gear(
         GearSet.PERSONAL, R.drawable.stalker_razor, listOf(
             Effect(6, false, R.string.add_patrons_effect),
-            Effect(-37, true, R.string.spread_in_focus_effect)
+            Effect(-37, true, R.string.spread_recoil_effect)
         ),
         autoFillGearEffects(
             listOf(
                 Effect(6, false, R.string.add_patrons_effect),
-                Effect(-37, true, R.string.spread_in_focus_effect)
+                Effect(-37, true, R.string.spread_recoil_effect)
             ),
             mapOf(
                 0 to listOf(2, 2, 3, 3, 4, 4, 5, 5, 6),
@@ -2907,12 +2905,12 @@ class GearsList {
     val DOC_BELT = Gear(
         GearSet.PERSONAL, R.drawable.doc_belt, listOf(
             Effect(18, false, R.string.add_health_effect),
-            Effect(-37, true, R.string.spread_in_focus_effect)
+            Effect(-37, true, R.string.spread_recoil_effect)
         ),
         autoFillGearEffects(
             listOf(
                 Effect(18, false, R.string.add_health_effect),
-                Effect(-37, true, R.string.spread_in_focus_effect)
+                Effect(-37, true, R.string.spread_recoil_effect)
             ),
             mapOf(
                 0 to listOf(10, 10, 12, 12, 14, 14, 16, 16, 18),
@@ -3144,12 +3142,12 @@ class GearsList {
     )
     val SATOSHI_LEGS = Gear(
         GearSet.PERSONAL, R.drawable.satoshi_leg, listOf(
-            Effect(-37, true, R.string.spread_in_focus_effect),
+            Effect(-37, true, R.string.spread_recoil_effect),
             Effect(12, true, R.string.speed_effect)
         ),
         autoFillGearEffects(
             listOf(
-                Effect(-37, true, R.string.spread_in_focus_effect),
+                Effect(-37, true, R.string.spread_recoil_effect),
                 Effect(12, true, R.string.speed_effect)
             ),
             mapOf(
@@ -3298,29 +3296,6 @@ class GearsList {
             }
         }
         return effects
-    }
-
-    fun getMapGearStringToResource(): Map<String, Int> {
-        val ignoreFieldNames = listOf("personal", "gear", "icon")
-        val isTrueField: (String) -> Boolean = { name ->
-            for (ifn in ignoreFieldNames) {
-                if (name.contains(ifn)) {
-                    false
-                }
-            }
-            true
-        }
-        return this::class.java.declaredFields.mapIndexed { i, f ->
-            val name = f.name.lowercase(Locale.getDefault())
-            if (isTrueField(name)) {
-                try {
-                    name to allGears[i].icon
-                } catch (_: IndexOutOfBoundsException){
-                    "" to 0
-                }
-            }
-            else "" to 0
-        }.toMap().filter { it.key.isNotEmpty() }
     }
 
 }
