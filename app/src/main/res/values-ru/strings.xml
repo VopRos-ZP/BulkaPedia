@@ -114,6 +114,8 @@
     <string name="buff_health_trooper_effect">к восстановлению здоровья в секунду при активации командное лечение</string>
     <string name="rain_of_arrows_radius_effect">к радиусу способности град стрел</string>
     <string name="rain_of_arrows_damage_effect">к урону способности град стрел</string>
+    <string name="ball_radius_effect">к радиусу шаровой молнии</string>
+    <string name="ball_incoming_damage_effect">к получаемому урону находясь в зоне действия шаровой молнии</string>
     <!--   персонажи -->
     <string name="arnie">Арни</string>
     <string name="cyclops">Циклоп</string>
@@ -246,5 +248,6 @@
     <string name="chat">Чат</string>
     <string name="update_title">Ошибка версии</string>
     <string name="update_content">Доступна новая версия приложения</string>
+    <string name="no_effects">Нет эффектов</string>
 
 </resources>

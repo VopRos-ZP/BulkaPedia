@@ -114,6 +114,8 @@
     <string name="buff_health_trooper_effect">to health regen per second when the team healing is activated</string>
     <string name="rain_of_arrows_radius_effect">to the radius of the rain of arrows</string>
     <string name="rain_of_arrows_damage_effect">to damage of the rain of arrows</string>
+    <string name="ball_radius_effect">to the radius of the ball lightning</string>
+    <string name="ball_incoming_damage_effect">to incoming damage while inside the ball lightning</string>
     <!--   персонажи -->
     <string name="arnie">Arnie</string>
     <string name="cyclops">Cyclops</string>
@@ -245,5 +247,7 @@
     <string name="chat">Chat</string>
     <string name="update_title">Version error</string>
     <string name="update_content">New version available</string>
+    <string name="title_activity_main" translatable="false">MainActivity</string>
+    <string name="no_effects">No effects</string>
 
 </resources>
