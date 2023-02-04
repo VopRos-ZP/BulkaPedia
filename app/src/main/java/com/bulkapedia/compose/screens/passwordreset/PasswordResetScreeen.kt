@@ -22,6 +22,7 @@ import com.bulkapedia.compose.ui.theme.Teal
 import com.bulkapedia.compose.util.clickable
 import com.bulkapedia.compose.data.User
 import com.bulkapedia.compose.DataStore
+import com.bulkapedia.compose.data.Database
 import kotlinx.coroutines.launch
 
 @Composable
@@ -108,11 +109,13 @@ private fun PasswordResetForm(
                 if (isEmailChecked) {
                     if (password.value.isEmpty()) return@OutlinedButton
                     val saveDataStore: (User) -> Unit = { u ->
-                        ctx.navController.navigate("${Destinations.PROFILE}/${u.email}")
-                        scope.launch {
-                            store.saveSign(true);
-                            store.saveEmail(u.email)
-                            store.saveNickname(u.nickname)
+                        Database().updatePassword(u) { newUser ->
+                            ctx.navController.navigate("${Destinations.PROFILE}/${newUser.email}")
+                            scope.launch {
+                                store.saveSign(true)
+                                store.saveEmail(newUser.email)
+                                store.saveNickname(newUser.nickname)
+                            }
                         }
                     }
                     viewModel.obtainEvent(

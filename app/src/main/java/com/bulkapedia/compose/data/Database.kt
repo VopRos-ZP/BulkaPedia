@@ -18,8 +18,6 @@ import com.google.firebase.database.ktx.database
 import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 import kotlin.collections.Map
 
 class Database {
@@ -108,6 +106,12 @@ class Database {
             user.email = newEmail
             user.updateEmail = nowYearFormat()
             updateUser(id, user, onSuccess)
+        }
+    }
+
+    fun updatePassword(user: User, onSuccess: (User) -> Unit) {
+        findUserByEmail(user.email) { id, newUser ->
+            updateUser(id, newUser, onSuccess)
         }
     }
 
