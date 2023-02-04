@@ -7,7 +7,6 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -21,16 +20,12 @@ import com.bulkapedia.compose.navigation.Navigation
 import com.bulkapedia.compose.navigation.ToolbarCtx
 import com.bulkapedia.R
 import com.bulkapedia.compose.ui.theme.*
-import com.bulkapedia.compose.util.CenteredBox
 import com.bulkapedia.compose.util.HCenteredBox
 import com.bulkapedia.compose.util.clickable
 import com.bulkapedia.compose.DataStore
 import kotlinx.coroutines.launch
 import com.bulkapedia.compose.data.*
-import com.bulkapedia.compose.elements.FirstLoginBlock
-import com.bulkapedia.compose.elements.LoginBlock
-import com.bulkapedia.compose.elements.OutlinedTextField
-import com.bulkapedia.compose.elements.OutlinedButton
+import com.bulkapedia.compose.elements.*
 
 @Composable
 fun LoginNav(toolbarCtx: ToolbarCtx) {
@@ -51,29 +46,39 @@ fun Login(ctx: ToolbarCtx, viewModel: LoginViewModel) {
     // get stored data
     val store = DataStore(LocalContext.current)
     val scope = rememberCoroutineScope()
+    // error
+    val showError = remember { mutableStateOf(false) }
+    val errorMessage = remember { mutableStateOf("") }
     // init view
     val viewState = viewModel.loginLiveData.observeAsState()
-    SideEffect {
-        viewModel.obtainEvent(LoginEvent.EnterScreen)
-    }
-    when (val state = viewState.value) {
-        is LoginViewState.Error -> CenteredBox {
-            Text(text = state.error, color = Color.Red)
+    ScreenWithError(
+        show = showError,
+        text = errorMessage.value,
+        onClose = { viewModel.obtainEvent(LoginEvent.EnterScreen) }
+    ) {
+        when (val state = viewState.value) {
+            is LoginViewState.Error -> {
+                showError.value = true
+                errorMessage.value = state.error
+            }
+            else -> LoginPage(
+                onLoginClick = { email, password ->
+                    viewModel.obtainEvent(LoginEvent.OnSignInClick(email, password) { u ->
+                        ctx.navController.navigate("${Destinations.PROFILE}/${u.email}")
+                        scope.launch {
+                            store.saveEmail(u.email)
+                            store.saveSign(true)
+                            store.saveNickname(u.nickname)
+                        }
+                    })
+                },
+                onRegistrationClick = { ctx.navController.navigate(Destinations.SING_UP) },
+                onForgotPasswordClick = { ctx.navController.navigate(Destinations.FORGOT_PASSWORD) }
+            )
         }
-        else -> LoginPage(
-            onLoginClick = { email, password ->
-                viewModel.obtainEvent(LoginEvent.OnSignInClick(email, password) {u ->
-                    ctx.navController.navigate("${Destinations.PROFILE}/${u.email}")
-                    scope.launch {
-                        store.saveEmail(u.email)
-                        store.saveSign(true)
-                        store.saveNickname(u.nickname)
-                    }
-                })
-            },
-            onRegistrationClick = { ctx.navController.navigate(Destinations.SING_UP) },
-            onForgotPasswordClick = { ctx.navController.navigate(Destinations.FORGOT_PASSWORD) }
-        )
+    }
+    LaunchedEffect(null) {
+        viewModel.obtainEvent(LoginEvent.EnterScreen)
     }
 }
 

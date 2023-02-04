@@ -33,23 +33,25 @@ fun Preview() {
 }
 
 @Composable
-fun InfoBox(text: String) {
+fun AgreeInfoBox(text: String) {
+    InfoBox(text, Color.Green)
+}
+
+@Composable
+fun InfoBox(text: String, color: Color = Color.Yellow) {
     Row (
         modifier = Modifier.fillMaxWidth()
             .background(Color.Transparent, RoundedCornerShape(10.dp))
-            .border(1.dp, Color.Yellow, RoundedCornerShape(10.dp))
+            .border(1.dp, color, RoundedCornerShape(10.dp))
             .padding(10.dp),
         verticalAlignment = Alignment.Top
     ) {
         Icon(
             imageVector = Icons.Outlined.Info,
             contentDescription = "info",
-            tint = Color.Yellow,
+            tint = color,
             modifier = Modifier.padding(end = 10.dp)
         )
-        Text(
-            text = text,
-            color = Color.Yellow
-        )
+        Text(text = text, color = color)
     }
 }

@@ -11,7 +11,7 @@ import javax.inject.Inject
 
 sealed class PasswordResetViewState {
     object EnterScreen: PasswordResetViewState()
-    object CheckedEmail: PasswordResetViewState()
+    data class CheckedEmail(val email: String): PasswordResetViewState()
     data class CheckedPassword(val user: User): PasswordResetViewState()
     data class Success(val updatedUser: User): PasswordResetViewState()
     data class Error(val message: String): PasswordResetViewState()
@@ -87,7 +87,7 @@ class PasswordResetViewModel @Inject constructor() : ViewModel(), EventHandler<P
             _liveData.postValue(PasswordResetViewState.Error(err))
         }) { _, user ->
             db.sendPasswordResetEmail(user.email) {
-                _liveData.postValue(PasswordResetViewState.CheckedEmail)
+                _liveData.postValue(PasswordResetViewState.CheckedEmail(user.email))
             }
         }
     }

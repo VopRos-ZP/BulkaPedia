@@ -12,6 +12,7 @@ import androidx.compose.material.TabRow
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.UiComposable
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.bulkapedia.compose.screens.CustomIndicator
 import com.bulkapedia.compose.ui.theme.PrimaryDark
@@ -25,11 +26,51 @@ fun ITabRow(
     pagerState: PagerState,
     tabs: @Composable @UiComposable () -> Unit
 ) {
-    Card(
+    ITabRow(pagerState,
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 20.dp)
-            .height(50.dp),
+            .height(50.dp)
+        , tabs
+    )
+}
+
+@OptIn(ExperimentalPagerApi::class)
+@Composable
+fun ITabRow(
+    pagerState: PagerState,
+    marginVertical: Dp = 0.dp,
+    tabs: @Composable @UiComposable () -> Unit
+) {
+    ITabRow(pagerState, marginVertical, marginVertical, tabs)
+}
+
+@OptIn(ExperimentalPagerApi::class)
+@Composable
+fun ITabRow(
+    pagerState: PagerState,
+    marginTop: Dp = 0.dp,
+    marginBottom: Dp = 0.dp,
+    tabs: @Composable @UiComposable () -> Unit
+) {
+    ITabRow(pagerState,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(start = 20.dp, end = 20.dp, top = marginTop, bottom = marginBottom)
+            .height(50.dp)
+        , tabs
+    )
+}
+
+@OptIn(ExperimentalPagerApi::class)
+@Composable
+fun ITabRow(
+    pagerState: PagerState,
+    modifier: Modifier,
+    tabs: @Composable @UiComposable () -> Unit
+) {
+    Card(
+        modifier = modifier,
         elevation = 10.dp,
         shape = RoundedCornerShape(50.dp),
         backgroundColor = PrimaryDark,

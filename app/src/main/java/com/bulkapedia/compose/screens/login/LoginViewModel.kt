@@ -31,8 +31,8 @@ class LoginViewModel @Inject constructor() : ViewModel(), EventHandler<LoginEven
 
     private fun reduce(event: LoginEvent, state: LoginViewState.Loading) {
         when (event) {
-            LoginEvent.EnterScreen -> getUsers()
-            is LoginEvent.ErrorScreen -> getUsers()
+            LoginEvent.EnterScreen -> getUsers(isLoading = true)
+            is LoginEvent.ErrorScreen -> getUsers(isLoading = true)
             is LoginEvent.OnSignInClick -> getUsers(
                 email = event.email,
                 password = event.password,
@@ -51,7 +51,7 @@ class LoginViewModel @Inject constructor() : ViewModel(), EventHandler<LoginEven
 
     private fun reduce(event: LoginEvent, state: LoginViewState.Success) {
         when (event) {
-            LoginEvent.EnterScreen -> getUsers()
+            LoginEvent.EnterScreen -> getUsers(isLoading = true)
             is LoginEvent.OnSignInClick -> getUsers(
                 email = event.email,
                 password = event.password,
@@ -71,11 +71,13 @@ class LoginViewModel @Inject constructor() : ViewModel(), EventHandler<LoginEven
         onSuccess: (User) -> Unit = {}
     ) {
         val db = Database()
-        if (isLoading || email.isEmpty())
+        if (isLoading) {
             _loginLiveData.postValue(LoginViewState.Loading)
-        else {
+        } else {
             if (password.isNotEmpty()) {
-                db.signIn(email, password) { user ->
+                db.signIn(email, password, { e ->
+                    _loginLiveData.postValue(LoginViewState.Error(e))
+                }) { user ->
                     onSuccess.invoke(user)
                     _loginLiveData.postValue(LoginViewState.Success(user))
                 }

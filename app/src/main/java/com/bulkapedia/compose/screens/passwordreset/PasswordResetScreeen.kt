@@ -2,9 +2,7 @@
 package com.bulkapedia.compose.screens.passwordreset
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
@@ -20,9 +18,7 @@ import com.bulkapedia.R
 import com.bulkapedia.compose.elements.*
 import com.bulkapedia.compose.navigation.Destinations
 import com.bulkapedia.compose.navigation.ToolbarCtx
-import com.bulkapedia.compose.ui.theme.PrimaryDark
 import com.bulkapedia.compose.ui.theme.Teal
-import com.bulkapedia.compose.util.CenteredBox
 import com.bulkapedia.compose.util.clickable
 import com.bulkapedia.compose.data.User
 import com.bulkapedia.compose.DataStore
@@ -34,51 +30,48 @@ fun PasswordResetScreen(ctx: ToolbarCtx, viewModel: PasswordResetViewModel) {
     ctx.setData(title = "Восстановить пароль", showBackButton = true)
     // ViewState
     val viewState = viewModel.liveData.observeAsState()
-    val showDialog = remember { mutableStateOf(true) }
-    val showErrorDialog = remember { mutableStateOf(true) }
+    val showErrorDialog = remember { mutableStateOf(false) }
     val errorMessage = remember { mutableStateOf("") }
-
+    // UI
     ScreenWithError(
         showErrorDialog,
         text = errorMessage.value,
-        onClose = {}
+        onClose = { viewModel.obtainEvent(PasswordResetEvent.NoEvent) }
     ) {
         when (val state = viewState.value!!) {
-            PasswordResetViewState.EnterScreen -> PasswordResetForm(ctx, viewModel)
             is PasswordResetViewState.Error -> {
                 showErrorDialog.value = true
                 errorMessage.value = state.message
             }
-            is PasswordResetViewState.CheckedEmail -> {
-                CenteredBox {
-                    PasswordResetForm(ctx, viewModel, true)
-                    if (showDialog.value) SendEmailInfoDialog(showDialog)
-                }
-            }
-            else -> {}
+            is PasswordResetViewState.CheckedEmail -> PasswordResetForm(ctx, viewModel, state.email, true)
+            else -> PasswordResetForm(ctx, viewModel)
         }
     }
-    LaunchedEffect(key1 = Unit, block = {
+    LaunchedEffect(null) {
         viewModel.obtainEvent(PasswordResetEvent.NoEvent)
-    })
+    }
 }
 
 @Composable
-private fun PasswordResetForm(ctx: ToolbarCtx, viewModel: PasswordResetViewModel, isEmailChecked: Boolean = false) {
+private fun PasswordResetForm(
+    ctx: ToolbarCtx,
+    viewModel: PasswordResetViewModel,
+    emailT: String = "",
+    isEmailChecked: Boolean = false
+) {
     // store
     val store = DataStore(LocalContext.current)
     val scope = rememberCoroutineScope()
     // state variables
-    val email = remember { mutableStateOf("") }
+    val email = remember { mutableStateOf(emailT) }
     val password = remember { mutableStateOf("") }
     var visiblePassword by remember { mutableStateOf(false) }
     // UI
-    Column(
-        modifier = Modifier.fillMaxSize()
-    ) {
+    Column(modifier = Modifier.fillMaxSize()) {
         FirstLoginBlock {
             OutlinedTextField(
                 text = email,
+                readOnly = isEmailChecked,
                 label = stringResource(id = R.string.enter_email),
                 modifier = Modifier
                     .fillMaxWidth()
@@ -106,6 +99,11 @@ private fun PasswordResetForm(ctx: ToolbarCtx, viewModel: PasswordResetViewModel
             }
         }
         LoginBlock {
+            if (isEmailChecked) {
+                AgreeInfoBox(
+                    text = "На указанную почту отправлено письмо с ссылкой на сброс пароля"
+                )
+            }
             OutlinedButton(text = if (isEmailChecked) "Войти" else "Отправить письмо") {
                 if (isEmailChecked) {
                     if (password.value.isEmpty()) return@OutlinedButton
@@ -129,38 +127,4 @@ private fun PasswordResetForm(ctx: ToolbarCtx, viewModel: PasswordResetViewModel
             }
         }
     }
-}
-
-@Composable
-private fun SendEmailInfoDialog(showDialog: MutableState<Boolean>) {
-    AlertDialog(
-        modifier = Modifier
-            .padding(horizontal = 20.dp)
-            .background(PrimaryDark, RoundedCornerShape(20.dp)),
-        onDismissRequest = { showDialog.value = false },
-        title = { Text("Восстановление пароля") },
-        text = { Text("На указанную почту отправлено письмо с ссылкой на сброс пароля") },
-        confirmButton = {
-            Button(onClick = { showDialog.value = false }) {
-                Text("Закрыть")
-            }
-        }
-    )
-}
-
-@Composable
-private fun ErrorDialog(message: String, showDialog: MutableState<Boolean>) {
-    AlertDialog(
-        modifier = Modifier
-            .padding(horizontal = 20.dp)
-            .background(PrimaryDark, RoundedCornerShape(20.dp)),
-        onDismissRequest = { showDialog.value = false },
-        title = { Text("Ошибка") },
-        text = { Text(message) },
-        confirmButton = {
-            Button(onClick = { showDialog.value = false }) {
-                Text("Закрыть")
-            }
-        }
-    )
 }

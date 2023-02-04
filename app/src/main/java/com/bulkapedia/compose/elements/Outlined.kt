@@ -24,6 +24,7 @@ import com.bulkapedia.compose.ui.theme.Teal200
 fun OutlinedTextField(
     text: MutableState<String>,
     label: String,
+    readOnly: Boolean = false,
     placeholder: @Composable (() -> Unit)? = null,
     modifier: Modifier = Modifier,
     trailingIcon: @Composable (() -> Unit)? = null,
@@ -43,6 +44,7 @@ fun OutlinedTextField(
             unfocusedLabelColor = Teal,
             placeholderColor = Teal
         ),
+        readOnly = readOnly,
         shape = shape,
         trailingIcon = trailingIcon,
         visualTransformation = visualTransformation,

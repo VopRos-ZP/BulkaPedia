@@ -181,21 +181,27 @@ class Database {
     }
 
     /** Authorization **/
-    fun signIn(email: String, password: String, onSuccess: (User) -> Unit) {
-        Firebase.auth.signInWithEmailAndPassword(email, password).addOnSuccessListener {
-            findUserByEmail(email) { _, user ->
-                onSuccess.invoke(user)
+    fun signIn(email: String, password: String, onError: (String) -> Unit, onSuccess: (User) -> Unit) {
+        Firebase.auth.signInWithEmailAndPassword(email, password).addOnCompleteListener {
+            if (it.isSuccessful) {
+                findUserByEmail(email) { _, user ->
+                    onSuccess.invoke(user)
+                }
+            } else {
+                onError.invoke(it.exception?.localizedMessage ?: "Ошибка входа")
             }
         }
     }
 
-    fun signUp(email: String, password: String, nickname: String, onSuccess: (User) -> Unit) {
-        Firebase.auth.createUserWithEmailAndPassword(email, password).addOnSuccessListener {
-            val now = nowYearFormat()
-            val user = User(email, password, nickname, now, now)
-            Firebase.database.reference.child("users").child(it.user!!.uid).setValue(user)
-            onSuccess.invoke(user)
-        }
+    fun signUp(email: String, password: String, nickname: String, onError: (String) -> Unit, onSuccess: (User) -> Unit) {
+        Firebase.auth.createUserWithEmailAndPassword(email, password)
+            .addOnFailureListener { e -> onError.invoke(e.localizedMessage ?: "Ошибка регистрации") }
+            .addOnSuccessListener {
+                val now = nowYearFormat()
+                val user = User(email, password, nickname, now, now)
+                Firebase.database.reference.child("users").child(it.user!!.uid).setValue(user)
+                onSuccess.invoke(user)
+            }
     }
 
     fun logout() {

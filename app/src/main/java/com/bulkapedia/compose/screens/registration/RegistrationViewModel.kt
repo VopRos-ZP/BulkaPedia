@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.bulkapedia.compose.data.Database
 import com.bulkapedia.compose.events.EventHandler
 import com.bulkapedia.compose.data.User
+import com.bulkapedia.compose.screens.login.LoginViewState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -33,42 +34,38 @@ class RegistrationViewModel @Inject constructor() : ViewModel(), EventHandler<Re
 
     private fun reduce(event: RegistrationEvent, state: RegistrationViewState.Loading) {
         when (event) {
-            RegistrationEvent.EnterScreen -> registration {}
+            RegistrationEvent.EnterScreen -> _liveData.postValue(RegistrationViewState.Loading)
             is RegistrationEvent.OnSignUpClick -> registration(event.email, event.password, event.nickname, event.onSuccess)
-            is RegistrationEvent.ErrorScreen -> registration {}
+            is RegistrationEvent.ErrorScreen -> _liveData.postValue(RegistrationViewState.Loading)
         }
     }
 
     private fun reduce(event: RegistrationEvent, state: RegistrationViewState.Success) {
         when (event) {
-            RegistrationEvent.EnterScreen -> registration {}
+            RegistrationEvent.EnterScreen -> _liveData.postValue(RegistrationViewState.Loading)
             is RegistrationEvent.OnSignUpClick -> registration(event.email, event.password, event.nickname, event.onSuccess)
-            is RegistrationEvent.ErrorScreen -> registration {}
+            is RegistrationEvent.ErrorScreen -> _liveData.postValue(RegistrationViewState.Loading)
         }
     }
 
     private fun reduce(event: RegistrationEvent, state: RegistrationViewState.Error) {
         when (event) {
-            RegistrationEvent.EnterScreen -> registration {}
+            RegistrationEvent.EnterScreen -> _liveData.postValue(RegistrationViewState.Loading)
             is RegistrationEvent.OnSignUpClick -> registration(event.email, event.password, event.nickname, event.onSuccess)
-            is RegistrationEvent.ErrorScreen -> registration {}
+            is RegistrationEvent.ErrorScreen -> _liveData.postValue(RegistrationViewState.Loading)
         }
     }
 
     private fun registration(email: String = "", password: String = "", nickname: String = "", onSuccess: () -> Unit) {
-        viewModelScope.launch {
-            if (email.isNotEmpty() && password.isNotEmpty()) {
-                try {
-                    Database().signUp(email, password, nickname) {
-                        onSuccess.invoke()
-                        _liveData.postValue(RegistrationViewState.Success(it))
-                    }
-                } catch (e: Exception) {
-                    _liveData.postValue(RegistrationViewState.Error(e.localizedMessage ?: ""))
-                }
-            } else {
-                _liveData.postValue(RegistrationViewState.Error("Почта и/или пароль не должна/-ы быть путой/-ыми"))
+        if (email.isNotEmpty() && password.isNotEmpty()) {
+            Database().signUp(email, password, nickname, {
+                _liveData.postValue(RegistrationViewState.Error(it))
+            }) {
+                onSuccess.invoke()
+                _liveData.postValue(RegistrationViewState.Success(it))
             }
+        } else {
+            _liveData.postValue(RegistrationViewState.Error("Почта и/или пароль не должна/-ы быть путой/-ыми"))
         }
     }
 

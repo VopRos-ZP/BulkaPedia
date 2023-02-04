@@ -157,7 +157,7 @@ fun ProfileScreen(
             }
         }
         // Tabs
-        ITabRow(pagerState) {
+        ITabRow(pagerState, marginTop = 10.dp) {
             tabs.mapIndexed { i, tabItem ->
                 Tab(
                     modifier = Modifier.zIndex(2f),
@@ -236,7 +236,7 @@ fun LoadingProfile() {
 fun MainsRecycler(mains: Map<String, Stats>, isSelected: Boolean, onItemClick: (Stats) -> Unit) {
     LazyRow (
         modifier = Modifier.fillMaxWidth()
-            .padding(vertical = 10.dp)
+            .padding(top = 10.dp)
     ) {
         mains.map { main ->
             item {
@@ -261,21 +261,21 @@ fun SetsRecycler(
     val confirmDialog = remember { mutableStateOf(false) }
     val errorMessage = remember { mutableStateOf("") }
     val confirmSet = remember { mutableStateOf<UserSet?>(null) }
-
-    ScreenWithDelete(
-        whatDelete = "сет",
-        show = confirmDialog,
-        whenShow = { confirmSet.value != null },
-        onDelete = { Database().removeSet(confirmSet.value!!) }
+    // UI
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .fillMaxHeight(fraction = 0.923f)
+            .background(Primary)
+            .padding(bottom = 15.dp)
     ) {
-        ScreenWithError(showErrorDialog, errorMessage.value) {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .fillMaxHeight(fraction = 0.923f)
-                    .background(Primary)
-                    .padding(bottom = 15.dp)
-            ) {
+        ScreenWithDelete(
+            whatDelete = "сет",
+            show = confirmDialog,
+            whenShow = { confirmSet.value != null },
+            onDelete = { Database().removeSet(confirmSet.value!!) }
+        ) {
+            ScreenWithError(showErrorDialog, errorMessage.value) {
                 when (val state = viewState.value!!) {
                     is SetsProfileViewState.EnterScreen -> {
                         LazyColumn (
@@ -294,7 +294,15 @@ fun SetsRecycler(
                                     }
                                 }
                             } else {
-                                item { CenteredBox { Text("Список пуст...", color = Teal200) } }
+                                item { CenteredBox {
+                                    Text(
+                                        text = "Список пуст...",
+                                        color = Teal200,
+                                        textAlign = TextAlign.Center,
+                                        modifier = Modifier.fillMaxWidth()
+                                            .padding(vertical = 20.dp)
+                                    )
+                                } }
                             }
                         }
                     }
@@ -303,9 +311,7 @@ fun SetsRecycler(
                         errorMessage.value = state.message
                     }
                     else -> CenteredBox (
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .fillMaxHeight(fraction = 0.923f)
+                        modifier = Modifier.fillMaxSize()
                             .background(Color.Transparent)
                     ) { CircularProgressIndicator(color = Teal200) }
                 }

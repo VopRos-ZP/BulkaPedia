@@ -10,7 +10,6 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -21,30 +20,38 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.bulkapedia.R
-import com.bulkapedia.compose.elements.FirstLoginBlock
-import com.bulkapedia.compose.elements.LoginBlock
-import com.bulkapedia.compose.elements.OutlinedButton
-import com.bulkapedia.compose.elements.OutlinedTextField
 import com.bulkapedia.compose.navigation.Destinations
 import com.bulkapedia.compose.navigation.ToolbarCtx
 import com.bulkapedia.compose.screens.profile.ProfileScreen
 import com.bulkapedia.compose.ui.theme.*
-import com.bulkapedia.compose.util.CenteredBox
 import com.bulkapedia.compose.util.HCenteredBox
 import com.bulkapedia.compose.util.clickable
 import com.bulkapedia.compose.DataStore
+import com.bulkapedia.compose.elements.*
 import kotlinx.coroutines.launch
 
 @Composable
 fun RegistrationScreen(ctx: ToolbarCtx, viewModel: RegistrationViewModel) {
     ctx.observeAsState()
     ctx.setData("Регистрация", true)
-
+    // Error
+    val showError = remember { mutableStateOf(false) }
+    val errorMessage = remember { mutableStateOf("Ошибка регистрации") }
+    // UI
     val viewState = viewModel.liveData.observeAsState()
-    when (val state = viewState.value!!) {
-        RegistrationViewState.Loading -> RegistrationForm(viewModel, ctx)
-        is RegistrationViewState.Success -> ProfileScreen(ctx, state.user, hiltViewModel())
-        is RegistrationViewState.Error -> ErrorRegistration(message = state.message)
+    ScreenWithError(
+        show = showError,
+        text = errorMessage.value,
+        onClose = { viewModel.obtainEvent(RegistrationEvent.EnterScreen) }
+    ) {
+        when (val state = viewState.value!!) {
+            RegistrationViewState.Loading -> RegistrationForm(viewModel, ctx)
+            is RegistrationViewState.Success -> ProfileScreen(ctx, state.user, hiltViewModel())
+            is RegistrationViewState.Error -> {
+                errorMessage.value = state.message
+                showError.value = true
+            }
+        }
     }
     LaunchedEffect(null) {
         viewModel.obtainEvent(RegistrationEvent.EnterScreen)
@@ -146,16 +153,5 @@ fun RegistrationForm(viewModel: RegistrationViewModel, ctx: ToolbarCtx) {
                 )
             }
         }
-    }
-}
-
-@Composable
-fun ErrorRegistration(message: String) {
-    CenteredBox {
-        Text(
-            text = message,
-            color = Color.Red,
-            fontSize = 18.sp
-        )
     }
 }
