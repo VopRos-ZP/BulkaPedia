@@ -1,7 +1,6 @@
 @file:Suppress("FunctionName")
 package com.bulkapedia.compose.elements
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -64,12 +63,50 @@ fun OutlinedButton(
     enabled: Boolean = true,
     onClick: () -> Unit
 ) {
-    androidx.compose.material.OutlinedButton(
-        enabled = enabled,
-        onClick = onClick,
+    ModOutlinedButton(
+        text = text,
         modifier = Modifier
             .fillMaxWidth()
             .padding(start = marginStart, end = marginEnd, top = marginTop, bottom = marginBottom),
+        color = color,
+        enabled = enabled,
+        onClick = onClick
+    )
+}
+
+@Composable
+fun InRowOutlinedButton(
+    text: String,
+    marginTop: Dp = 10.dp,
+    marginBottom: Dp = 10.dp,
+    marginStart: Dp = 0.dp,
+    marginEnd: Dp = 0.dp,
+    color: Color = Teal200,
+    enabled: Boolean = true,
+    onClick: () -> Unit
+) {
+    ModOutlinedButton(
+        text = text,
+        modifier = Modifier
+            .padding(start = marginStart, end = marginEnd, top = marginTop, bottom = marginBottom),
+        color = color,
+        enabled = enabled,
+        onClick = onClick
+    )
+}
+
+@Composable
+private fun ModOutlinedButton(
+    text: String,
+    modifier: Modifier,
+    color: Color = Teal200,
+    enabled: Boolean = true,
+    onClick: () -> Unit
+) {
+    androidx.compose.material.OutlinedButton(
+        enabled = enabled,
+        onClick = onClick,
+        modifier = modifier,
         colors = ButtonDefaults.outlinedButtonColors(
             backgroundColor = Color.Transparent
         ),

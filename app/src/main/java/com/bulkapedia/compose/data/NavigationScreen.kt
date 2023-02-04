@@ -17,6 +17,9 @@ import com.bulkapedia.compose.screens.hero.HeroSets
 import com.bulkapedia.compose.screens.heroes.HeroViewModel
 import com.bulkapedia.compose.screens.heroes.Heroes
 import com.bulkapedia.compose.screens.login.Login
+import com.bulkapedia.compose.screens.maps.MapViewModel
+import com.bulkapedia.compose.screens.maps.Maps
+import com.bulkapedia.compose.screens.maps.SelectedMap
 import com.bulkapedia.compose.screens.passwordreset.PasswordResetScreen
 import com.bulkapedia.compose.screens.profile.Profile
 import com.bulkapedia.compose.screens.profile.VisitProfileScreen
@@ -43,10 +46,20 @@ fun navArg(name: String, type: NavType<*>, defaultValue: Any): NamedNavArgument 
 
 val ToDASHBOARD = NavigationScreen(Destinations.DASHBOARD) { ctx, _ -> DashboardScreen(ctx, hiltViewModel()) }
 val ToHEROES = NavigationScreen(Destinations.HEROES) { ctx, _ -> Heroes(ctx) }
-val ToSETTINGS = NavigationScreen(Destinations.SETTINGS) { ctx, _ -> SettingsScreen(ctx) }
+val ToSETTINGS = NavigationScreen(Destinations.SETTINGS) { ctx, _ -> SettingsScreen(ctx, hiltViewModel()) }
 val ToSIGN_IN = NavigationScreen(Destinations.SING_IN) { ctx, _ -> Login(ctx, hiltViewModel()) }
 val ToSIGN_UP = NavigationScreen(Destinations.SING_UP) { ctx, _ -> RegistrationScreen(ctx, hiltViewModel()) }
 val ToFORGOT_PASSWORD = NavigationScreen(Destinations.FORGOT_PASSWORD) { ctx, _ -> PasswordResetScreen(ctx, hiltViewModel()) }
+val ToMAPS = NavigationScreen(Destinations.MAPS) { ctx, _ -> Maps(ctx) }
+
+val ToMAP = NavigationScreen("${Destinations.MAPS}/{mapImage}", listOf(
+    navArg("mapImage", NavType.StringType)
+)) { ctx, args ->
+    val viewModel = hiltViewModel<MapViewModel>().apply {
+        this.mapImage = args?.getString("mapImage")!!
+    }
+    SelectedMap(ctx, viewModel)
+}
 
 val ToDEV_CHAT = NavigationScreen("${Destinations.DEV_CHAT}/{author}/{receiver}",
     listOf(navArg("author", NavType.StringType),

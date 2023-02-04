@@ -1,3 +1,4 @@
+@file:Suppress("FunctionName")
 package com.bulkapedia.compose.screens.maps
 
 import androidx.compose.foundation.BorderStroke
@@ -30,9 +31,7 @@ import androidx.core.os.bundleOf
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavType
-import com.bulkapedia.compose.data.HardCode
-import com.bulkapedia.compose.data.NavigationScreen
-import com.bulkapedia.compose.data.navArg
+import com.bulkapedia.compose.data.*
 import com.bulkapedia.compose.elements.Tags
 import com.bulkapedia.compose.elements.mapsTags
 import com.bulkapedia.compose.models.TagViewModel
@@ -56,24 +55,8 @@ fun MapListNav(context: ToolbarCtx) {
     Navigation(
         startDestination = Destinations.MAPS, context,
         screens = listOf(
-            NavigationScreen(Destinations.MAPS) { ctx, _ -> Maps(ctx) },
-            NavigationScreen(Destinations.SETTINGS) { ctx, _ -> SettingsScreen(ctx) },
-            NavigationScreen(Destinations.DASHBOARD) { ctx, _ -> DashboardScreen(ctx, hiltViewModel()) },
-            NavigationScreen("${Destinations.DEV_CHAT}/{author}/{receiver}",
-                listOf(navArg("author", NavType.StringType),
-                    navArg("receiver", NavType.StringType)
-                )
-            ) { ctx, args ->
-                DevChat(ctx = ctx, args?.getString("author")!!, args?.getString("receiver")!!, hiltViewModel())
-            },
-            NavigationScreen("${Destinations.MAPS}/{mapImage}", listOf(
-                navArg("mapImage", NavType.StringType)
-            )) { ctx, args ->
-                val viewModel = hiltViewModel<MapViewModel>().apply {
-                    this.mapImage = args?.getString("mapImage")!!
-                }
-                SelectedMap(ctx, viewModel)
-            }
+            ToMAPS, ToSETTINGS, ToMAP,
+            ToDEV_CHAT, ToDASHBOARD
         )
     )
 }
@@ -125,7 +108,7 @@ fun SelectedMap(ctx: ToolbarCtx, viewModel: MapViewModel) {
 }
 
 @Composable
-private fun ShowMap(map: com.bulkapedia.compose.data.Map, ctx: ToolbarCtx) {
+private fun ShowMap(map: com.bulkapedia.compose.data.Map<Any?, Any?>, ctx: ToolbarCtx) {
     // init toolbar
     ctx.observeAsState()
     ctx.setData(title = CTX.getString(stringToResource(map.name)), showBackButton = true)

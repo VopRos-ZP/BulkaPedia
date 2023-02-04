@@ -85,14 +85,10 @@ fun MainTagDialog(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                OutlinedButton(
-                    text = "Отмена",
-                    color = Color.Red
-                ) { showDialog.value = false }
-                OutlinedButton(
-                    text = "Сохранить",
-                    color = Color.Green
-                ) {
+                InRowOutlinedButton(text = "Отмена", color = Color.Red) {
+                    showDialog.value = false
+                }
+                InRowOutlinedButton(text = "Сохранить", color = Color.Green) {
                     showDialog.value = false
                     onSave.invoke( hero.value,
                         Stats(

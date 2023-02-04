@@ -11,7 +11,7 @@ import javax.inject.Inject
 sealed class MapViewState {
     object StateLoading: MapViewState()
     object StateNoItem: MapViewState()
-    data class StateData(val map: Map): MapViewState()
+    data class StateData(val map: Map<Any?, Any?>): MapViewState()
 }
 
 @HiltViewModel
