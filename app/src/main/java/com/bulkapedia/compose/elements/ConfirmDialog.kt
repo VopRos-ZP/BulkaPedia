@@ -2,24 +2,24 @@
 
 package com.bulkapedia.compose.elements
 
-import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.AlertDialog
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.OutlinedButton
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
+import com.bulkapedia.compose.data.classes.ChangeValue
 import com.bulkapedia.compose.ui.theme.PrimaryDark
-import com.bulkapedia.compose.ui.theme.Teal
 import com.bulkapedia.compose.ui.theme.Teal200
-import com.bulkapedia.compose.data.sets.UserSet
+import com.bulkapedia.compose.util.CenteredBox
+import com.bulkapedia.compose.util.HCenteredBox
 
 @Composable
 fun ConfirmDialog(
@@ -30,6 +30,7 @@ fun ConfirmDialog(
 ) {
     AlertDialog(
         onDismissRequest = {/* On touch outside */},
+        modifier = Modifier.border(2.dp, Teal200, RoundedCornerShape(20.dp)),
         shape = RoundedCornerShape(20.dp),
         backgroundColor = PrimaryDark,
         title = { Text(text = title, color = Teal200, fontWeight = FontWeight.Bold) },
@@ -38,24 +39,60 @@ fun ConfirmDialog(
             Row (
                 modifier = Modifier.fillMaxWidth()
                     .padding(bottom = 20.dp),
-                horizontalArrangement = Arrangement.SpaceEvenly,
-                verticalAlignment = Alignment.CenterVertically
+                horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                OutlinedButton(
-                    onClick = { state.value = false },
-                    colors = ButtonDefaults.outlinedButtonColors(backgroundColor = Color.Transparent),
-                    border = BorderStroke(2.dp, Color.Red)
-                ) {
-                    Text(text = "Отмена", color = Color.Red)
+                InRowOutlinedButton(text = "Отмена", color = Color.Red) {
+                    state.value = false
                 }
-                OutlinedButton(
-                    onClick = { state.value = false; onConfirm.invoke() },
-                    colors = ButtonDefaults.outlinedButtonColors(backgroundColor = Color.Transparent),
-                    border = BorderStroke(2.dp, Color.Yellow)
-                ) {
-                    Text(text = "Удалить", color = Color.Yellow)
+                InRowOutlinedButton(text = "Удалить", color = Color.Yellow) {
+                    state.value = false
+                    onConfirm.invoke()
                 }
             }
         }
     )
+}
+
+@Composable
+fun ChangeValueDialog(
+    changeValue: ChangeValue<String>
+) {
+    Dialog(onDismissRequest = {/* On touch outside */}) {
+        Column (
+            modifier = Modifier
+                .background(PrimaryDark, RoundedCornerShape(20.dp))
+                .border(2.dp, Teal200, RoundedCornerShape(20.dp))
+                .padding(vertical = 10.dp, horizontal = 20.dp)
+        ) {
+            HCenteredBox { Text(text = changeValue.title.value, color = Teal200, fontSize = 18.sp) }
+            OutlinedTextField(
+                changeValue.value, changeValue.fieldLabel.value,
+                shape = RoundedCornerShape(10.dp)
+            )
+            Box(modifier = Modifier.padding(top = 20.dp, bottom = 5.dp)) { InfoBox(changeValue.infoText.value) }
+            Row (
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                InRowOutlinedButton(text = "Отмена", color = Color.Red) {
+                    changeValue.show.value = false
+                }
+                InRowOutlinedButton(text = "Сохранить", color = Color.Green) {
+                    changeValue.show.value = false
+                    changeValue.onSave.value.invoke(changeValue.value.value)
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun ScreenWithChangeDialog(
+    changeValue: ChangeValue<String>,
+    content: @Composable () -> Unit
+) {
+    CenteredBox {
+        content.invoke()
+        if (changeValue.show.value) { ChangeValueDialog(changeValue) }
+    }
 }

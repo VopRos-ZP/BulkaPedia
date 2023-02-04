@@ -18,6 +18,9 @@ import com.google.firebase.database.ktx.database
 import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import kotlin.collections.Map
 
 class Database {
 
@@ -80,23 +83,38 @@ class Database {
     }
 
     fun addSet(set: UserSet) {
-        val data = mapOf(
-            "author" to set.from,
-            "hero" to set.hero,
-            "head" to set.gears[GearCell.HEAD],
-            "body" to set.gears[GearCell.BODY],
-            "arm" to set.gears[GearCell.ARM],
-            "leg" to set.gears[GearCell.LEG],
-            "decor" to set.gears[GearCell.DECOR],
-            "device" to set.gears[GearCell.DEVICE],
-            "likes" to set.likes,
-            "user_like_ids" to set.userLikeIds,
-        )
-        Firebase.firestore.collection("sets").add(data)
+        Firebase.firestore.collection("sets").add(setData(set))
     }
 
     fun addMessage(message: Message) {
         Firebase.firestore.collection("chat").add(message)
+    }
+
+    fun updateSet(set: UserSet) {
+        Firebase.firestore.collection("sets")
+            .document(set.userSetId).update(setData(set))
+    }
+
+    fun updateNickname(email: String, nickname: String, onSuccess: (User) -> Unit) {
+        findUserByEmail(email) { id, user ->
+            user.nickname = nickname
+            user.updateNickname = nowYearFormat()
+            updateUser(id, user, onSuccess)
+        }
+    }
+
+    fun updateEmail(email: String, newEmail: String, onSuccess: (User) -> Unit) {
+        findUserByEmail(email) { id, user ->
+            user.email = newEmail
+            user.updateEmail = nowYearFormat()
+            updateUser(id, user, onSuccess)
+        }
+    }
+
+    private fun updateUser(id: String, user: User, onSuccess: (User) -> Unit) {
+        Firebase.database.reference.child("users").child(id).setValue(user).addOnSuccessListener {
+            onSuccess.invoke(user)
+        }
     }
 
     /** Removing functions **/
@@ -155,7 +173,7 @@ class Database {
                         }
                     }
                 }
-                onError.invoke("User not found")
+                onError.invoke("Пользователь не найден")
             }
 
             override fun onCancelled(error: DatabaseError) { onError.invoke(error.message) }
@@ -173,16 +191,37 @@ class Database {
 
     fun signUp(email: String, password: String, nickname: String, onSuccess: (User) -> Unit) {
         Firebase.auth.createUserWithEmailAndPassword(email, password).addOnSuccessListener {
-            val user = User(email, password, nickname)
+            val now = nowYearFormat()
+            val user = User(email, password, nickname, now, now)
             Firebase.database.reference.child("users").child(it.user!!.uid).setValue(user)
             onSuccess.invoke(user)
         }
+    }
+
+    fun logout() {
+        Firebase.auth.signOut()
     }
 
     fun sendPasswordResetEmail(email: String, onSuccess: () -> Unit) {
         Firebase.auth.sendPasswordResetEmail(email).addOnSuccessListener {
             onSuccess.invoke()
         }
+    }
+
+    /** Help functions **/
+    private fun setData(set: UserSet): Map<String, Any?> {
+        return mapOf(
+            "author" to set.from,
+            "hero" to set.hero,
+            "head" to set.gears[GearCell.HEAD],
+            "body" to set.gears[GearCell.BODY],
+            "arm" to set.gears[GearCell.ARM],
+            "leg" to set.gears[GearCell.LEG],
+            "decor" to set.gears[GearCell.DECOR],
+            "device" to set.gears[GearCell.DEVICE],
+            "likes" to set.likes,
+            "user_like_ids" to set.userLikeIds,
+        )
     }
 
 }

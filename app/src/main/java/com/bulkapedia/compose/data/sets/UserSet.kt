@@ -8,7 +8,7 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class UserSet(
     var userSetId: String,
-    val from: String,
+    var from: String,
     val hero: String,
     var gears: Map<GearCell, String>,
     var likes: Int,

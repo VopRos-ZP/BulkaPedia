@@ -1,15 +1,23 @@
 package com.bulkapedia.compose.data
 
+import android.annotation.SuppressLint
 import android.os.Parcelable
+import android.text.format.DateFormat
 import com.bulkapedia.compose.data.labels.Stats
 import com.google.firebase.database.DataSnapshot
 import kotlinx.parcelize.Parcelize
+import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.util.*
 
 @Parcelize
 data class User(
     var email: String,
     var password: String,
     var nickname: String,
+    var updateEmail: String,
+    var updateNickname: String,
     var mains: MutableMap<String, Stats>? = null
 ) : Parcelable {
 
@@ -37,8 +45,11 @@ data class User(
                     } else
                         strings += data.key!! to (data.value as String)
                 }
-                User(strings["email"]!!, strings["password"]!!,
-                    strings["nickname"]!!, mains)
+                val now = LocalDate.now().format(DateTimeFormatter.ofPattern("dd.MM.yyyy"))
+                User(strings["email"]!!, strings["password"]!!, strings["nickname"]!!,
+                    updateEmail = strings["updateEmail"] ?: now,
+                    updateNickname = strings["updateENickname"] ?: now,
+                    mains)
             } catch (_: Exception) { null }
         }
 
