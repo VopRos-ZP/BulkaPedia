@@ -1,11 +1,8 @@
 @file:Suppress("FunctionName")
 package com.bulkapedia.compose.elements
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.AlertDialog
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.OutlinedButton
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
@@ -31,12 +28,9 @@ fun ErrorDialog(
         text = { Text(text = msg, color = Teal) },
         title = { Text(text = "Ошибка", color = Color.Red, fontSize = 16.sp) },
         confirmButton = {
-            OutlinedButton(
-                onClick = { state.value = false; onDismiss.invoke() },
-                colors = ButtonDefaults.outlinedButtonColors(backgroundColor = Color.Transparent),
-                border = BorderStroke(2.dp, Color.Red)
-            ) {
-                Text(text = "Закрыть", color = Color.Red)
+            InRowOutlinedButton(text = "Закрыть", color = Color.Red) {
+                state.value = false
+                onDismiss.invoke()
             }
         }
     )
