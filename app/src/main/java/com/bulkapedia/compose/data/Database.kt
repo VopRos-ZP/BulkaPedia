@@ -10,6 +10,10 @@ import com.bulkapedia.compose.data.sets.GearCell
 import com.bulkapedia.compose.data.sets.UserSet
 import com.bulkapedia.compose.data.sets.UserSet.Companion.toUserSet
 import com.bulkapedia.compose.data.User.Companion.toUser
+import com.bulkapedia.compose.data.category.Category
+import com.bulkapedia.compose.data.category.Category.Companion.toCategory
+import com.bulkapedia.compose.data.category.HeroInfo
+import com.bulkapedia.compose.data.category.HeroInfo.Companion.toHeroInfo
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -72,6 +76,20 @@ class Database {
     fun addMechanicsSnapshotListener(): ListenerRegistration {
         return Firebase.firestore.collection("mechanics").addSnapshotListener { value, _ ->
             // listen mechanics
+        }
+    }
+
+    fun addCategoriesSnapshotListener(listener: (List<Category>) -> Unit): ListenerRegistration {
+        return Firebase.firestore.collection("categories").addSnapshotListener { value, _ ->
+            val categories = value?.documents?.mapNotNull { it.toCategory() } ?: emptyList()
+            listener.invoke(categories)
+        }
+    }
+
+    fun addHeroInfoSnapshotListener(listener: (List<HeroInfo>) -> Unit): ListenerRegistration {
+        return Firebase.firestore.collection("heroInfo").addSnapshotListener { value, _ ->
+            val heroInfo = value?.documents?.mapNotNull { it.toHeroInfo() } ?: emptyList()
+            listener.invoke(heroInfo)
         }
     }
 

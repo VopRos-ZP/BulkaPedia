@@ -4,9 +4,9 @@ package com.bulkapedia.compose
 import android.annotation.SuppressLint
 import android.os.Build
 import android.os.Bundle
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
@@ -21,7 +21,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import com.bulkapedia.compose.DataStore
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hierarchy
@@ -35,17 +34,17 @@ import com.bulkapedia.compose.navigation.*
 import com.bulkapedia.compose.screens.Screen
 import com.bulkapedia.compose.screens.heroes.HeroesNavList
 import com.bulkapedia.compose.screens.login.LoginNav
-import com.bulkapedia.compose.screens.maps.MapListNav
 import com.bulkapedia.compose.screens.profile.ProfileNav
 import com.bulkapedia.compose.ui.theme.*
 import com.bulkapedia.compose.util.CTX
 import com.bulkapedia.compose.data.gears.GearsList
+import com.bulkapedia.compose.screens.information.InfoListNav
 import com.bulkapedia.compose.util.GEARS_RES
 import com.bulkapedia.compose.util.HEROES_RES
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class MainActivity : ComponentActivity() {
+class MainActivity : AppCompatActivity() {
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -88,9 +87,9 @@ fun MainScreen(
 
     val childNC = rememberNavController()
     val bottomItems = if (sign == true && email != null && email?.isNotEmpty() == true)
-        listOf(Screen.Heroes, Screen.Maps, Screen.Profile(email ?: ""))
+        listOf(Screen.Heroes, Screen.Wiki, Screen.Profile(email ?: ""))
     else
-        listOf(Screen.Heroes, Screen.Maps, Screen.SignIn)
+        listOf(Screen.Heroes, Screen.Wiki, Screen.SignIn)
 
     toolbarCtx.navController = childNC
     Scaffold (
@@ -133,7 +132,7 @@ fun MainScreen(
     ) {
         NavHost(navController = childNC, startDestination = Screen.Heroes.route) {
             composable(Screen.Heroes.route) { HeroesNavList(toolbarCtx) }
-            composable(Screen.Maps.route) { MapListNav(toolbarCtx) }
+            composable(Screen.Wiki.route) { InfoListNav(toolbarCtx) }
             if (sign == true && email != null && email?.isNotEmpty() == true) {
                 composable("${Destinations.PROFILE}/$email") {
                     ProfileNav(toolbarCtx, "${Destinations.PROFILE}/$email", email!!)

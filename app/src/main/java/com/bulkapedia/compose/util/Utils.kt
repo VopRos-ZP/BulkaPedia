@@ -47,7 +47,7 @@ val HEROES_RES = mapOf(
     "doc_icon" to R.drawable.doc_icon,
     "levi_icon" to R.drawable.levi_icon,
     "satoshi_icon" to R.drawable.satoshi_icon,
-    // "tess_icon" to R.drawable.tess_icon // new hero
+    "tess_icon" to R.drawable.tess_icon,
     // maps
     "hotel" to R.drawable.hotel,
     "railway_station" to R.drawable.railway_station,

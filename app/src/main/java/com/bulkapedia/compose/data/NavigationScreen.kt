@@ -16,6 +16,9 @@ import com.bulkapedia.compose.screens.devchat.DevChat
 import com.bulkapedia.compose.screens.hero.HeroSets
 import com.bulkapedia.compose.screens.heroes.HeroViewModel
 import com.bulkapedia.compose.screens.heroes.Heroes
+import com.bulkapedia.compose.screens.heroinfo.HeroInfoScreen
+import com.bulkapedia.compose.screens.heroinfo.HeroesInfoScreen
+import com.bulkapedia.compose.screens.information.InfoScreen
 import com.bulkapedia.compose.screens.login.Login
 import com.bulkapedia.compose.screens.maps.MapViewModel
 import com.bulkapedia.compose.screens.maps.Maps
@@ -51,6 +54,14 @@ val ToSIGN_IN = NavigationScreen(Destinations.SING_IN) { ctx, _ -> Login(ctx, hi
 val ToSIGN_UP = NavigationScreen(Destinations.SING_UP) { ctx, _ -> RegistrationScreen(ctx, hiltViewModel()) }
 val ToFORGOT_PASSWORD = NavigationScreen(Destinations.FORGOT_PASSWORD) { ctx, _ -> PasswordResetScreen(ctx, hiltViewModel()) }
 val ToMAPS = NavigationScreen(Destinations.MAPS) { ctx, _ -> Maps(ctx) }
+val ToINFO = NavigationScreen(Destinations.INFO) { ctx, _ -> InfoScreen(ctx, hiltViewModel()) }
+val ToHEROES_INFO = NavigationScreen(Destinations.HERO_INFO) { ctx, _ -> HeroesInfoScreen(ctx, hiltViewModel()) }
+
+val ToHERO_INFO = NavigationScreen("${Destinations.HERO_INFO}/{hero}", listOf(
+    navArg("hero", NavType.StringType)
+)) { ctx, args ->
+    HeroInfoScreen(ctx, args?.getString("hero")!!, hiltViewModel())
+}
 
 val ToMAP = NavigationScreen("${Destinations.MAPS}/{mapImage}", listOf(
     navArg("mapImage", NavType.StringType)

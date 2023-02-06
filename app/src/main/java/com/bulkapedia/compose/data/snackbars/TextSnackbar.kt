@@ -1,12 +1,14 @@
 @file:Suppress("FunctionName")
 package com.bulkapedia.compose.data.snackbars
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.bulkapedia.compose.ui.theme.Primary
 import com.bulkapedia.compose.ui.theme.PrimaryDark
 import com.bulkapedia.compose.ui.theme.Teal200
 import com.bulkapedia.compose.util.CenteredBox
@@ -26,12 +28,13 @@ fun TextSnackbar(
     val scaffoldState = rememberScaffoldState()
     val action = TextSnackbarAction(scaffoldState.snackbarHostState)
     CenteredBox (
-        modifier = Modifier.fillMaxSize()
-            .padding(bottom = 10.dp)
+        modifier = Modifier.fillMaxWidth()
+            .fillMaxHeight(fraction = 0.923f)
+            .background(Primary)
+            .padding(top = 20.dp)
     ) {
         Scaffold(
-            modifier = Modifier.fillMaxWidth()
-                .fillMaxHeight(fraction = 0.9f),
+            modifier = Modifier.fillMaxSize(),
             scaffoldState = scaffoldState,
             snackbarHost = {
                 SnackbarHost(it) { data ->

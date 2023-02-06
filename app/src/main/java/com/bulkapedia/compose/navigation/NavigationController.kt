@@ -1,3 +1,4 @@
+@file:Suppress("FunctionName")
 package com.bulkapedia.compose.navigation
 
 import android.os.Bundle
@@ -5,17 +6,11 @@ import android.os.Parcelable
 import androidx.compose.runtime.Composable
 import androidx.core.os.bundleOf
 import androidx.navigation.NavController
-import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptionsBuilder
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navigation
 import com.bulkapedia.compose.data.NavigationScreen
-import com.bulkapedia.compose.screens.Screen
-import com.bulkapedia.compose.screens.heroes.HeroesNavList
-import com.bulkapedia.compose.screens.login.LoginNav
-import com.bulkapedia.compose.screens.maps.MapListNav
 
 @Composable
 fun Navigation(

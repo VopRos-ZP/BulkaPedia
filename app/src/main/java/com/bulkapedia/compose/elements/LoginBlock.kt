@@ -25,13 +25,49 @@ fun LoginBlock(
     top: Dp = 0.dp,
     content: @Composable ColumnScope.() -> Unit
 ) {
-    Column(
+    Block(marginTop = top, marginBottom = 20.dp, content)
+}
+
+@Composable
+fun Block(
+    marginTop: Dp,
+    marginBottom: Dp,
+    content: @Composable ColumnScope.() -> Unit
+) {
+    Block(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(start = 20.dp, end = 20.dp, bottom = 20.dp, top = top)
+            .padding(start = 20.dp, end = 20.dp, bottom = marginBottom, top = marginTop)
             .background(PrimaryDark, RoundedCornerShape(20.dp))
             .border(2.dp, Teal200, RoundedCornerShape(20.dp))
             .padding(20.dp),
-        content = content
+        content
     )
+}
+
+@Composable
+fun Block(
+    marginStart: Dp,
+    marginEnd: Dp,
+    marginTop: Dp,
+    marginBottom: Dp,
+    content: @Composable ColumnScope.() -> Unit
+) {
+    Block(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(start = marginStart, end = marginEnd, bottom = marginBottom, top = marginTop)
+            .background(PrimaryDark, RoundedCornerShape(20.dp))
+            .border(2.dp, Teal200, RoundedCornerShape(20.dp))
+            .padding(20.dp),
+        content
+    )
+}
+
+@Composable
+fun Block(
+    modifier: Modifier,
+    content: @Composable ColumnScope.() -> Unit
+) {
+    Column(modifier = modifier, content = content)
 }

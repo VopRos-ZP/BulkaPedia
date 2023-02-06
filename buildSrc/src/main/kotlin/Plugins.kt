@@ -27,6 +27,7 @@ object Deps {
 
     const val material = "com.google.android.material:material:${Versions.material}"
 
+    const val fragment = "androidx.fragment:fragment-ktx:1.5.5"
     const val coroutinesCore = "org.jetbrains.kotlinx:kotlinx-coroutines-core:${Versions.coroutines}"
     const val coroutinesAndroid = "org.jetbrains.kotlinx:kotlinx-coroutines-android:${Versions.coroutines}"
     const val datastorePreferences = "androidx.datastore:datastore-preferences:1.0.0"

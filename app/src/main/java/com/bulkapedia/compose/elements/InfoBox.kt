@@ -38,10 +38,10 @@ fun AgreeInfoBox(text: String) {
 }
 
 @Composable
-fun InfoBox(text: String, color: Color = Color.Yellow) {
+fun InfoBox(text: String, color: Color = Color.Yellow, bgColor: Color = Color.Transparent) {
     Row (
         modifier = Modifier.fillMaxWidth()
-            .background(Color.Transparent, RoundedCornerShape(10.dp))
+            .background(bgColor, RoundedCornerShape(10.dp))
             .border(1.dp, color, RoundedCornerShape(10.dp))
             .padding(10.dp),
         verticalAlignment = Alignment.Top

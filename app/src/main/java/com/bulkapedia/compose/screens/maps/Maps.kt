@@ -51,21 +51,10 @@ import com.bulkapedia.compose.ui.theme.Teal
 import com.bulkapedia.compose.util.*
 
 @Composable
-fun MapListNav(context: ToolbarCtx) {
-    Navigation(
-        startDestination = Destinations.MAPS, context,
-        screens = listOf(
-            ToMAPS, ToSETTINGS, ToMAP,
-            ToDEV_CHAT, ToDASHBOARD
-        )
-    )
-}
-
-@Composable
 fun Maps(ctx: ToolbarCtx) {
     // init toolbar
     ctx.observeAsState()
-    ctx.setTitle("Выберите карту")
+    ctx.setData("Выберите карту", showBackButton = true)
     // body
     Column (
         modifier = Modifier

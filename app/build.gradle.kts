@@ -16,7 +16,7 @@ android {
         minSdk = 26
         targetSdk = 33
         versionCode = 35
-        versionName = "0.3.4"
+        versionName = "0.3.5"
         vectorDrawables {
             useSupportLibrary = true
         }
@@ -68,6 +68,7 @@ dependencies {
     implementation(Deps.coroutinesCore)
     implementation(Deps.coroutinesAndroid)
     implementation(Deps.datastorePreferences)
+    implementation(Deps.fragment)
 
     implementation(Deps.pager)
     implementation(Deps.pagerIndicators)
@@ -103,6 +104,7 @@ dependencies {
         implementation(navigation)
         kapt(compiler)
     }
+    implementation("com.pierfrancescosoffritti.androidyoutubeplayer:core:11.1.0")
 }
 
 kapt {

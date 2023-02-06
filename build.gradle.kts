@@ -1,4 +1,4 @@
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
+// Top-level build file where you can add configuration options common to all subprojects/modules.
 buildscript {
     repositories {
         gradlePluginPortal()
@@ -9,7 +9,7 @@ buildscript {
     dependencies {
         classpath(Deps.kotlin_gradle_plugin)
         classpath(Deps.android_gradle_plugin)
-        classpath("com.google.gms:google-services:4.3.14")
+        classpath("com.google.gms:google-services:4.3.15")
         classpath("androidx.navigation:navigation-safe-args-gradle-plugin:2.5.3")
     }
 
