@@ -14,11 +14,15 @@ import com.bulkapedia.compose.data.category.Category
 import com.bulkapedia.compose.data.category.Category.Companion.toCategory
 import com.bulkapedia.compose.data.category.HeroInfo
 import com.bulkapedia.compose.data.category.HeroInfo.Companion.toHeroInfo
+import com.bulkapedia.compose.data.category.Mechanic
+import com.bulkapedia.compose.data.category.Mechanic.Companion.toMechanic
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
+import com.google.firebase.firestore.CollectionReference
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -28,17 +32,11 @@ class Database {
 
     /** Listeners **/
     fun addSetsSnapshotListener(listener: (List<UserSet>) -> Unit): ListenerRegistration {
-        return Firebase.firestore.collection("sets").addSnapshotListener { value, _ ->
-            val sets = value?.documents?.mapNotNull { it.toUserSet() } ?: emptyList()
-            listener.invoke(sets)
-        }
+        return addSnapshotListener(Firebase.firestore.collection("sets"), { it.toUserSet() }, listener)
     }
 
     fun addCommentsSnapshotListener(listener: (List<Comment>) -> Unit): ListenerRegistration {
-        return Firebase.firestore.collection("comments").addSnapshotListener { value, _ ->
-            val comments = value?.documents?.mapNotNull { it.toComment() } ?: emptyList()
-            listener.invoke(comments)
-        }
+        return addSnapshotListener(Firebase.firestore.collection("comments"), { it.toComment() }, listener)
     }
 
     fun addUsersSnapshotListener(listener: (List<User>) -> Unit): ValueEventListener {
@@ -53,43 +51,33 @@ class Database {
     }
 
     fun addHeroesSnapshotListener(listener: (List<Hero>) -> Unit): ListenerRegistration {
-        return Firebase.firestore.collection("heroes").addSnapshotListener { value, _ ->
-            val heroes = value?.documents?.mapNotNull { it.toHero() } ?: emptyList()
-            listener.invoke(heroes)
-        }
+        return addSnapshotListener(Firebase.firestore.collection("heroes"), { it.toHero() }, listener)
     }
 
     fun addGearsSnapshotListener(listener: (List<Gear>) -> Unit): ListenerRegistration {
-        return Firebase.firestore.collection("gears").addSnapshotListener { value, _ ->
-            val gears = value?.documents?.mapNotNull { it.toGear() } ?: emptyList()
-            listener.invoke(gears)
-        }
+        return addSnapshotListener(Firebase.firestore.collection("gears"), { it.toGear() }, listener)
     }
 
     fun addMessagesSnapshotListener(listener: (List<Message>) -> Unit): ListenerRegistration {
-        return Firebase.firestore.collection("chat").addSnapshotListener { value, _ ->
-            val messages = value?.documents?.mapNotNull { it.toMessage() } ?: emptyList()
-            listener.invoke(messages)
-        }
+        return addSnapshotListener(Firebase.firestore.collection("chat"), { it.toMessage() }, listener)
     }
 
-    fun addMechanicsSnapshotListener(): ListenerRegistration {
-        return Firebase.firestore.collection("mechanics").addSnapshotListener { value, _ ->
-            // listen mechanics
-        }
+    fun addMechanicsSnapshotListener(listener: (List<Mechanic>) -> Unit): ListenerRegistration {
+        return addSnapshotListener(Firebase.firestore.collection("mechanics"), { it.toMechanic() }, listener)
     }
 
     fun addCategoriesSnapshotListener(listener: (List<Category>) -> Unit): ListenerRegistration {
-        return Firebase.firestore.collection("categories").addSnapshotListener { value, _ ->
-            val categories = value?.documents?.mapNotNull { it.toCategory() } ?: emptyList()
-            listener.invoke(categories)
-        }
+        return addSnapshotListener(Firebase.firestore.collection("categories"), { it.toCategory() }, listener)
     }
 
     fun addHeroInfoSnapshotListener(listener: (List<HeroInfo>) -> Unit): ListenerRegistration {
-        return Firebase.firestore.collection("heroInfo").addSnapshotListener { value, _ ->
-            val heroInfo = value?.documents?.mapNotNull { it.toHeroInfo() } ?: emptyList()
-            listener.invoke(heroInfo)
+        return addSnapshotListener(Firebase.firestore.collection("heroInfo"), { it.toHeroInfo() }, listener)
+    }
+
+    private fun <T> addSnapshotListener(collection: CollectionReference, toType: (DocumentSnapshot) -> T?, listener: (List<T>) -> Unit): ListenerRegistration {
+        return collection.addSnapshotListener { value, _ ->
+            val docs = value?.documents?.mapNotNull { toType.invoke(it) } ?: emptyList()
+            listener.invoke(docs)
         }
     }
 
