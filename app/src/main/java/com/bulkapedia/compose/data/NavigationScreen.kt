@@ -23,6 +23,8 @@ import com.bulkapedia.compose.screens.login.Login
 import com.bulkapedia.compose.screens.maps.MapViewModel
 import com.bulkapedia.compose.screens.maps.Maps
 import com.bulkapedia.compose.screens.maps.SelectedMap
+import com.bulkapedia.compose.screens.mechanics.MechanicScreen
+import com.bulkapedia.compose.screens.mechanics.MechanicsScreen
 import com.bulkapedia.compose.screens.passwordreset.PasswordResetScreen
 import com.bulkapedia.compose.screens.profile.Profile
 import com.bulkapedia.compose.screens.profile.VisitProfileScreen
@@ -56,6 +58,13 @@ val ToFORGOT_PASSWORD = NavigationScreen(Destinations.FORGOT_PASSWORD) { ctx, _ 
 val ToMAPS = NavigationScreen(Destinations.MAPS) { ctx, _ -> Maps(ctx) }
 val ToINFO = NavigationScreen(Destinations.INFO) { ctx, _ -> InfoScreen(ctx, hiltViewModel()) }
 val ToHEROES_INFO = NavigationScreen(Destinations.HERO_INFO) { ctx, _ -> HeroesInfoScreen(ctx, hiltViewModel()) }
+val ToMECHANICS = NavigationScreen(Destinations.MECHANICS) { ctx, _ -> MechanicsScreen(ctx, hiltViewModel()) }
+
+val ToMECHANIC = NavigationScreen("${Destinations.MECHANICS}/{id}", listOf(
+    navArg("id", NavType.StringType)
+)) { ctx, args ->
+    MechanicScreen(ctx, args?.getString("id") ?: "", hiltViewModel())
+}
 
 val ToHERO_INFO = NavigationScreen("${Destinations.HERO_INFO}/{hero}", listOf(
     navArg("hero", NavType.StringType)

@@ -40,7 +40,7 @@ fun InfoListNav(toolbarCtx: ToolbarCtx) {
         /** HeroInfo category **/
         ToHEROES_INFO, ToHERO_INFO,
         /** Mechanics category **/
-        // soon
+        ToMECHANICS, ToMECHANIC,
     ))
 }
 
