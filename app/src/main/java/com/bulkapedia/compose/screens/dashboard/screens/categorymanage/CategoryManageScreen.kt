@@ -21,7 +21,7 @@ import com.bulkapedia.compose.util.CenteredBox
 @Composable
 fun CategoryManageScreen(ctx: ToolbarCtx, viewModel: CategoryManageViewModel) {
     ctx.observeAsState()
-    ctx.setData(title = "", showBackButton = true)
+    ctx.setData(title = "Категории Wiki", showBackButton = true)
     // UI
     val viewState = viewModel.liveData.observeAsState()
     when (val state = viewState.value!!) {
@@ -33,6 +33,7 @@ fun CategoryManageScreen(ctx: ToolbarCtx, viewModel: CategoryManageViewModel) {
         else -> {
             Box(
                 modifier = Modifier.fillMaxWidth()
+                    .padding(top = 20.dp)
                     .fillMaxHeight(fraction = 0.923f)
                     .background(Primary)
             ) {
