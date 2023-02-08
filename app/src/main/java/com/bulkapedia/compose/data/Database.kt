@@ -94,6 +94,25 @@ class Database {
         Firebase.firestore.collection("chat").add(message)
     }
 
+    fun addHeroInfo(heroInfo: HeroInfo) {
+        val data = mapOf(
+            "hero" to heroInfo.hero,
+            "description" to heroInfo.description,
+            "video" to heroInfo.video,
+        )
+        Firebase.firestore.collection("heroInfo").add(data)
+    }
+
+    fun updateCategory(category: Category) {
+        Firebase.firestore.collection("categories")
+            .whereEqualTo("destination", category.destination)
+            .get().addOnSuccessListener { q ->
+                for (doc in q.documents) {
+                    doc.reference.set(category)
+                }
+            }
+    }
+
     fun updateSet(set: UserSet) {
         Firebase.firestore.collection("sets")
             .document(set.userSetId).update(setData(set))
