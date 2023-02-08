@@ -45,7 +45,8 @@ fun HeroesNavList(toolbarCtx: ToolbarCtx) {
         startDestination = Destinations.HEROES, toolbarCtx,
         screens = listOf(
             ToHEROES, ToDASHBOARD, ToDEV_CHAT, ToCREATE_SET,
-            ToSETTINGS, ToSET, ToTOP, ToCOMMENTS, ToVISIT
+            ToSETTINGS, ToSET, ToTOP, ToCOMMENTS, ToVISIT,
+            ToCATEGORY_MANAGE, ToUSERS_SETS,
         )
     )
 }

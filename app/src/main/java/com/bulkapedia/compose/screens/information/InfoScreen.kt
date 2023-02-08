@@ -35,6 +35,8 @@ import kotlinx.coroutines.launch
 fun InfoListNav(toolbarCtx: ToolbarCtx) {
     Navigation(Destinations.INFO, toolbarCtx, listOf(
         ToINFO, ToDEV_CHAT, ToSETTINGS, ToDASHBOARD,
+        /* Dashboard */
+        ToCATEGORY_MANAGE, ToUSERS_SETS,
         /** Maps category **/
         ToMAPS, ToMAP,
         /** HeroInfo category **/

@@ -53,7 +53,8 @@ fun ProfileNav(toolbarCtx: ToolbarCtx, startDestination: String, dEmail: String)
                 Profile(ctx, email, viewModel)
             }, ToSETTINGS,
             ToSIGN_IN, ToDASHBOARD, ToCOMMENTS,
-            ToVISIT, ToCREATE_SET, ToDEV_CHAT
+            ToVISIT, ToCREATE_SET, ToDEV_CHAT,
+            ToCATEGORY_MANAGE, ToUSERS_SETS,
         )
     )
 }

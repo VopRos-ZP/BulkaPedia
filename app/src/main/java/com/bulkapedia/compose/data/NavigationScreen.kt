@@ -4,7 +4,6 @@ import android.os.Bundle
 import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NamedNavArgument
-import androidx.navigation.NavController
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
 import com.bulkapedia.compose.navigation.Destinations
@@ -12,6 +11,8 @@ import com.bulkapedia.compose.navigation.ToolbarCtx
 import com.bulkapedia.compose.screens.comments.CommentsScreen
 import com.bulkapedia.compose.screens.createset.CreateSetScreen
 import com.bulkapedia.compose.screens.dashboard.DashboardScreen
+import com.bulkapedia.compose.screens.dashboard.screens.categorymanage.CategoryManageScreen
+import com.bulkapedia.compose.screens.dashboard.tabs.UsersSetsScreen
 import com.bulkapedia.compose.screens.devchat.DevChat
 import com.bulkapedia.compose.screens.hero.HeroSets
 import com.bulkapedia.compose.screens.heroes.HeroViewModel
@@ -49,7 +50,7 @@ fun navArg(name: String, type: NavType<*>, defaultValue: Any): NamedNavArgument 
 
 // Navigation screens
 
-val ToDASHBOARD = NavigationScreen(Destinations.DASHBOARD) { ctx, _ -> DashboardScreen(ctx, hiltViewModel()) }
+val ToDASHBOARD = NavigationScreen(Destinations.DASHBOARD) { ctx, _ -> DashboardScreen(ctx) }
 val ToHEROES = NavigationScreen(Destinations.HEROES) { ctx, _ -> Heroes(ctx) }
 val ToSETTINGS = NavigationScreen(Destinations.SETTINGS) { ctx, _ -> SettingsScreen(ctx, hiltViewModel()) }
 val ToSIGN_IN = NavigationScreen(Destinations.SING_IN) { ctx, _ -> Login(ctx, hiltViewModel()) }
@@ -59,6 +60,8 @@ val ToMAPS = NavigationScreen(Destinations.MAPS) { ctx, _ -> Maps(ctx) }
 val ToINFO = NavigationScreen(Destinations.INFO) { ctx, _ -> InfoScreen(ctx, hiltViewModel()) }
 val ToHEROES_INFO = NavigationScreen(Destinations.HERO_INFO) { ctx, _ -> HeroesInfoScreen(ctx, hiltViewModel()) }
 val ToMECHANICS = NavigationScreen(Destinations.MECHANICS) { ctx, _ -> MechanicsScreen(ctx, hiltViewModel()) }
+val ToUSERS_SETS = NavigationScreen(Destinations.USERS_SETS) { ctx, _ -> UsersSetsScreen(ctx, hiltViewModel()) }
+val ToCATEGORY_MANAGE = NavigationScreen(Destinations.CATEGORY_MANAGE) { ctx, _ -> CategoryManageScreen(ctx, hiltViewModel()) }
 
 val ToMECHANIC = NavigationScreen("${Destinations.MECHANICS}/{id}", listOf(
     navArg("id", NavType.StringType)
