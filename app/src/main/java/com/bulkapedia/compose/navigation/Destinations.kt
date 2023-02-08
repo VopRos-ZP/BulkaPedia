@@ -4,6 +4,9 @@ object Destinations {
     /** Settings view **/
     const val SETTINGS = "settings"
     const val DASHBOARD = "dashboard"
+    const val USERS_SETS = "users_sets"
+    const val CATEGORY_MANAGE = "category_manage"
+    const val ABOUT = "about"
     /** Heroes tab **/
     const val HEROES = "heroes"
     const val SETS = "sets"
