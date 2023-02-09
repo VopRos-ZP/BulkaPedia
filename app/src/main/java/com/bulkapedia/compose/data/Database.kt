@@ -100,7 +100,7 @@ class Database {
             "description" to heroInfo.description,
             "video" to heroInfo.video,
         )
-        Firebase.firestore.collection("heroInfo").add(data)
+        Firebase.firestore.collection("heroInfo").document(heroInfo.id).set(data)
     }
 
     fun updateCategory(category: Category) {

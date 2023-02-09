@@ -16,6 +16,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.bulkapedia.compose.data.classes.ChangeValue
+import com.bulkapedia.compose.data.classes.ChangeValues
 import com.bulkapedia.compose.ui.theme.PrimaryDark
 import com.bulkapedia.compose.ui.theme.Teal200
 import com.bulkapedia.compose.util.CenteredBox
@@ -51,6 +52,41 @@ fun ConfirmDialog(
             }
         }
     )
+}
+
+@Composable
+fun ChangesValueDialog(changeValue: ChangeValues<String>) {
+    Dialog(onDismissRequest = {/* On touch outside */}) {
+        Column (
+            modifier = Modifier
+                .background(PrimaryDark, RoundedCornerShape(20.dp))
+                .border(2.dp, Teal200, RoundedCornerShape(20.dp))
+                .padding(vertical = 10.dp, horizontal = 20.dp)
+        ) {
+            HCenteredBox { Text(text = changeValue.title.value, color = Teal200, fontSize = 18.sp) }
+            changeValue.values.value.mapIndexed { i, value ->
+                OutlinedTextField(
+                    value, changeValue.fieldLabels.value[i],
+                    shape = RoundedCornerShape(10.dp)
+                )
+            }
+            if (changeValue.infoText.value.isNotEmpty()) {
+                Box(modifier = Modifier.padding(top = 20.dp, bottom = 5.dp)) { InfoBox(changeValue.infoText.value) }
+            }
+            Row (
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                InRowOutlinedButton(text = "Отмена", color = Color.Red) {
+                    changeValue.show.value = false
+                }
+                InRowOutlinedButton(text = "Сохранить", color = Color.Green) {
+                    changeValue.show.value = false
+                    changeValue.onSave.value.invoke(changeValue.values.value.map { it.value })
+                }
+            }
+        }
+    }
 }
 
 @Composable
@@ -94,5 +130,16 @@ fun ScreenWithChangeDialog(
     CenteredBox {
         content.invoke()
         if (changeValue.show.value) { ChangeValueDialog(changeValue) }
+    }
+}
+
+@Composable
+fun ScreenWithChangesDialog(
+    changeValue: ChangeValues<String>,
+    content: @Composable () -> Unit
+) {
+    CenteredBox {
+        content.invoke()
+        if (changeValue.show.value) { ChangesValueDialog(changeValue) }
     }
 }

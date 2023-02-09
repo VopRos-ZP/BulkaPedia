@@ -54,7 +54,7 @@ fun ProfileNav(toolbarCtx: ToolbarCtx, startDestination: String, dEmail: String)
             }, ToSETTINGS,
             ToSIGN_IN, ToDASHBOARD, ToCOMMENTS,
             ToVISIT, ToCREATE_SET, ToDEV_CHAT,
-            ToCATEGORY_MANAGE, ToUSERS_SETS,
+            ToCATEGORY_MANAGE, ToUSERS_SETS, ToMANAGE_HEROES_INFO,
         )
     )
 }

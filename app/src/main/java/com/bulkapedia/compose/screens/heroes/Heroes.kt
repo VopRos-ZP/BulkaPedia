@@ -46,7 +46,7 @@ fun HeroesNavList(toolbarCtx: ToolbarCtx) {
         screens = listOf(
             ToHEROES, ToDASHBOARD, ToDEV_CHAT, ToCREATE_SET,
             ToSETTINGS, ToSET, ToTOP, ToCOMMENTS, ToVISIT,
-            ToCATEGORY_MANAGE, ToUSERS_SETS,
+            ToCATEGORY_MANAGE, ToUSERS_SETS, ToMANAGE_HEROES_INFO,
         )
     )
 }

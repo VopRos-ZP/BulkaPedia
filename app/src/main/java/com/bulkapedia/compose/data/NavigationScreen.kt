@@ -62,6 +62,9 @@ val ToHEROES_INFO = NavigationScreen(Destinations.HERO_INFO) { ctx, _ -> HeroesI
 val ToMECHANICS = NavigationScreen(Destinations.MECHANICS) { ctx, _ -> MechanicsScreen(ctx, hiltViewModel()) }
 val ToUSERS_SETS = NavigationScreen(Destinations.USERS_SETS) { ctx, _ -> UsersSetsScreen(ctx, hiltViewModel()) }
 val ToCATEGORY_MANAGE = NavigationScreen(Destinations.CATEGORY_MANAGE) { ctx, _ -> CategoryManageScreen(ctx, hiltViewModel()) }
+val ToMANAGE_HEROES_INFO = NavigationScreen("${Destinations.DASHBOARD}/${Destinations.HERO_INFO}") { ctx, _ ->
+    com.bulkapedia.compose.screens.dashboard.screens.heroinfo.HeroesInfoScreen(ctx, hiltViewModel())
+}
 
 val ToMECHANIC = NavigationScreen("${Destinations.MECHANICS}/{id}", listOf(
     navArg("id", NavType.StringType)

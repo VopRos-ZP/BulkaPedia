@@ -10,3 +10,12 @@ data class ChangeValue<T>(
     val value: MutableState<T>,
     val onSave: MutableState<(T) -> Unit>
 )
+
+data class ChangeValues<T>(
+    val show: MutableState<Boolean>,
+    val title: MutableState<String>,
+    val fieldLabels: MutableState<List<String>>,
+    val values: MutableState<List<MutableState<T>>>,
+    val infoText: MutableState<String>,
+    val onSave: MutableState<(List<T>) -> Unit>
+)
