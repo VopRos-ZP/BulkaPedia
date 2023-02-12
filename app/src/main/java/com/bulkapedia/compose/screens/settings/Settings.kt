@@ -29,6 +29,7 @@ import com.bulkapedia.compose.DataStore
 import com.bulkapedia.R
 import com.bulkapedia.compose.data.Database
 import com.bulkapedia.compose.data.classes.ChangeValue
+import com.bulkapedia.compose.data.classes.Value
 import com.bulkapedia.compose.data.snackbars.TextSnackbar
 import com.bulkapedia.compose.data.toYearDate
 import com.bulkapedia.compose.data.yearFormat
@@ -60,12 +61,12 @@ fun SettingsScreen(ctx: ToolbarCtx, viewModel: SettingsViewModel) {
     val showChange = remember { mutableStateOf(false) }
     val changeFieldLabel = remember { mutableStateOf("") }
     val changeTitle = remember { mutableStateOf("") }
-    val changeValue = remember { mutableStateOf("") }
+    val changeValue = remember { mutableStateOf(Value.TextValue(mutableStateOf(""))) }
     val changeInfoText = remember { mutableStateOf("") }
-    val changeOnSave = remember { mutableStateOf<(String) -> Unit>({}) }
+    val changeOnSave = remember { mutableStateOf<(Value) -> Unit>({}) }
     val change = ChangeValue(
         showChange, changeTitle, changeFieldLabel, changeInfoText,
-        changeValue, changeOnSave
+        changeValue.value, changeOnSave
     )
     // UI
     // перейти потом на LazyColumn!!! Когда блоков будет много
@@ -105,7 +106,7 @@ fun SettingsScreen(ctx: ToolbarCtx, viewModel: SettingsViewModel) {
                                 if (period >= 2) {
                                     changeInfoText.value = "Последущая смена почты будет возможна только через 2 месяца"
                                     changeOnSave.value = { newEmail ->
-                                        db.updateEmail(user.email, newEmail) { newUser ->
+                                        db.updateEmail(user.email, (newEmail as Value.TextValue).v.value) { newUser ->
                                             scope.launch { store.saveEmail(newUser.email) }
                                             db.addSetsSnapshotListener { sets ->
                                                 sets.filter { it.userLikeIds.contains(user.email) }.forEach { set ->
@@ -123,7 +124,7 @@ fun SettingsScreen(ctx: ToolbarCtx, viewModel: SettingsViewModel) {
                                     changeOnSave.value = {}
                                 }
                                 changeTitle.value = "Изменить почту"
-                                changeValue.value = user.email
+                                changeValue.value = Value.TextValue(mutableStateOf(user.email))
                                 changeFieldLabel.value = "Почта"
                                 showChange.value = true
                             }
@@ -151,7 +152,7 @@ fun SettingsScreen(ctx: ToolbarCtx, viewModel: SettingsViewModel) {
                                 if (period >= 2) {
                                     changeInfoText.value = "Последущая смена ника будет возможна только через 2 месяца"
                                     changeOnSave.value = { newNick ->
-                                        db.updateNickname(user.email, newNick) { newUser ->
+                                        db.updateNickname(user.email, (newNick as Value.TextValue).v.value) { newUser ->
                                             scope.launch { store.saveNickname(newUser.nickname) }
                                             db.addSetsSnapshotListener { sets ->
                                                 sets.filter { it.from == nickname.value }.forEach { set ->
@@ -168,7 +169,7 @@ fun SettingsScreen(ctx: ToolbarCtx, viewModel: SettingsViewModel) {
                                     changeOnSave.value = {}
                                 }
                                 changeTitle.value = "Изменить ник"
-                                changeValue.value = user.nickname
+                                changeValue.value = Value.TextValue(mutableStateOf(user.nickname))
                                 changeFieldLabel.value = "Ник"
                                 showChange.value = true
                             }

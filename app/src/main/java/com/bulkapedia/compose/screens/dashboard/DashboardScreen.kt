@@ -32,8 +32,9 @@ fun DashboardScreen(ctx: ToolbarCtx) {
     ctx.setData("Доска управления", true)
     // Vars
     val items = listOf(
-        DashboardItem("Юзеры\n и Сеты") { ctx.navController.navigate(Destinations.USERS_SETS) },
+        DashboardItem("Юзеры\nи Сеты") { ctx.navController.navigate(Destinations.USERS_SETS) },
         DashboardItem("Категории\nWiki") { ctx.navController.navigate(Destinations.CATEGORY_MANAGE) },
+        DashboardItem("Добавить\nheroInfo") { ctx.navController.navigate("${Destinations.DASHBOARD}/${Destinations.HERO_INFO}") },
     )
     // UI
     LazyVerticalGrid(

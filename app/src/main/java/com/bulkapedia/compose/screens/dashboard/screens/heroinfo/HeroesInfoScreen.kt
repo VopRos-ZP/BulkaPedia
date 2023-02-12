@@ -2,10 +2,7 @@
 package com.bulkapedia.compose.screens.dashboard.screens.heroinfo
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
@@ -19,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.bulkapedia.compose.data.category.HeroInfo
 import com.bulkapedia.compose.data.classes.ChangeValues
+import com.bulkapedia.compose.data.classes.Value
 import com.bulkapedia.compose.elements.OutlinedButton
 import com.bulkapedia.compose.elements.ScreenWithChangesDialog
 import com.bulkapedia.compose.navigation.ToolbarCtx
@@ -37,8 +35,8 @@ fun HeroesInfoScreen(ctx: ToolbarCtx, viewModel: HeroInfoViewModel) {
     val dialogTitle = remember { mutableStateOf("Добавить") }
     val infoText = remember { mutableStateOf("") }
     val fieldLabels = remember { mutableStateOf(listOf<String>()) }
-    val values = remember { mutableStateOf(listOf(mutableStateOf(""))) }
-    val onSave = remember { mutableStateOf<(List<String>) -> Unit>({}) }
+    val values = remember { mutableStateOf(listOf<Value>()) }
+    val onSave = remember { mutableStateOf<(List<Value>) -> Unit>({}) }
 
     val changeValues = ChangeValues(
         show = showDialog,
@@ -51,7 +49,8 @@ fun HeroesInfoScreen(ctx: ToolbarCtx, viewModel: HeroInfoViewModel) {
     // UI
     ScreenWithChangesDialog(changeValues) {
         Column(
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier.fillMaxWidth()
+                .fillMaxHeight(fraction = 0.923f)
                 .background(Primary),
         ) {
             when (val state = viewState.value!!) {
@@ -61,7 +60,7 @@ fun HeroesInfoScreen(ctx: ToolbarCtx, viewModel: HeroInfoViewModel) {
                         GridCells.Fixed(2),
                         horizontalArrangement = Arrangement.spacedBy(20.dp),
                         verticalArrangement = Arrangement.spacedBy(20.dp),
-                        modifier = Modifier.fillMaxSize()
+                        modifier = Modifier.fillMaxWidth()
                             .background(Primary)
                             .padding(horizontal = 20.dp)
                     ) {
@@ -73,16 +72,16 @@ fun HeroesInfoScreen(ctx: ToolbarCtx, viewModel: HeroInfoViewModel) {
                                         "Icon", "Video", "Description"
                                     )
                                     values.value = listOf(
-                                        mutableStateOf(info.hero),
-                                        mutableStateOf(info.video),
-                                        mutableStateOf(info.description),
+                                        Value.TextValue(mutableStateOf(info.hero)),
+                                        Value.TextValue(mutableStateOf(info.video)),
+                                        Value.TextValue(mutableStateOf(info.description)),
                                     )
                                     onSave.value = { newValues ->
                                         val heroInfo = HeroInfo(
-                                            id = newValues[0].split("_")[0],
-                                            hero = newValues[0],
-                                            video = newValues[1],
-                                            description = newValues[2]
+                                            id = (newValues[0] as Value.TextValue).v.value.split("_")[0],
+                                            hero = (newValues[0] as Value.TextValue).v.value,
+                                            video = (newValues[1] as Value.TextValue).v.value,
+                                            description = (newValues[2] as Value.TextValue).v.value
                                         )
                                         viewModel.addHeroInfo(heroInfo)
                                     }
@@ -100,16 +99,16 @@ fun HeroesInfoScreen(ctx: ToolbarCtx, viewModel: HeroInfoViewModel) {
                         "Icon", "Video", "Description"
                     )
                     values.value = listOf(
-                        mutableStateOf("arnie_icon"),
-                        mutableStateOf("video_id"),
-                        mutableStateOf("[start_time]0:00[end_time] some description"),
+                        Value.TextValue(mutableStateOf("arnie_icon")),
+                        Value.TextValue(mutableStateOf("video_id")),
+                        Value.TextValue(mutableStateOf("[start_time]0:00[end_time] some description")),
                     )
                     onSave.value = { newValues ->
                         val heroInfo = HeroInfo(
-                            id = newValues[0].split("_")[0],
-                            hero = newValues[0],
-                            video = newValues[1],
-                            description = newValues[2]
+                            id = (newValues[0] as Value.TextValue).v.value.split("_")[0],
+                            hero = (newValues[0] as Value.TextValue).v.value,
+                            video = (newValues[1] as Value.TextValue).v.value,
+                            description = (newValues[2] as Value.TextValue).v.value
                         )
                         viewModel.addHeroInfo(heroInfo)
                     }

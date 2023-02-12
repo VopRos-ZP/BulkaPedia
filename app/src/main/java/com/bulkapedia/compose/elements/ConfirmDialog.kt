@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.bulkapedia.compose.data.classes.ChangeValue
 import com.bulkapedia.compose.data.classes.ChangeValues
+import com.bulkapedia.compose.data.classes.Value
 import com.bulkapedia.compose.ui.theme.PrimaryDark
 import com.bulkapedia.compose.ui.theme.Teal200
 import com.bulkapedia.compose.util.CenteredBox
@@ -55,7 +56,7 @@ fun ConfirmDialog(
 }
 
 @Composable
-fun ChangesValueDialog(changeValue: ChangeValues<String>) {
+fun ChangesValueDialog(changeValue: ChangeValues) {
     Dialog(onDismissRequest = {/* On touch outside */}) {
         Column (
             modifier = Modifier
@@ -66,7 +67,7 @@ fun ChangesValueDialog(changeValue: ChangeValues<String>) {
             HCenteredBox { Text(text = changeValue.title.value, color = Teal200, fontSize = 18.sp) }
             changeValue.values.value.mapIndexed { i, value ->
                 OutlinedTextField(
-                    value, changeValue.fieldLabels.value[i],
+                    (value as Value.TextValue).v, changeValue.fieldLabels.value[i],
                     shape = RoundedCornerShape(10.dp)
                 )
             }
@@ -82,7 +83,7 @@ fun ChangesValueDialog(changeValue: ChangeValues<String>) {
                 }
                 InRowOutlinedButton(text = "Сохранить", color = Color.Green) {
                     changeValue.show.value = false
-                    changeValue.onSave.value.invoke(changeValue.values.value.map { it.value })
+                    changeValue.onSave.value.invoke(changeValue.values.value.map { (it as Value.TextValue) })
                 }
             }
         }
@@ -91,7 +92,7 @@ fun ChangesValueDialog(changeValue: ChangeValues<String>) {
 
 @Composable
 fun ChangeValueDialog(
-    changeValue: ChangeValue<String>
+    changeValue: ChangeValue
 ) {
     Dialog(onDismissRequest = {/* On touch outside */}) {
         Column (
@@ -102,7 +103,7 @@ fun ChangeValueDialog(
         ) {
             HCenteredBox { Text(text = changeValue.title.value, color = Teal200, fontSize = 18.sp) }
             OutlinedTextField(
-                changeValue.value, changeValue.fieldLabel.value,
+                (changeValue.value as Value.TextValue).v, changeValue.fieldLabel.value,
                 shape = RoundedCornerShape(10.dp)
             )
             Box(modifier = Modifier.padding(top = 20.dp, bottom = 5.dp)) { InfoBox(changeValue.infoText.value) }
@@ -115,7 +116,7 @@ fun ChangeValueDialog(
                 }
                 InRowOutlinedButton(text = "Сохранить", color = Color.Green) {
                     changeValue.show.value = false
-                    changeValue.onSave.value.invoke(changeValue.value.value)
+                    changeValue.onSave.value.invoke(changeValue.value)
                 }
             }
         }
@@ -124,7 +125,7 @@ fun ChangeValueDialog(
 
 @Composable
 fun ScreenWithChangeDialog(
-    changeValue: ChangeValue<String>,
+    changeValue: ChangeValue,
     content: @Composable () -> Unit
 ) {
     CenteredBox {
@@ -135,7 +136,7 @@ fun ScreenWithChangeDialog(
 
 @Composable
 fun ScreenWithChangesDialog(
-    changeValue: ChangeValues<String>,
+    changeValue: ChangeValues,
     content: @Composable () -> Unit
 ) {
     CenteredBox {
