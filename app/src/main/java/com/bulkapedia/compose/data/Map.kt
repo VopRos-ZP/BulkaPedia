@@ -6,7 +6,7 @@ import kotlinx.parcelize.Parcelize
 import com.bulkapedia.R
 
 @Parcelize
-data class Map<T, U>(
+data class Map(
     val mapId: String,
     val image: String,
     val imageSpawns: String,
@@ -15,7 +15,7 @@ data class Map<T, U>(
 ) : Parcelable {
 
     companion object {
-        fun DocumentSnapshot.toMap(): Map<Any?, Any?>? {
+        fun DocumentSnapshot.toMap(): Map? {
             return try {
                 Map(id, getString("image")!!, getString("imageSpawns")!!,
                     getString("name")!!, getString("mode")!!)

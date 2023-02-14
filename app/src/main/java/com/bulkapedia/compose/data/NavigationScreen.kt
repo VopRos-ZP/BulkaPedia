@@ -56,7 +56,7 @@ val ToSETTINGS = NavigationScreen(Destinations.SETTINGS) { ctx, _ -> SettingsScr
 val ToSIGN_IN = NavigationScreen(Destinations.SING_IN) { ctx, _ -> Login(ctx, hiltViewModel()) }
 val ToSIGN_UP = NavigationScreen(Destinations.SING_UP) { ctx, _ -> RegistrationScreen(ctx, hiltViewModel()) }
 val ToFORGOT_PASSWORD = NavigationScreen(Destinations.FORGOT_PASSWORD) { ctx, _ -> PasswordResetScreen(ctx, hiltViewModel()) }
-val ToMAPS = NavigationScreen(Destinations.MAPS) { ctx, _ -> Maps(ctx) }
+val ToMAPS = NavigationScreen(Destinations.MAPS) { ctx, _ -> Maps(ctx, hiltViewModel()) }
 val ToINFO = NavigationScreen(Destinations.INFO) { ctx, _ -> InfoScreen(ctx, hiltViewModel()) }
 val ToHEROES_INFO = NavigationScreen(Destinations.HERO_INFO) { ctx, _ -> HeroesInfoScreen(ctx, hiltViewModel()) }
 val ToMECHANICS = NavigationScreen(Destinations.MECHANICS) { ctx, _ -> MechanicsScreen(ctx, hiltViewModel()) }
@@ -81,10 +81,7 @@ val ToHERO_INFO = NavigationScreen("${Destinations.HERO_INFO}/{hero}", listOf(
 val ToMAP = NavigationScreen("${Destinations.MAPS}/{mapImage}", listOf(
     navArg("mapImage", NavType.StringType)
 )) { ctx, args ->
-    val viewModel = hiltViewModel<MapViewModel>().apply {
-        this.mapImage = args?.getString("mapImage")!!
-    }
-    SelectedMap(ctx, viewModel)
+    SelectedMap(ctx, args?.getString("mapImage")!!, hiltViewModel())
 }
 
 val ToDEV_CHAT = NavigationScreen("${Destinations.DEV_CHAT}/{author}/{receiver}",

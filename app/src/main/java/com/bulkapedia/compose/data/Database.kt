@@ -1,6 +1,7 @@
 package com.bulkapedia.compose.data
 
 import com.bulkapedia.compose.data.Comment.Companion.toComment
+import com.bulkapedia.compose.data.Map.Companion.toMap
 import com.bulkapedia.compose.data.Message.Companion.toMessage
 import com.bulkapedia.compose.data.gears.Gear
 import com.bulkapedia.compose.data.gears.Gear.Companion.toGear
@@ -31,6 +32,10 @@ import kotlin.collections.Map
 class Database {
 
     /** Listeners **/
+    fun addMapsSnapshotListener(listener: (List<com.bulkapedia.compose.data.Map>) -> Unit): ListenerRegistration {
+        return addSnapshotListener(Firebase.firestore.collection("maps"), { it.toMap() }, listener)
+    }
+
     fun addSetsSnapshotListener(listener: (List<UserSet>) -> Unit): ListenerRegistration {
         return addSnapshotListener(Firebase.firestore.collection("sets"), { it.toUserSet() }, listener)
     }

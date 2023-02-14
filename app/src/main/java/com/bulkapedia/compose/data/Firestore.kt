@@ -35,7 +35,7 @@ object Firestore {
     object Maps {
         private val ref = fs().collection("maps")
 
-        suspend fun getMaps(): List<Map<Any?, Any?>>? {
+        suspend fun getMaps(): List<Map>? {
             return try {
                 ref.get().await().documents.mapNotNull { it.toMap() }
             } catch (_: Exception) { null }

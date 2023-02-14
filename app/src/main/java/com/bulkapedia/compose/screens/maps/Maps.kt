@@ -2,89 +2,97 @@
 package com.bulkapedia.compose.screens.maps
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Card
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.IconToggleButton
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.os.bundleOf
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import androidx.navigation.NavType
 import com.bulkapedia.compose.data.*
+import com.bulkapedia.compose.data.Map
+import com.bulkapedia.compose.elements.ScreenWithError
 import com.bulkapedia.compose.elements.Tags
 import com.bulkapedia.compose.elements.mapsTags
 import com.bulkapedia.compose.models.TagViewModel
 import com.bulkapedia.compose.models.TagViewState
 import com.bulkapedia.compose.navigation.Destinations
-import com.bulkapedia.compose.navigation.Navigation
 import com.bulkapedia.compose.navigation.ToolbarCtx
 import com.bulkapedia.compose.navigation.navigate
-import com.bulkapedia.compose.screens.dashboard.DashboardScreen
-import com.bulkapedia.compose.screens.devchat.DevChat
-import com.bulkapedia.compose.screens.settings.SettingsScreen
 import com.bulkapedia.compose.ui.theme.Primary
 import com.bulkapedia.compose.ui.theme.Teal200
 import com.bulkapedia.compose.util.stringToResource
 import com.bulkapedia.compose.ui.theme.PrimaryDark
-import com.bulkapedia.compose.ui.theme.Teal
 import com.bulkapedia.compose.util.*
+import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
+import com.bumptech.glide.integration.compose.GlideImage
 
 @Composable
-fun Maps(ctx: ToolbarCtx) {
-    // init toolbar
+fun Maps(ctx: ToolbarCtx, viewModel: MapsViewModel) {
+    // toolbar
     ctx.observeAsState()
     ctx.setData("Выберите карту", showBackButton = true)
-    // body
-    Column (
-        modifier = Modifier
-            .fillMaxWidth()
-            .fillMaxHeight(0.923f)
-            .background(Primary)
-    ) {
-        val tagViewModel = TagViewModel()
-        val tagViewState = tagViewModel.viewState.observeAsState()
-        Tags(mapsTags(), tagViewModel)
-        LazyColumn(
+    val viewState = viewModel.liveData.observeAsState()
+    // Error
+    val showError = remember { mutableStateOf(false) }
+    val errorText = remember { mutableStateOf("Неизвестная ошибка") }
+    // UI
+    ScreenWithError(showError, errorText.value) {
+        Column (
             modifier = Modifier.fillMaxSize()
-                .padding(horizontal = 20.dp)
-                .background(Color.Transparent, RoundedCornerShape(25.dp))
-                .padding(horizontal = 40.dp)
+                .background(Primary)
         ) {
-            val filteredList = filterList(HardCode.Map.values, tagViewState.value!!)
-            items(filteredList) { item ->
-                HCenteredBox {
-                    MapCard(item, ctx.navController,
-                        isLast = filteredList.last() == item
-                    )
+            val tagViewModel = TagViewModel()
+            val tagViewState = tagViewModel.viewState.observeAsState()
+            Tags(mapsTags(), tagViewModel)
+            when (val list = viewState.value) {
+                null -> {
+                    errorText.value = "Не удалось загрузить карты"
+                    showError.value = true
+                }
+                emptyList<Map>() -> CenteredBox { Text("Список пуст...", color = Teal200) }
+                else -> {
+                    val filteredList = filterList(list, tagViewState.value!!)
+                    Column(
+                        modifier = Modifier.fillMaxSize()
+                            .padding(horizontal = 20.dp)
+                            .background(Color.Transparent, RoundedCornerShape(25.dp))
+                            .padding(horizontal = 40.dp)
+                            .verticalScroll(rememberScrollState())
+                    ) {
+                        filteredList.map { item ->
+                            HCenteredBox {
+                                MapCard(item, ctx.navController,
+                                    isLast = filteredList.last() == item
+                                )
+                            }
+                        }
+                    }
                 }
             }
         }
     }
+    DisposableEffect(null) {
+        viewModel.obtainEvent(MapsViewEvent.LoadAllMaps)
+        onDispose { viewModel.obtainEvent(MapsViewEvent.RemoveAllMaps) }
+    }
 }
 
 @Composable
-fun SelectedMap(ctx: ToolbarCtx, viewModel: MapViewModel) {
+fun SelectedMap(ctx: ToolbarCtx, mapId: String, viewModel: MapViewModel) {
     val viewState = viewModel.viewState.observeAsState()
     when (val state = viewState.value!!) {
         MapViewState.StateLoading -> Loading()
@@ -92,12 +100,13 @@ fun SelectedMap(ctx: ToolbarCtx, viewModel: MapViewModel) {
         is MapViewState.StateData -> ShowMap(map = state.map, ctx)
     }
     LaunchedEffect(key1 = viewState, block = {
-        viewModel.obtainEvent(MapsEvent.EnterScreen)
+        viewModel.obtainEvent(MapsEvent.OnMapClick(mapId))
     })
 }
 
+@OptIn(ExperimentalGlideComposeApi::class)
 @Composable
-private fun ShowMap(map: com.bulkapedia.compose.data.Map<Any?, Any?>, ctx: ToolbarCtx) {
+private fun ShowMap(map: Map, ctx: ToolbarCtx) {
     // init toolbar
     ctx.observeAsState()
     ctx.setData(title = CTX.getString(stringToResource(map.name)), showBackButton = true)
@@ -119,8 +128,8 @@ private fun ShowMap(map: com.bulkapedia.compose.data.Map<Any?, Any?>, ctx: Toolb
             BoxWithConstraints(
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Image(
-                    painter = painterResource(id = stringToResource(mapIconState.value)),
+                GlideImage(
+                    model = mapIconState.value,
                     contentDescription = mapIconState.value,
                     modifier = Modifier.size(maxWidth)
                         .padding(20.dp)
@@ -188,8 +197,9 @@ private fun Loading() {
     }
 }
 
+@OptIn(ExperimentalGlideComposeApi::class)
 @Composable
-fun MapCard(map: String, nc: NavController, isLast: Boolean = false) {
+fun MapCard(map: Map, nc: NavController, isLast: Boolean = false) {
     Card (
         modifier = Modifier
             .fillMaxWidth()
@@ -203,16 +213,16 @@ fun MapCard(map: String, nc: NavController, isLast: Boolean = false) {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = stringResource(id = stringToResource(map.plus("_txt"))),
+                text = stringResource(id = stringToResource(map.name)),
                 textAlign = TextAlign.Center,
                 color = Teal200,
                 modifier = Modifier.padding(bottom = 10.dp)
             )
-            Image(
-                painter = painterResource(id = stringToResource(map)),
-                contentDescription = map,
+            GlideImage(
+                model = map.image,
+                contentDescription = map.name,
                 modifier = Modifier.clickable {
-                    nc.navigate("${Destinations.MAPS}/$map",
+                    nc.navigate("${Destinations.MAPS}/${map.mapId}",
                         bundleOf("mapImage" to map))  { launchSingleTop = true }
                 }
             )
@@ -220,10 +230,10 @@ fun MapCard(map: String, nc: NavController, isLast: Boolean = false) {
     }
 }
 
-private fun filterList(list: List<String>, tagViewState: TagViewState): List<String> {
+private fun filterList(list: List<Map>, tagViewState: TagViewState): List<Map> {
     return when (tagViewState.selected) {
         true -> when (val sortType = tagViewState.sortType) {
-            is SortType.ByMap -> list.filter { HardCode.Map.getType(it) == sortType.type.str() }
+            is SortType.ByMap -> list.filter { it.mode == sortType.type.str() }
             else -> list
         }
         else -> list
