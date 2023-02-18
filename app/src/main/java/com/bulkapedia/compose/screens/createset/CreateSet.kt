@@ -26,7 +26,6 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.bulkapedia.compose.GEARS_LIST
 import com.bulkapedia.R
-import com.bulkapedia.compose.elements.ErrorDialog
 import com.bulkapedia.compose.navigation.ToolbarCtx
 import com.bulkapedia.compose.screens.createset.selectgear.SelectGearScreen
 import com.bulkapedia.compose.screens.hero.TopHeroCard
@@ -46,11 +45,11 @@ import com.bulkapedia.compose.data.gears.PersonalGears
 import com.bulkapedia.compose.data.heroes.Hero
 import com.bulkapedia.compose.data.sets.GearCell
 import com.bulkapedia.compose.data.sets.UserSet
+import com.bulkapedia.compose.elements.ScreenWithError
 import com.bulkapedia.compose.util.stringToResource
 import com.bulkapedia.compose.util.toHeroStats
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlin.math.roundToInt
 
 @Composable
@@ -62,21 +61,14 @@ fun CreateSetScreen(
     viewModel: CreateSetViewModel
 ) {
     // UI
-    val showError = remember { mutableStateOf(false) }
-    val errorMessage = remember { mutableStateOf("") }
     val viewState = viewModel.liveData.observeAsState()
-    when (val state = viewState.value!!) {
-        is CreateSetViewState.Error -> {
-            showError.value = true
-            errorMessage.value = state.message
-        }
-        is CreateSetViewState.Enter -> CreateSetFragment(ctx, state.hero, state.set, viewModel)
-        else -> LoadingProfile()
-    }
-    if (showError.value) {
-        ErrorDialog(errorMessage.value, showError) {
-            showError.value = false
-            viewModel.obtainEvent(CreateSetEvent.LoadContent(nickname, hero, setId))
+    ScreenWithError { action ->
+        when (val state = viewState.value!!) {
+            is CreateSetViewState.Error -> action.showError(state.message) {
+                viewModel.obtainEvent(CreateSetEvent.LoadContent(nickname, hero, setId))
+            }
+            is CreateSetViewState.Enter -> CreateSetFragment(ctx, state.hero, state.set, viewModel)
+            else -> LoadingProfile()
         }
     }
     DisposableEffect(null) {
@@ -85,7 +77,6 @@ fun CreateSetScreen(
     }
 }
 
-@OptIn(ExperimentalCoroutinesApi::class)
 @Composable
 fun CreateSetFragment(
     ctx: ToolbarCtx,
@@ -397,80 +388,63 @@ private fun sumValueEffects(eff: Int, val1: Number, val2: Number, percent: Boole
                 val1.toInt() + val2.toInt()
             else val1.toDouble() + (val1.toDouble() * (val2.toDouble() / 100))
         }
-
         R.string.max_armor_effect -> {
             return if (!percent)
                 val1.toInt() + val2.toInt()
             else val1.toDouble() + (val1.toDouble() * (val2.toDouble() / 100))
         }
-
         R.string.damage_effect -> {
             return if (!percent)
                 val1.toInt() + val2.toInt()
             else val1.toDouble() + (val1.toDouble() * (val2.toDouble() / 100))
         }
-
         R.string.visibility_effect -> {
             return if (!percent)
                 val1.toInt() + val2.toInt()
             else val1.toDouble() + (val1.toDouble() * (val2.toDouble() / 100))
         }
-
         R.string.running_volume_effect -> {
             return if (!percent)
                 val1.toInt() + val2.toInt()
             else val1.toDouble() + (val1.toDouble() * (val2.toDouble() / 100))
         }
-
         R.string.speed_effect -> {
             return if (!percent)
                 val1.toInt() + val2.toInt()
             else val1.toDouble() + (val1.toDouble() * (val2.toDouble() / 100))
         }
-
         R.string.speed_in_focus_effect ->
             val1.toDouble() + (val1.toDouble() * (val2.toDouble() / 100))
-
         R.string.reloading_time_effect ->
             val1.toDouble() + (val1.toDouble() * (val2.toDouble() / 100))
-
         R.string.fire_rate_effect ->
             val1.toDouble() + (val1.toDouble() * (val2.toDouble() / 100))
-
         R.string.fire_range_effect -> {
             return if (!percent)
                 val1.toInt() + val2.toInt()
             else val1.toDouble() + (val1.toDouble() * (val2.toDouble() / 100))
         }
-
         R.string.fire_range_focus_effect -> {
             return if (!percent)
                 val1.toInt() + val2.toInt()
             else val1.toDouble() + (val1.toDouble() * (val2.toDouble() / 100))
         }
-
         R.string.spread_in_not_focus_effect ->
             val1.toDouble() + (val1.toDouble() * (val2.toDouble() / 100))
-
         R.string.spread_in_move_effect ->
             val1.toDouble() + (val1.toDouble() * (val2.toDouble() / 100))
-
         R.string.spread_in_focus_effect ->
             val1.toDouble() + (val1.toDouble() * (val2.toDouble() / 100))
-
         R.string.add_patrons_effect -> val1.toInt() + val2.toInt()
         R.string.piercing_power_effect -> val1.toInt() + val2.toInt()
         R.string.health_damage_effect ->
             val1.toDouble() + (val1.toDouble() * (val2.toDouble() / 100))
-
         R.string.armor_damage_effect ->
             val1.toDouble() + (val1.toDouble() * (val2.toDouble() / 100))
-
         R.string.piercing_effect -> {
             return if (!percent) val1.toInt() + val2.toInt()
             else val1.toDouble() + (val1.toDouble() * (val2.toDouble() / 100))
         }
-
         R.string.aiming_speed_effect ->
             val1.toDouble() + (val1.toDouble() * (val2.toDouble() / 100))
 

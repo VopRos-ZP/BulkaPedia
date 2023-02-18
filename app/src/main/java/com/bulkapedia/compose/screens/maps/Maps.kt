@@ -46,11 +46,8 @@ fun Maps(ctx: ToolbarCtx, viewModel: MapsViewModel) {
     ctx.observeAsState()
     ctx.setData("Выберите карту", showBackButton = true)
     val viewState = viewModel.liveData.observeAsState()
-    // Error
-    val showError = remember { mutableStateOf(false) }
-    val errorText = remember { mutableStateOf("Неизвестная ошибка") }
     // UI
-    ScreenWithError(showError, errorText.value) {
+    ScreenWithError { action ->
         Column (
             modifier = Modifier.fillMaxSize()
                 .background(Primary)
@@ -59,10 +56,7 @@ fun Maps(ctx: ToolbarCtx, viewModel: MapsViewModel) {
             val tagViewState = tagViewModel.viewState.observeAsState()
             Tags(mapsTags(), tagViewModel)
             when (val list = viewState.value) {
-                null -> {
-                    errorText.value = "Не удалось загрузить карты"
-                    showError.value = true
-                }
+                null -> action.showError("Не удалось загрузить карты")
                 emptyList<Map>() -> CenteredBox { Text("Список пуст...", color = Teal200) }
                 else -> {
                     val filteredList = filterList(list, tagViewState.value!!)

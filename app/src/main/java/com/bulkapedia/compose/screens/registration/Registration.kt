@@ -34,22 +34,14 @@ import kotlinx.coroutines.launch
 fun RegistrationScreen(ctx: ToolbarCtx, viewModel: RegistrationViewModel) {
     ctx.observeAsState()
     ctx.setData("Регистрация", true)
-    // Error
-    val showError = remember { mutableStateOf(false) }
-    val errorMessage = remember { mutableStateOf("Ошибка регистрации") }
     // UI
     val viewState = viewModel.liveData.observeAsState()
-    ScreenWithError(
-        show = showError,
-        text = errorMessage.value,
-        onClose = { viewModel.obtainEvent(RegistrationEvent.EnterScreen) }
-    ) {
+    ScreenWithError { action ->
         when (val state = viewState.value!!) {
             RegistrationViewState.Loading -> RegistrationForm(viewModel, ctx)
             is RegistrationViewState.Success -> ProfileScreen(ctx, state.user, hiltViewModel())
-            is RegistrationViewState.Error -> {
-                errorMessage.value = state.message
-                showError.value = true
+            is RegistrationViewState.Error -> action.showError(state.message) {
+                viewModel.obtainEvent(RegistrationEvent.EnterScreen)
             }
         }
     }

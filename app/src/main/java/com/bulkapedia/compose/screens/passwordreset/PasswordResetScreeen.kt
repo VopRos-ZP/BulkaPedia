@@ -31,18 +31,11 @@ fun PasswordResetScreen(ctx: ToolbarCtx, viewModel: PasswordResetViewModel) {
     ctx.setData(title = "Восстановить пароль", showBackButton = true)
     // ViewState
     val viewState = viewModel.liveData.observeAsState()
-    val showErrorDialog = remember { mutableStateOf(false) }
-    val errorMessage = remember { mutableStateOf("") }
     // UI
-    ScreenWithError(
-        showErrorDialog,
-        text = errorMessage.value,
-        onClose = { viewModel.obtainEvent(PasswordResetEvent.NoEvent) }
-    ) {
+    ScreenWithError { action ->
         when (val state = viewState.value!!) {
-            is PasswordResetViewState.Error -> {
-                showErrorDialog.value = true
-                errorMessage.value = state.message
+            is PasswordResetViewState.Error -> action.showError(state.message) {
+                viewModel.obtainEvent(PasswordResetEvent.NoEvent)
             }
             is PasswordResetViewState.CheckedEmail -> PasswordResetForm(ctx, viewModel, state.email, true)
             else -> PasswordResetForm(ctx, viewModel)

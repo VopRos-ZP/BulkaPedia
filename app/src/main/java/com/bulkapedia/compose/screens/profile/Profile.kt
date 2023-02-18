@@ -61,24 +61,20 @@ fun ProfileNav(toolbarCtx: ToolbarCtx, startDestination: String, dEmail: String)
 
 @Composable
 fun Profile(ctx: ToolbarCtx, email: String, viewModel: ProfileViewModel) {
-    val showError = remember { mutableStateOf(false) }
-    val errorMessage = remember { mutableStateOf("") }
     val viewState = viewModel.liveData.observeAsState()
-    when (val state = viewState.value!!) {
-        is ProfileViewState.EnterScreen -> ProfileScreen(
-            ctx, user = state.user,
-            viewModel = hiltViewModel(),
-            visit = false
-        )
-        is ProfileViewState.ErrorScreen -> {
-            showError.value = true
-            errorMessage.value = state.message
-        }
-        else -> LoadingProfile()
-    }
-    if (showError.value) {
-        ErrorDialog(msg = errorMessage.value, state = showError) {
-            viewModel.obtainEvent(ProfileEvent.Loading(email))
+    ScreenWithError { action ->
+        when (val state = viewState.value!!) {
+            is ProfileViewState.EnterScreen -> ProfileScreen(
+                ctx, user = state.user,
+                viewModel = hiltViewModel(),
+                visit = false
+            )
+            is ProfileViewState.ErrorScreen -> {
+                action.showError(state.message) {
+                    viewModel.obtainEvent(ProfileEvent.Loading(email))
+                }
+            }
+            else -> LoadingProfile()
         }
     }
     DisposableEffect(ctx.navController.currentDestination) {
@@ -89,17 +85,14 @@ fun Profile(ctx: ToolbarCtx, email: String, viewModel: ProfileViewModel) {
 
 @Composable
 fun VisitProfileScreen(ctx: ToolbarCtx, nickname: String, viewModel: VisitProfileViewModel) {
-    val showError = remember { mutableStateOf(false) }
-    val errorMessage = remember { mutableStateOf("") }
     val viewState = viewModel.liveData.observeAsState()
-    ScreenWithError(showError, errorMessage.value, { viewModel.fetchUser(nickname) }) {
+    ScreenWithError { action ->
         when (val state = viewState.value!!) {
             is VisitProfileViewState.Enter -> ProfileScreen(
                 ctx, state.user, hiltViewModel(), true
             )
-            is VisitProfileViewState.Error -> {
-                showError.value = true
-                errorMessage.value = state.message
+            is VisitProfileViewState.Error -> action.showError(state.message) {
+                viewModel.fetchUser(nickname)
             }
             else -> LoadingProfile()
         }
@@ -208,7 +201,7 @@ fun ProfileScreen(
                     modifier = Modifier
                         .background(PrimaryDark, RoundedCornerShape(20.dp))
                         .border(1.dp, Teal200, RoundedCornerShape(20.dp))
-                        .padding(10.dp)
+                        .padding(20.dp)
                         .clickable { isShowMainStat.value = false }
                 )
             }
@@ -258,17 +251,13 @@ fun SetsRecycler(
     visit: Boolean = false,
     isShowLiked: Boolean = true
 ) {
-    val showErrorDialog = remember { mutableStateOf(false) }
     val confirmDialog = remember { mutableStateOf(false) }
-    val errorMessage = remember { mutableStateOf("") }
     val confirmSet = remember { mutableStateOf<UserSet?>(null) }
     // UI
     Box(
         modifier = Modifier
-            .fillMaxWidth()
-            .fillMaxHeight(fraction = 0.923f)
+            .fillMaxSize()
             .background(Primary)
-            .padding(bottom = 15.dp)
     ) {
         ScreenWithDelete(
             whatDelete = "сет",
@@ -276,13 +265,13 @@ fun SetsRecycler(
             whenShow = { confirmSet.value != null },
             onDelete = { Database().removeSet(confirmSet.value!!) }
         ) {
-            ScreenWithError(showErrorDialog, errorMessage.value) {
+            ScreenWithError { action ->
                 when (val state = viewState.value!!) {
                     is SetsProfileViewState.EnterScreen -> {
                         LazyColumn (
                             modifier = Modifier
                                 .fillMaxHeight()
-                                .background(Color.Transparent)
+                                .background(Color.Transparent),
                         ) {
                             val sets = state.sets
                             if (sets.isNotEmpty()) {
@@ -307,10 +296,7 @@ fun SetsRecycler(
                             }
                         }
                     }
-                    is SetsProfileViewState.ErrorScreen -> {
-                        showErrorDialog.value = true
-                        errorMessage.value = state.message
-                    }
+                    is SetsProfileViewState.ErrorScreen -> action.showError(state.message)
                     else -> CenteredBox (
                         modifier = Modifier.fillMaxSize()
                             .background(Color.Transparent)

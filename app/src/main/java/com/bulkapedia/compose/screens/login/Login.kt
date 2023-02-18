@@ -46,20 +46,12 @@ fun Login(ctx: ToolbarCtx, viewModel: LoginViewModel) {
     // get stored data
     val store = DataStore(LocalContext.current)
     val scope = rememberCoroutineScope()
-    // error
-    val showError = remember { mutableStateOf(false) }
-    val errorMessage = remember { mutableStateOf("") }
     // init view
     val viewState = viewModel.loginLiveData.observeAsState()
-    ScreenWithError(
-        show = showError,
-        text = errorMessage.value,
-        onClose = { viewModel.obtainEvent(LoginEvent.EnterScreen) }
-    ) {
+    ScreenWithError { action ->
         when (val state = viewState.value) {
-            is LoginViewState.Error -> {
-                showError.value = true
-                errorMessage.value = state.error
+            is LoginViewState.Error -> action.showError(state.error) {
+                viewModel.obtainEvent(LoginEvent.EnterScreen)
             }
             else -> LoginPage(
                 onLoginClick = { email, password ->

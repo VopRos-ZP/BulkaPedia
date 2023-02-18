@@ -5,8 +5,6 @@ package com.bulkapedia.compose.screens.createset.selectgear
 import android.content.Context
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
-import androidx.compose.foundation.gestures.detectDragGestures
-import androidx.compose.foundation.gestures.detectVerticalDragGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -18,12 +16,9 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.bulkapedia.compose.elements.ErrorDialog
 import com.bulkapedia.compose.navigation.ToolbarCtx
 import com.bulkapedia.compose.screens.createset.emptyIcons
 import com.bulkapedia.compose.screens.sets.GearImage
@@ -31,17 +26,14 @@ import com.bulkapedia.compose.ui.theme.Primary
 import com.bulkapedia.compose.ui.theme.PrimaryDark
 import com.bulkapedia.compose.ui.theme.Purple500
 import com.bulkapedia.compose.ui.theme.Teal
-import com.bulkapedia.compose.util.CenteredBox
-import com.bulkapedia.compose.util.VCenteredBox
 import com.bulkapedia.compose.util.clickable
 import com.bulkapedia.compose.data.gears.Effect
 import com.bulkapedia.compose.data.gears.Gear
-import com.bulkapedia.compose.data.gears.GearSet
 import com.bulkapedia.compose.data.gears.getRankEffect
 import com.bulkapedia.compose.data.heroes.Hero
 import com.bulkapedia.compose.data.labels.Ranks
 import com.bulkapedia.compose.data.sets.GearCell
-import com.bulkapedia.compose.util.resourceToString
+import com.bulkapedia.compose.elements.ScreenWithError
 import com.bulkapedia.compose.util.stringToResource
 import kotlinx.coroutines.launch
 
@@ -54,27 +46,19 @@ fun SelectGearScreen(
     gearsState: MutableState<Map<GearCell, Gear>>,
     viewModel: SelectGearViewModel
 ) {
-    // Vars
-    val showError = remember { mutableStateOf(false) }
-    val errorMessage = remember { mutableStateOf("") }
     // UI
     val viewState = viewModel.liveData.observeAsState()
-    when (val state = viewState.value!!) {
-        SelectGearViewState.Loading -> {}
-        is SelectGearViewState.Enter -> SelectGearFragment(
-            ctx, state.gears,
-            showSelectGears,
-            cellState.value, gearsState,
-        )
-        is SelectGearViewState.Error -> {
-            showError.value = true
-            errorMessage.value = state.message
-        }
-    }
-    if (showError.value) {
-        ErrorDialog(errorMessage.value, showError) {
-            showError.value = false
-            viewModel.obtainEvent(SelectGearEvent.LoadingData(cellState.value, hero))
+    ScreenWithError { action ->
+        when (val state = viewState.value!!) {
+            SelectGearViewState.Loading -> {}
+            is SelectGearViewState.Enter -> SelectGearFragment(
+                ctx, state.gears,
+                showSelectGears,
+                cellState.value, gearsState,
+            )
+            is SelectGearViewState.Error -> action.showError(state.message) {
+                viewModel.obtainEvent(SelectGearEvent.LoadingData(cellState.value, hero))
+            }
         }
     }
     LaunchedEffect(key1 = cellState) {
