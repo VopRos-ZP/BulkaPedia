@@ -357,6 +357,10 @@ var GEARS_RES = mapOf(
     "satoshi_leg" to R.drawable.satoshi_leg,
     "satoshi_ring" to R.drawable.satoshi_ring,
     "satoshi_sphere" to R.drawable.satoshi_sphere,
+
+    "info" to R.drawable.info,
+    "maps" to R.drawable.maps,
+    "mechanics" to R.drawable.mechanics,
     // strings
     "arnie" to R.string.arnie,
     "sparkle" to R.string.sparkle,

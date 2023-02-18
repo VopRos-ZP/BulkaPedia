@@ -1,15 +1,11 @@
 package com.bulkapedia.compose.data
 
-import android.annotation.SuppressLint
 import android.os.Parcelable
-import android.text.format.DateFormat
 import com.bulkapedia.compose.data.labels.Stats
 import com.google.firebase.database.DataSnapshot
 import kotlinx.parcelize.Parcelize
-import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
-import java.util.*
 
 @Parcelize
 data class User(
