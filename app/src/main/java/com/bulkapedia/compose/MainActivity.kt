@@ -11,13 +11,11 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
@@ -100,8 +98,7 @@ fun MainScreen(
             backgroundColor = PrimaryDark,
             modifier = Modifier
                 .fillMaxWidth()
-                .background(Color.Transparent)
-                .padding(horizontal = 20.dp)
+                .background(PrimaryDark)
                 .clip(RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp))
         ) {
             val navBackStackEntry by childNC.currentBackStackEntryAsState()
