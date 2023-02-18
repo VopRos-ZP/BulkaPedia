@@ -8,12 +8,15 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
+import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -29,6 +32,7 @@ import com.bulkapedia.compose.ui.theme.PrimaryDark
 import com.bulkapedia.compose.ui.theme.Teal
 import com.bulkapedia.compose.ui.theme.Teal200
 import com.bulkapedia.compose.util.clickable
+import com.bulkapedia.compose.util.stringToResource
 import kotlinx.coroutines.launch
 
 @Composable
@@ -61,9 +65,7 @@ fun InfoScreen(ctx: ToolbarCtx, viewModel: InfoViewModel) {
                 .background(Primary)
         ) {
             items(categoryState.value ?: emptyList()) { cat ->
-                Category(cat, (categoryState.value ?: emptyList())
-                    .first() == cat
-                ) { destination ->
+                Category(cat, (categoryState.value ?: emptyList()).first() == cat) { destination ->
                     if (cat.enabled) {
                         ctx.navController.navigate(destination)
                     } else {
@@ -94,26 +96,37 @@ fun Category(
         modifier = Modifier.fillMaxWidth()
             .padding(start = 20.dp, end = 20.dp, top = top)
     ) {
-        Column (
-            modifier = Modifier.fillMaxWidth()
-                .padding(20.dp)
-                .clickable { onClick.invoke(category.destination) },
-            verticalArrangement = Arrangement.SpaceEvenly
+        Row (
+            modifier = Modifier.fillMaxSize().padding(20.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(20.dp)
         ) {
-            Text(
-                text = category.title,
-                color = Teal200,
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Bold,
+            Icon(
+                painter = painterResource(stringToResource(category.icon)),
+                contentDescription = "category_icon",
+                tint = Teal200,
+                modifier = Modifier.size(60.dp)
+            )
+            Column (
                 modifier = Modifier.fillMaxWidth()
-                    .padding(start = 20.dp)
-            )
-            Text(
-                text = category.subTitle,
-                color = Teal,
-                fontSize = 16.sp,
-                fontStyle = FontStyle.Italic
-            )
+                    .clickable { onClick.invoke(category.destination) },
+                verticalArrangement = Arrangement.SpaceEvenly
+            ) {
+                Text(
+                    text = category.title,
+                    color = Teal200,
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.fillMaxWidth()
+                        .padding(start = 20.dp)
+                )
+                Text(
+                    text = category.subTitle,
+                    color = Teal,
+                    fontSize = 16.sp,
+                    fontStyle = FontStyle.Italic
+                )
+            }
         }
     }
 }
