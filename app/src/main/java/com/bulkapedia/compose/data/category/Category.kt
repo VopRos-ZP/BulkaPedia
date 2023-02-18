@@ -9,7 +9,8 @@ data class Category(
     val title: String,
     val subTitle: String,
     val enabled: Boolean,
-    val destination: String
+    val destination: String,
+    val icon: String
 ) : Parcelable {
 
     companion object {
@@ -19,7 +20,8 @@ data class Category(
                     title = getString("title")!!,
                     subTitle = getString("subTitle")!!,
                     enabled = getBoolean("enabled")!!,
-                    destination = getString("destination")!!
+                    destination = getString("destination")!!,
+                    icon = getString("icon")!!
                 )
             } catch (_: Exception) { null }
         }
