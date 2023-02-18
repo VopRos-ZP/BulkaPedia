@@ -107,7 +107,7 @@ fun SelectGearFragment(
     },
         sheetBackgroundColor = Primary,
         backgroundColor = Primary,
-        sheetPeekHeight = 0.dp,
+        sheetPeekHeight = (-5).dp,
         sheetGesturesEnabled = false,
         scaffoldState = scaffoldState
     ) {
