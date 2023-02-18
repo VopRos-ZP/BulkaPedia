@@ -5,6 +5,7 @@ package com.bulkapedia.compose.screens.createset.selectgear
 import android.content.Context
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -22,10 +23,6 @@ import androidx.compose.ui.unit.dp
 import com.bulkapedia.compose.navigation.ToolbarCtx
 import com.bulkapedia.compose.screens.createset.emptyIcons
 import com.bulkapedia.compose.screens.sets.GearImage
-import com.bulkapedia.compose.ui.theme.Primary
-import com.bulkapedia.compose.ui.theme.PrimaryDark
-import com.bulkapedia.compose.ui.theme.Purple500
-import com.bulkapedia.compose.ui.theme.Teal
 import com.bulkapedia.compose.util.clickable
 import com.bulkapedia.compose.data.gears.Effect
 import com.bulkapedia.compose.data.gears.Gear
@@ -34,6 +31,7 @@ import com.bulkapedia.compose.data.heroes.Hero
 import com.bulkapedia.compose.data.labels.Ranks
 import com.bulkapedia.compose.data.sets.GearCell
 import com.bulkapedia.compose.elements.ScreenWithError
+import com.bulkapedia.compose.ui.theme.*
 import com.bulkapedia.compose.util.stringToResource
 import kotlinx.coroutines.launch
 
@@ -112,11 +110,11 @@ fun SelectGearFragment(
         scaffoldState = scaffoldState
     ) {
         LazyColumn (
-            modifier = Modifier.fillMaxWidth()
-                .fillMaxHeight(fraction = 0.923f)
+            modifier = Modifier.fillMaxSize()
                 .padding(20.dp)
                 .background(PrimaryDark, RoundedCornerShape(20.dp))
-                .padding(10.dp)
+                .border(2.dp, Teal200, RoundedCornerShape(20.dp))
+                .padding(horizontal = 10.dp)
         ) {
             items(gears) { gear ->
                 SelectGearItem(gear, isLast = gears.last() == gear) {
