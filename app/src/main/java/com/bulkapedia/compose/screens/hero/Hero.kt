@@ -79,7 +79,7 @@ private fun HeroSetData(
     when (val state = viewState.value!!) {
         SetTabViewState.Loading -> HeroSetLoading()
         is SetTabViewState.Error -> {}
-        is SetTabViewState.Enter -> HeroContent(ctx, hero, state.state)
+        is SetTabViewState.Enter -> HeroContent(ctx, hero, state.state, state.state.isEmpty())
     }
     DisposableEffect(null) {
         viewModel.obtainEvent(HeroTabEvent.LoadingData(hero.heroId, setsState))
@@ -89,17 +89,17 @@ private fun HeroSetData(
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
-fun HeroContent(ctx: ToolbarCtx, hero: Hero, state: SnapshotStateList<UserSet>) {
+fun HeroContent(ctx: ToolbarCtx, hero: Hero, state: SnapshotStateList<UserSet>, empty: Boolean) {
     val tabs = listOf(SetTabItem.Number1, SetTabItem.Number2, SetTabItem.Number3)
     val store = DataStore(LocalContext.current)
     val pagerState = rememberPagerState()
     val nickname by store.getNickname.collectAsState(initial = "")
     val sign by store.getSign.collectAsState(initial = false)
     val scope = rememberCoroutineScope()
-    val currentSet = remember { mutableStateOf(state[0]) }
+    val currentSet = remember { mutableStateOf( if (empty) null else state[0]) }
     // UI
     LaunchedEffect(state) {
-        currentSet.value = state[pagerState.currentPage]
+        currentSet.value = if (empty) null else state[pagerState.currentPage]
     }
     ScreenWithDelete { delete ->
         Column (
@@ -149,13 +149,17 @@ fun HeroContent(ctx: ToolbarCtx, hero: Hero, state: SnapshotStateList<UserSet>) 
                             .fillMaxWidth()
                             .background(Color.Transparent, RoundedCornerShape(20.dp))
                     ) {
-                        HorizontalPager(
-                            count = state.size,
-                            state = pagerState
-                        ) {
-                            SetTabCard(currentSet.value, currentSet.value.from != nickname) { s ->
-                                delete.showDelete("сет") {
-                                    Database().removeSet(s)
+                        if (currentSet.value == null) {
+                            CenteredBox { Text("Сетов нет", color = Teal200) }
+                        } else {
+                            HorizontalPager(
+                                count = state.size,
+                                state = pagerState
+                            ) {
+                                SetTabCard(currentSet.value!!, currentSet.value!!.from != nickname) { s ->
+                                    delete.showDelete("сет") {
+                                        Database().removeSet(s)
+                                    }
                                 }
                             }
                         }
@@ -171,7 +175,7 @@ fun HeroContent(ctx: ToolbarCtx, hero: Hero, state: SnapshotStateList<UserSet>) 
                         AddSetButton(ctx, hero.heroId, sign ?: false, nickname ?: "")
                     }
                 }
-                // counterpicks
+                // counterpick
                 item {
                     Column(
                         modifier = Modifier
@@ -201,7 +205,7 @@ fun HeroContent(ctx: ToolbarCtx, hero: Hero, state: SnapshotStateList<UserSet>) 
     }
     LaunchedEffect(pagerState) {
         snapshotFlow { pagerState.currentPage }.collect { page ->
-            currentSet.value = state[page]
+            currentSet.value = if (empty) null else state[page]
         }
     }
 }
