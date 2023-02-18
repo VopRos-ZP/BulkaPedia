@@ -251,21 +251,14 @@ fun SetsRecycler(
     visit: Boolean = false,
     isShowLiked: Boolean = true
 ) {
-    val confirmDialog = remember { mutableStateOf(false) }
-    val confirmSet = remember { mutableStateOf<UserSet?>(null) }
     // UI
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(Primary)
     ) {
-        ScreenWithDelete(
-            whatDelete = "сет",
-            show = confirmDialog,
-            whenShow = { confirmSet.value != null },
-            onDelete = { Database().removeSet(confirmSet.value!!) }
-        ) {
-            ScreenWithError { action ->
+        ScreenWithDelete { delete ->
+            ScreenWithError { error ->
                 when (val state = viewState.value!!) {
                     is SetsProfileViewState.EnterScreen -> {
                         LazyColumn (
@@ -278,8 +271,9 @@ fun SetsRecycler(
                                 sets.map { uSet ->
                                     item {
                                         SetInProfileCard(uSet, visit || isShowLiked, disableSettings = visit) { s ->
-                                            confirmSet.value = s
-                                            confirmDialog.value = true
+                                            delete.showDelete("сет") {
+                                                Database().removeSet(s)
+                                            }
                                         }
                                     }
                                 }
@@ -296,7 +290,7 @@ fun SetsRecycler(
                             }
                         }
                     }
-                    is SetsProfileViewState.ErrorScreen -> action.showError(state.message)
+                    is SetsProfileViewState.ErrorScreen -> error.showError(state.message)
                     else -> CenteredBox (
                         modifier = Modifier.fillMaxSize()
                             .background(Color.Transparent)

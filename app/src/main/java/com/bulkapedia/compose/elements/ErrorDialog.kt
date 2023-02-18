@@ -16,7 +16,7 @@ import com.bulkapedia.compose.ui.theme.Teal
 import com.bulkapedia.compose.ui.theme.Teal200
 
 @Composable
-fun ErrorDialog(action: ErrorAction) {
+fun ErrorDialog(action: ScreenAction.ErrorAction) {
     AlertDialog(
         onDismissRequest = {/* On touch outside */},
         shape = RoundedCornerShape(20.dp),

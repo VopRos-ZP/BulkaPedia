@@ -36,11 +36,9 @@ import com.bulkapedia.compose.data.heroes.Hero
 import com.bulkapedia.compose.util.stringToResource
 import com.bulkapedia.R
 import com.bulkapedia.compose.data.Database
-import com.bulkapedia.compose.elements.ConfirmDialog
 import com.bulkapedia.compose.elements.ITabRow
 import com.bulkapedia.compose.elements.ScreenWithDelete
 import com.bulkapedia.compose.navigation.Destinations
-import com.bulkapedia.compose.screens.CustomIndicator
 import com.bulkapedia.compose.screens.sets.HeroTabEvent
 import com.bulkapedia.compose.screens.sets.SetTabCard
 import com.bulkapedia.compose.screens.sets.SetTabViewModel
@@ -99,18 +97,11 @@ fun HeroContent(ctx: ToolbarCtx, hero: Hero, state: SnapshotStateList<UserSet>) 
     val sign by store.getSign.collectAsState(initial = false)
     val scope = rememberCoroutineScope()
     val currentSet = remember { mutableStateOf(state[0]) }
-    val showConfirmDialog = remember { mutableStateOf(false) }
-    val setConfirmDialog = remember { mutableStateOf<UserSet?>(null) }
     // UI
     LaunchedEffect(state) {
         currentSet.value = state[pagerState.currentPage]
     }
-    ScreenWithDelete(
-        whatDelete = "Сет",
-        show = showConfirmDialog,
-        whenShow = { setConfirmDialog.value != null },
-        onDelete = { Database().removeSet(setConfirmDialog.value!!) }
-    ) {
+    ScreenWithDelete { delete ->
         Column (
             modifier = Modifier
                 .fillMaxSize()
@@ -163,8 +154,9 @@ fun HeroContent(ctx: ToolbarCtx, hero: Hero, state: SnapshotStateList<UserSet>) 
                             state = pagerState
                         ) {
                             SetTabCard(currentSet.value, currentSet.value.from != nickname) { s ->
-                                setConfirmDialog.value = s
-                                showConfirmDialog.value = true
+                                delete.showDelete("сет") {
+                                    Database().removeSet(s)
+                                }
                             }
                         }
                     }

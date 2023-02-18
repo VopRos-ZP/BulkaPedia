@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
+import com.bulkapedia.compose.data.Database
 import com.bulkapedia.compose.data.User
 import com.bulkapedia.compose.data.User.Companion.toUser
 import com.bulkapedia.compose.elements.ScreenWithDelete
@@ -32,7 +33,6 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
-import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.launch
 
@@ -56,18 +56,10 @@ fun UsersSetsScreen(ctx: ToolbarCtx, viewModel: UsersSetsViewModel) {
     val defKills = remember { mutableStateOf("10000") }
     val defWR = remember { mutableStateOf("50") }
     val defRevives = remember { mutableStateOf("0") }
-    // Delete
-    val showDelete = remember { mutableStateOf(false) }
-    val whatDelete = remember { mutableStateOf("сет") }
-    val deleteAction = remember { mutableStateOf({}) }
     // Search
 
     // UI
-    ScreenWithDelete(
-        show = showDelete,
-        whatDelete = whatDelete.value,
-        onDelete = { deleteAction.value.invoke() }
-    ) {
+    ScreenWithDelete { action ->
         Column (
             modifier = Modifier.fillMaxSize()
                 .padding(vertical = 20.dp)
@@ -131,9 +123,7 @@ fun UsersSetsScreen(ctx: ToolbarCtx, viewModel: UsersSetsViewModel) {
                             usersState.value ?: emptyList(), userState,
                             showAddMainDialog, defHero, defKills, defWR, defRevives
                         ) { hero, user ->
-                            showDelete.value = true
-                            whatDelete.value = "мейн героя"
-                            deleteAction.value = {
+                            action.showDelete("мейн героя") {
                                 val db = Firebase.database.reference.child("users")
                                 db.addListenerForSingleValueEvent(object : ValueEventListener {
                                     override fun onDataChange(snapshot: DataSnapshot) {
@@ -152,16 +142,8 @@ fun UsersSetsScreen(ctx: ToolbarCtx, viewModel: UsersSetsViewModel) {
                             }
                         }
                         1 -> SetsRecycler(setsState.value ?: emptyList()) { s ->
-                            showDelete.value = true
-                            whatDelete.value = "сет"
-                            deleteAction.value = {
-                                val fs = Firebase.firestore
-                                fs.collection("sets").document(s.userSetId).delete().addOnSuccessListener {
-                                    fs.collection("comments").whereEqualTo("set", s.userSetId)
-                                        .get().addOnSuccessListener { q ->
-                                            q.documents.forEach { d -> d.reference.delete() }
-                                        }
-                                }
+                            action.showDelete("сет") {
+                                Database().removeSet(s)
                             }
                         }
                     }

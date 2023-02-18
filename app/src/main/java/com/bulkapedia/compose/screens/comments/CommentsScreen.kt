@@ -50,16 +50,8 @@ fun CommentsScreen(
     val commentsList = remember { mutableStateListOf<Comment>() }
     val setState = viewModel.setLiveData.observeAsState()
     val cmsState = commentsVM.liveData.observeAsState()
-
-    val confirmSet = remember { mutableStateOf<UserSet?>(null) }
-    val confirmDialog = remember { mutableStateOf(false) }
     //UI
-    ScreenWithDelete(
-        whatDelete = "Сет",
-        show = confirmDialog,
-        whenShow = { confirmSet.value != null },
-        onDelete = { Database().removeSet(confirmSet.value!!) }
-    ) {
+    ScreenWithDelete { action ->
         when (val set = setState.value) {
             null -> CommentsLoading()
             else -> {
@@ -69,8 +61,7 @@ fun CommentsScreen(
                         .background(Primary)
                 ) {
                     SetTabCard(set, set.from != nickname, disableComments = true, disableSettings = false) { s ->
-                        confirmSet.value = s
-                        confirmDialog.value = true
+                        action.showDelete("Сет") { Database().removeSet(s) }
                     }
                     ChatRecycler(cmsState.value ?: emptyList())
                     SendForm(set, commentsVM)

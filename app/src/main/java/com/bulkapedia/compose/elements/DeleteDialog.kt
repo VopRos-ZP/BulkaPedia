@@ -1,40 +1,32 @@
 @file:Suppress("FunctionName")
 package com.bulkapedia.compose.elements
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import com.bulkapedia.compose.util.CenteredBox
 
 @Composable
-fun ScreenWithDelete(
-    whatDelete: String,
-    whenShow: (() -> Boolean)? = null,
-    show: MutableState<Boolean>,
-    onDelete: () -> Unit,
-    content: @Composable () -> Unit
-) {
+fun ScreenWithDelete(content: @Composable (ScreenAction.DeleteAction) -> Unit) {
+    val show = remember { mutableStateOf(false) }
+    val whatDelete = remember { mutableStateOf("") }
+    val onDelete = remember { mutableStateOf({}) }
+    val action = ScreenAction.DeleteAction(whatDelete, show, onDelete)
     CenteredBox {
-        content.invoke()
-        if (whenShow == null) {
-            if (show.value) DeleteDialog(whatDelete, show, onDelete)
-        } else {
-            if (show.value && whenShow.invoke()) {
-                DeleteDialog(whatDelete, show, onDelete)
-            }
+        content.invoke(action)
+        AnimatedVisibility(show.value) {
+            DeleteDialog(action)
         }
     }
 }
 
 @Composable
-fun DeleteDialog(
-    whatDelete: String,
-    show: MutableState<Boolean>,
-    onDelete: () -> Unit
-) {
+fun DeleteDialog(action: ScreenAction.DeleteAction) {
     ConfirmDialog(
-        state = show,
-        title = "Удалить $whatDelete",
-        text = "Вы действительно хотите удалить $whatDelete?",
-        onConfirm = onDelete
+        state = action.show,
+        title = "Удалить ${action.whatDelete.value}",
+        text = "Вы действительно хотите удалить ${action.whatDelete.value}?",
+        onConfirm = action.onDelete.value
     )
 }
