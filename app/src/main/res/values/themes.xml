@@ -8,25 +8,4 @@
         <item name="android:windowFullscreen">true</item>
         <item name="windowNoTitle">true</item>
     </style>
-
-    <style name="DialogStyle" parent="Base.Theme.AppCompat.Dialog">
-        <item name="android:windowMinWidthMajor">95%</item>
-        <item name="android:windowMinWidthMinor">95%</item>
-        <item name="windowFixedHeightMajor">95%</item>
-        <item name="windowFixedHeightMinor">95%</item>
-    </style>
-
-    <style name="menuStyle.PopupMenu" parent="Widget.AppCompat.PopupMenu">
-        <item name="popupMenuBackground">@drawable/rounded_primary_dark</item>
-        <item name="android:textColor">@color/white</item>
-        <item name="android:tint">@color/white</item>
-    </style>
-
-    <style name="MySearchView" parent="Widget.AppCompat.SearchView">
-        <item name="android:editTextColor">@color/white</item>
-        <item name="android:textColorHint">@color/white</item>
-        <item name="android:textColorPrimary">@color/white</item>
-        <item name="android:tint">@color/white</item>
-        <item name="iconTintMode">@color/white</item>
-    </style>
 </resources>
