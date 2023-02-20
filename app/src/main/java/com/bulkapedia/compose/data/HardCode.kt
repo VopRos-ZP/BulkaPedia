@@ -1,7 +1,5 @@
 package com.bulkapedia.compose.data
 
-import com.bulkapedia.compose.util.resourceToString
-
 object HardCode {
 
     object Hero {
@@ -12,6 +10,7 @@ object HardCode {
             "smog_icon", "dragoon_icon", "bastion_icon", "bertha_icon", "leviathan_icon",
             "stalker_icon", "doc_icon", "levi_icon", "satoshi_icon", "tess_icon"
         )
+
         fun getType(icon: String): String {
             return when (icon) {
                 in listOf("arnie_icon", "cyclops_icon", "sparkle_icon", "hurricane_icon") -> "shortguns"
@@ -19,23 +18,6 @@ object HardCode {
                 in listOf("blot_icon", "firefly_icon", "slayer_icon", "mirage_icon", "lynx_icon") -> "snipers"
                 in listOf("smog_icon", "dragoon_icon", "bastion_icon", "bertha_icon", "leviathan_icon") -> "tanks"
                 in listOf("stalker_icon", "doc_icon", "levi_icon", "satoshi_icon", "tess_icon") -> "troopers"
-                else -> ""
-            }
-        }
-    }
-
-    object Map {
-        val values = MapList.maps.map { resourceToString(it.mapImage) }
-        fun getType(map: String): String {
-            return when (map) {
-                in listOf(
-                    "hotel", "railway_station", "casino", "villa",
-                    "road_motel", "village", "city", "city_garden",
-                    "police_station", "sawmill", "fortress"
-                ) -> "battle_royale"
-                in listOf("hospital", "circus", "forgotten_bazar", "psychiatric_hospital") -> "king_of_the_hill"
-                in listOf("sewerage", "dungeon", "amusement_park", "factory", "mysterious_island") -> "squad"
-                in listOf("underground_base", "military_storage", "secret_floor", "boarding") -> "sabotage"
                 else -> ""
             }
         }
