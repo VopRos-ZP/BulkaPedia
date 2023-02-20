@@ -41,7 +41,7 @@ import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 
 @Composable
-fun Maps(ctx: ToolbarCtx, viewModel: MapsViewModel) {
+fun Maps(ctx: ToolbarCtx, viewModel: MapsViewModel, tagViewModel: TagViewModel) {
     // toolbar
     ctx.observeAsState()
     ctx.setData("Выберите карту", showBackButton = true)
@@ -49,10 +49,10 @@ fun Maps(ctx: ToolbarCtx, viewModel: MapsViewModel) {
     // UI
     ScreenWithError { action ->
         Column (
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier.fillMaxWidth()
+                .fillMaxHeight(fraction = 0.923f)
                 .background(Primary)
         ) {
-            val tagViewModel = TagViewModel()
             val tagViewState = tagViewModel.viewState.observeAsState()
             Tags(mapsTags(), tagViewModel)
             when (val list = viewState.value) {

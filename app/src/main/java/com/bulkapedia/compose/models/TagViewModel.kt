@@ -8,7 +8,9 @@ import com.bulkapedia.compose.elements.Tag
 import com.bulkapedia.compose.util.HeroType
 import com.bulkapedia.compose.util.MapType
 import com.bulkapedia.compose.util.SortType
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 data class TagViewState(
     val tagId: Int = 0,
@@ -16,7 +18,8 @@ data class TagViewState(
     val sortType: SortType<*> = SortType.None
 )
 
-class TagViewModel : ViewModel() {
+@HiltViewModel
+class TagViewModel @Inject constructor() : ViewModel() {
 
     private val _liveData: MutableLiveData<TagViewState> = MutableLiveData(TagViewState())
 

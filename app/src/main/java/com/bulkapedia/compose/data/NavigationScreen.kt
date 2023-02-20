@@ -21,7 +21,6 @@ import com.bulkapedia.compose.screens.heroinfo.HeroInfoScreen
 import com.bulkapedia.compose.screens.heroinfo.HeroesInfoScreen
 import com.bulkapedia.compose.screens.information.InfoScreen
 import com.bulkapedia.compose.screens.login.Login
-import com.bulkapedia.compose.screens.maps.MapViewModel
 import com.bulkapedia.compose.screens.maps.Maps
 import com.bulkapedia.compose.screens.maps.SelectedMap
 import com.bulkapedia.compose.screens.mechanics.MechanicScreen
@@ -56,7 +55,7 @@ val ToSETTINGS = NavigationScreen(Destinations.SETTINGS) { ctx, _ -> SettingsScr
 val ToSIGN_IN = NavigationScreen(Destinations.SING_IN) { ctx, _ -> Login(ctx, hiltViewModel()) }
 val ToSIGN_UP = NavigationScreen(Destinations.SING_UP) { ctx, _ -> RegistrationScreen(ctx, hiltViewModel()) }
 val ToFORGOT_PASSWORD = NavigationScreen(Destinations.FORGOT_PASSWORD) { ctx, _ -> PasswordResetScreen(ctx, hiltViewModel()) }
-val ToMAPS = NavigationScreen(Destinations.MAPS) { ctx, _ -> Maps(ctx, hiltViewModel()) }
+val ToMAPS = NavigationScreen(Destinations.MAPS) { ctx, _ -> Maps(ctx, hiltViewModel(), hiltViewModel()) }
 val ToINFO = NavigationScreen(Destinations.INFO) { ctx, _ -> InfoScreen(ctx, hiltViewModel()) }
 val ToHEROES_INFO = NavigationScreen(Destinations.HERO_INFO) { ctx, _ -> HeroesInfoScreen(ctx, hiltViewModel()) }
 val ToMECHANICS = NavigationScreen(Destinations.MECHANICS) { ctx, _ -> MechanicsScreen(ctx, hiltViewModel()) }
