@@ -21,6 +21,7 @@ import com.bulkapedia.compose.navigation.ToolbarData
 import com.bulkapedia.compose.ui.theme.*
 import com.bulkapedia.compose.util.VCenteredBox
 import com.bulkapedia.compose.util.clickable
+import java.util.*
 
 @Composable
 fun Toolbar(ctx: ToolbarCtx) {
@@ -79,7 +80,7 @@ private fun ToolbarTitle(viewState: State<ToolbarData?>) {
     VCenteredBox {
         Text(
             modifier = Modifier.padding(start = 20.dp),
-            text = viewState.value?.title ?: "",
+            text = (viewState.value?.title ?: "").replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.ROOT) else it.toString() },
             color = Teal200,
             fontWeight = FontWeight.Bold
         )

@@ -16,7 +16,6 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -34,7 +33,6 @@ import com.bulkapedia.compose.navigation.ToolbarCtx
 import com.bulkapedia.compose.navigation.navigate
 import com.bulkapedia.compose.ui.theme.Primary
 import com.bulkapedia.compose.ui.theme.Teal200
-import com.bulkapedia.compose.util.stringToResource
 import com.bulkapedia.compose.ui.theme.PrimaryDark
 import com.bulkapedia.compose.util.*
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
@@ -103,7 +101,7 @@ fun SelectedMap(ctx: ToolbarCtx, mapId: String, viewModel: MapViewModel) {
 private fun ShowMap(map: Map, ctx: ToolbarCtx) {
     // init toolbar
     ctx.observeAsState()
-    ctx.setData(title = CTX.getString(stringToResource(map.name)), showBackButton = true)
+    ctx.setData(title = map.name, showBackButton = true)
     // map view
     val mapIconState = remember { mutableStateOf(map.image) }
     val toggleTextState = remember { mutableStateOf("Показать точки появления") }
@@ -207,7 +205,7 @@ fun MapCard(map: Map, nc: NavController, isLast: Boolean = false) {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = stringResource(id = stringToResource(map.name)),
+                text = map.name,
                 textAlign = TextAlign.Center,
                 color = Teal200,
                 modifier = Modifier.padding(bottom = 10.dp)
