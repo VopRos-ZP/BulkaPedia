@@ -2,6 +2,7 @@
 
 package com.bulkapedia.compose.screens.hero
 
+import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -278,6 +279,7 @@ private fun getDifficultImages(difficult: String): List<Color> {
 
 @Composable
 fun AddSetButton(ctx: ToolbarCtx, hero: String, sign: Boolean, nickname: String) {
+    val context = LocalContext.current
     Card(
         elevation = 10.dp,
         backgroundColor = Color.Transparent,
@@ -289,6 +291,8 @@ fun AddSetButton(ctx: ToolbarCtx, hero: String, sign: Boolean, nickname: String)
                     ctx.navController.navigate("${Destinations.CREATE_SET}/$hero/${nickname}")
                 } else {
                     /* Сообщение о том, что надо войти в аккаунт */
+                    Toast.makeText(context,
+                        "Чтобы создать сет необходимо войти в аккаунт!", Toast.LENGTH_SHORT).show()
                 }
                       },
             colors = ButtonDefaults.buttonColors(backgroundColor = PrimaryDark),
