@@ -5,6 +5,7 @@ import com.bulkapedia.compose.data.gears.longToInt
 import com.google.firebase.firestore.DocumentSnapshot
 import kotlinx.parcelize.Parcelize
 
+@Suppress("UNCHECKED_CAST")
 @Parcelize
 data class UserSet(
     var userSetId: String,
