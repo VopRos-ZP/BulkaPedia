@@ -4,9 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.bulkapedia.compose.data.Database
-import com.bulkapedia.compose.data.HardCode
 import com.bulkapedia.compose.events.EventHandler
-import com.bulkapedia.compose.screens.createset.emptyIcons
 import com.bulkapedia.compose.util.HeroType
 import com.bulkapedia.compose.data.gears.Gear
 import com.bulkapedia.compose.data.gears.GearSet
@@ -59,31 +57,22 @@ class SelectGearViewModel @Inject constructor() : ViewModel(), EventHandler<Sele
 
     private fun fetchGears(cell: GearCell, hero: Hero) {
         Database().addGearsSnapshotListener { allGears ->
-            val icons = fetchIconsByCell(cell)
-            val emptyGear = allGears.find { it.icon == icons[0] }!!
-            val defaultGears = allGears
-                .filter { it.gearSet == GearSet.NONE.name }
-                .filter { icons.contains(it.icon) && !emptyIcons.contains(it.icon) }
-            val setsGears = allGears
-                .filter { it.gearSet == fetchGearTypeByHeroType(hero.type) }
-                .filter { icons.contains(it.icon) }
-            val personal = allGears
-                .filter { it.gearSet == GearSet.PERSONAL.name }
-                .filter { hero.personalGears[cell.name.lowercase()]!! == it.icon }
-            val gears = (defaultGears + setsGears + personal)
-                .toMutableList().apply{ add(0, emptyGear) }
-            _liveData.postValue(SelectGearViewState.Enter(gears))
-        }
-    }
+            val allGS = allGears.filter { it.cell == cell.name.lowercase() }
 
-    private fun fetchIconsByCell(cell: GearCell): List<String> {
-        return when (cell) {
-            GearCell.HEAD -> HardCode.Icon.headIcons()
-            GearCell.BODY -> HardCode.Icon.bodyIcons()
-            GearCell.ARM -> HardCode.Icon.armIcons()
-            GearCell.LEG -> HardCode.Icon.legIcons()
-            GearCell.DECOR -> HardCode.Icon.decorIcons()
-            GearCell.DEVICE -> HardCode.Icon.deviceIcons()
+            val defaultGears = allGS.filter { it.gearSet == GearSet.NONE.name }
+            val setsGears = allGS
+                .filter { it.gearSet == fetchGearTypeByHeroType(hero.type) }
+            val personal = allGS
+                .filter { it.gearSet == GearSet.PERSONAL.name }
+                .filter { hero.personalGears[cell.name.lowercase()]!! == it.name }
+            val gears = (defaultGears + setsGears + personal)
+                .toMutableList().apply {
+                    val index = indexOfFirst { it.name.contains("empty") }
+                    val g = this[index]
+                    removeAt(index)
+                    add(0, g)
+                }
+            _liveData.postValue(SelectGearViewState.Enter(gears))
         }
     }
 

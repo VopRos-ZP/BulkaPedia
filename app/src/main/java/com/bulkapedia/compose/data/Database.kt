@@ -183,7 +183,7 @@ class Database {
         }
     }
 
-    fun findUser(user: User, onError: (String) -> Unit = {}, onFind: (String, User) -> Unit) {
+    private fun findUser(user: User, onError: (String) -> Unit = {}, onFind: (String, User) -> Unit) {
         findUserBy({ it.email == user.email && it.nickname == user.nickname }, onError, onFind)
     }
 

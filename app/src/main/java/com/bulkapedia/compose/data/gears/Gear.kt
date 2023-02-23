@@ -12,7 +12,8 @@ data class Gear(
     val icon : String,
     var effects : List<Effect>,
     val rankEffect : Map<String, List<Int>>,
-    val name: String
+    val name: String,
+    val cell: String
 ) : Parcelable {
 
     companion object {
@@ -21,8 +22,8 @@ data class Gear(
             return try {
                 val effects = (data?.get("effects")!! as Map<String, Map<String, Any>>).toEffects()
                 Gear(
-                    getString("gearSet")!!, id, effects,
-                    (get("ranks") as Map<String, List<Int>>), id
+                    getString("gearSet")!!, getString("icon")!!, effects,
+                    (get("ranks") as Map<String, List<Int>>), id, getString("gearCell")!!
                 )
             } catch (_: Exception) { null }
         }

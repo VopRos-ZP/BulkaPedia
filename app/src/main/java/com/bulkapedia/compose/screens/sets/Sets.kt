@@ -14,7 +14,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
@@ -32,6 +31,8 @@ import com.bulkapedia.compose.util.clickable
 import com.bulkapedia.compose.data.sets.GearCell
 import com.bulkapedia.compose.data.sets.UserSet
 import com.bulkapedia.compose.util.stringToResource
+import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
+import com.bumptech.glide.integration.compose.GlideImage
 import kotlinx.coroutines.launch
 
 @Composable
@@ -185,39 +186,37 @@ fun Set(
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) { // head / body
-            GearImage(image = gears[GearCell.HEAD] ?: "", default = R.drawable.empty_head, onHeadClick)
-            GearImage(image = gears[GearCell.BODY] ?: "", default = R.drawable.empty_body, onBodyClick)
+            GearImage(image = gears[GearCell.HEAD] ?: "", onHeadClick)
+            GearImage(image = gears[GearCell.BODY] ?: "", onBodyClick)
         }
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) { // arm / leg
-            GearImage(image = gears[GearCell.ARM] ?: "", default = R.drawable.empty_arm, onArmClick)
-            GearImage(image = gears[GearCell.LEG] ?: "", default = R.drawable.empty_leg, onLegClick)
+            GearImage(image = gears[GearCell.ARM] ?: "", onArmClick)
+            GearImage(image = gears[GearCell.LEG] ?: "", onLegClick)
         }
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) { // decor / device
-            GearImage(image = gears[GearCell.DECOR] ?: "", default = R.drawable.empty_decor, onDecorClick)
-            GearImage(image = gears[GearCell.DEVICE] ?: "", default = R.drawable.empty_device, onDeviceClick)
+            GearImage(image = gears[GearCell.DECOR] ?: "", onDecorClick)
+            GearImage(image = gears[GearCell.DEVICE] ?: "", onDeviceClick)
         }
     }
 }
 
+@OptIn(ExperimentalGlideComposeApi::class)
 @Composable
 fun GearImage(
     image: String,
-    default: Int = R.drawable.empty_head,
     onClick: () -> Unit
 ) {
-    val img = if (stringToResource(image) == 0) default else stringToResource(image)
-    Image(
-        painter = painterResource(id = img),
+    GlideImage(
+        model = image,
         contentDescription = image,
         modifier = Modifier
             .size(size = 75.dp)
             .padding(end = 10.dp)
-            .clickable(onClick),
-        contentScale = ContentScale.Fit
+            .clickable(onClick)
     )
 }
 

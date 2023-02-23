@@ -100,11 +100,8 @@ fun CreateSetFragment(
         val listener = Firebase.firestore.collection("gears").addSnapshotListener { value, _ ->
             val gears = value?.documents?.mapNotNull { it.toGear() } ?: emptyList()
             set.gears.forEach { (cell, icon) ->
-                val g = gears.find { it.icon == icon }
-                println(g)
-                newMap[cell] = g!!
+                newMap[cell] = gears.find { it.icon == icon }!!
             }
-            println(newMap)
             gearsEffectState.value = newMap
         }
         onDispose { listener.remove() }
