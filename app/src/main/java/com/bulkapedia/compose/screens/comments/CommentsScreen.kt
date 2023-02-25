@@ -34,6 +34,7 @@ import com.bulkapedia.compose.util.CenteredBox
 import com.bulkapedia.compose.util.clickable
 import com.bulkapedia.compose.data.sets.UserSet
 import com.bulkapedia.compose.DataStore
+import com.bulkapedia.compose.navigation.Destinations
 import java.util.*
 
 @Composable
@@ -50,6 +51,9 @@ fun CommentsScreen(
     val commentsList = remember { mutableStateListOf<Comment>() }
     val setState = viewModel.setLiveData.observeAsState()
     val cmsState = commentsVM.liveData.observeAsState()
+    val txt = remember { mutableStateOf("") }
+    val isEdit = remember { mutableStateOf(false) }
+    val editComment = remember { mutableStateOf<Comment?>(null) }
     //UI
     ScreenWithDelete { action ->
         when (val set = setState.value) {
@@ -63,8 +67,20 @@ fun CommentsScreen(
                     SetTabCard(set, set.from != nickname, disableComments = true, disableSettings = false) { s ->
                         action.showDelete("Сет") { Database().removeSet(s) }
                     }
-                    ChatRecycler(cmsState.value ?: emptyList())
-                    SendForm(set, commentsVM)
+                    ChatRecycler(cmsState.value ?: emptyList(), { c, isD ->
+                        if (isD) {
+                            action.showDelete("комментарий") { Database().removeComment(c) }
+                        } else {
+                            editComment.value = c
+                            isEdit.value = true
+                            txt.value = c.text
+                        }
+                    }) { c ->
+                        ctx.navController.navigate("${Destinations.VISIT_PROFILE}/${c.from}") {
+                            launchSingleTop = true
+                        }
+                    }
+                    SendForm(set, commentsVM, txt, isEdit, editComment)
                 }
             }
         }
@@ -88,7 +104,7 @@ fun CommentsLoading() {
 }
 
 @Composable
-fun ChatRecycler(comments: List<Comment>) {
+fun ChatRecycler(comments: List<Comment>, onSendLongClick: (Comment, Boolean) -> Unit, onRecLongClick: (Comment) -> Unit) {
     val nickname by DataStore(LocalContext.current).getNickname.collectAsState(initial = "")
     Card(
         backgroundColor = PrimaryDark,
@@ -111,17 +127,32 @@ fun ChatRecycler(comments: List<Comment>) {
                 item { Text(text = "Пока комментариев нет", color = Teal) }
             } else {
                 items(comments) { comment ->
+                    val expanded = remember { mutableStateOf(false) }
                     if (comment.from == nickname) {
-                        SendTextMessage(
-                            text = comment.text,
-                            date = comment.date
-                        )
+                        Box {
+                            SendTextMessage(
+                                text = comment.text,
+                                date = comment.date) {
+                                expanded.value = !expanded.value
+                            }
+                            SendCommentsDropdownMenu(expanded, {
+                                onSendLongClick.invoke(comment, false)
+                            }) {
+                                onSendLongClick.invoke(comment, true)
+                            }
+                        }
                     } else {
-                        ReceiverTextMessage(
-                            text = comment.text,
-                            date = comment.date,
-                            author = comment.from
-                        )
+                        Box {
+                            ReceiverTextMessage(
+                                text = comment.text,
+                                date = comment.date,
+                                author = comment.from) {
+                                expanded.value = !expanded.value
+                            }
+                            ReceiveCommentsDropdownMenu(expanded) {
+                                onRecLongClick.invoke(comment)
+                            }
+                        }
                     }
                 }
             }
@@ -130,8 +161,12 @@ fun ChatRecycler(comments: List<Comment>) {
 }
 
 @Composable
-fun SendForm(set: UserSet, viewModel: CommentsVM) {
-    val text = remember { mutableStateOf("") }
+fun SendForm(
+    set: UserSet,
+    viewModel: CommentsVM,
+    txt: MutableState<String>,
+    isEdit: MutableState<Boolean>,
+    editComment: MutableState<Comment?>, ) {
     val nickname by DataStore(LocalContext.current).getNickname.collectAsState(initial = "")
     Row (
         modifier = Modifier
@@ -142,7 +177,7 @@ fun SendForm(set: UserSet, viewModel: CommentsVM) {
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         FormTextField(
-            text = text,
+            text = txt,
             placeholder = "Введите комментарий"
         )
         Image(
@@ -156,14 +191,21 @@ fun SendForm(set: UserSet, viewModel: CommentsVM) {
                 .clip(CircleShape)
                 .padding(10.dp)
                 .clickable {
-                    if (text.value.isNotEmpty()) {
-                        val calendar = Calendar.getInstance(Locale.getDefault())
-                        val date = DateFormat.format("dd.MM.yyyy HH:mm:ss", calendar).toString()
-                        viewModel.sendComment(Comment(
-                            set.userSetId, nickname ?: "",
-                            text.value, date
-                        ))
-                        text.value = ""
+                    if (txt.value.isNotEmpty()) {
+                        if (!isEdit.value) {
+                            val calendar = Calendar.getInstance(Locale.getDefault())
+                            val date = DateFormat.format("dd.MM.yyyy HH:mm:ss", calendar).toString()
+                            viewModel.sendComment(
+                                Comment(
+                                    set.userSetId, nickname ?: "",
+                                    txt.value, date
+                                )
+                            )
+                        } else {
+                            isEdit.value = false
+                            viewModel.updateComment(editComment.value!!.copy(text = txt.value))
+                        }
+                        txt.value = ""
                     }
                 }
         )

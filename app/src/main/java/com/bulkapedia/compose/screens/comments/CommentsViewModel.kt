@@ -1,13 +1,11 @@
 package com.bulkapedia.compose.screens.comments
 
 import android.annotation.SuppressLint
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.bulkapedia.compose.data.Comment
-import com.bulkapedia.compose.data.Comment.Companion.toComment
 import com.bulkapedia.compose.data.Database
 import com.bulkapedia.compose.data.sets.GearCell
 import com.bulkapedia.compose.data.sets.UserSet
@@ -63,6 +61,10 @@ class CommentsVM @Inject constructor() : ViewModel() {
 
     fun sendComment(comment: Comment) {
         Database().addComment(comment)
+    }
+
+    fun updateComment(comment: Comment) {
+        Database().updateComment(comment)
     }
 
     fun addListener(setId: String, state: SnapshotStateList<Comment>) {

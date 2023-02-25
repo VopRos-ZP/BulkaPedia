@@ -151,6 +151,16 @@ class Database {
         }
     }
 
+    fun updateComment(comment: Comment) {
+        Firebase.firestore.collection("comments")
+            .whereEqualTo("set", comment.set)
+            .whereEqualTo("date", comment.date)
+            .whereEqualTo("from", comment.from)
+            .get().addOnSuccessListener { q ->
+                q.documents.first().reference.set(comment)
+            }
+    }
+
     /** Removing functions **/
     fun removeComment(comment: Comment) {
         Firebase.firestore.collection("comments")

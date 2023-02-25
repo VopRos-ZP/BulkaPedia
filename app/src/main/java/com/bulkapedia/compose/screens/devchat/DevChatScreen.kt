@@ -1,5 +1,4 @@
 @file:Suppress("FunctionName")
-
 package com.bulkapedia.compose.screens.devchat
 
 import android.annotation.SuppressLint
@@ -191,14 +190,14 @@ fun MessagesRecycler(nickname: String, messages: List<Message>) {
                             text = message.text,
                             date = message.date,
                             image = message.image
-                        )
+                        ) {}
                     } else {
                         ReceiverTextMessage(
                             text = message.text,
                             date = message.date,
                             author = message.author,
                             image = message.image
-                        )
+                        ) {}
                     }
                 }
             }

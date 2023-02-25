@@ -83,29 +83,52 @@ fun MainTagSettingsMenu(
             expanded = expanded.value,
             onDismissRequest = { expanded.value = false }
         ) {
-            DropdownMenuItem(onClick = { expanded.value = false; onEditClick.invoke(main) }) {
-                Icon(
-                    painter = painterResource(id = R.drawable.edit),
-                    contentDescription = "edit",
-                    tint = Teal200,
-                    modifier = Modifier.padding(end = 10.dp)
-                )
-                Text(
-                    text = "Редактировать",
-                    color = Teal200
-                )
+            DropdownSetMenuItem(expanded, R.drawable.edit, "Редактировать") {
+                onEditClick.invoke(main)
             }
-            DropdownMenuItem(onClick = { expanded.value = false; onDeleteClick.invoke(main) }) {
-                Icon(
-                    painter = painterResource(id = R.drawable.delete),
-                    contentDescription = "delete",
-                    tint = Teal200,
-                    modifier = Modifier.padding(end = 10.dp)
-                )
-                Text(
-                    text = "Удалить",
-                    color = Teal200
-                )
+            DropdownSetMenuItem(expanded, R.drawable.delete, "Удалить", Color.Red) {
+                onDeleteClick.invoke(main)
+            }
+        }
+    }
+}
+
+@Composable
+fun ReceiveCommentsDropdownMenu(expanded: MutableState<Boolean>, onProfileClick: () -> Unit) {
+    MaterialTheme(
+        shapes = MaterialTheme.shapes.copy(medium = RoundedCornerShape(20.dp))
+    ) {
+        DropdownMenu(
+            modifier = Modifier
+                .background(PrimaryDark)
+                .border(2.dp, Teal200, RoundedCornerShape(20.dp))
+                .padding(4.dp),
+            expanded = expanded.value,
+            onDismissRequest = { expanded.value = false }
+        ) {
+            DropdownSetMenuItem(expanded, R.drawable.person, "Профиль", onClick = onProfileClick)
+        }
+    }
+}
+
+@Composable
+fun SendCommentsDropdownMenu(expanded: MutableState<Boolean>, onEditClick: () -> Unit, onDeleteClick: () -> Unit) {
+    MaterialTheme(
+        shapes = MaterialTheme.shapes.copy(medium = RoundedCornerShape(20.dp))
+    ) {
+        DropdownMenu(
+            modifier = Modifier
+                .background(PrimaryDark)
+                .border(2.dp, Teal200, RoundedCornerShape(20.dp))
+                .padding(4.dp),
+            expanded = expanded.value,
+            onDismissRequest = { expanded.value = false }
+        ) {
+            DropdownSetMenuItem(expanded, R.drawable.edit, "Редактировать") {
+                onEditClick.invoke()
+            }
+            DropdownSetMenuItem(expanded, R.drawable.delete, "Удалить", Color.Red) {
+                onDeleteClick.invoke()
             }
         }
     }
