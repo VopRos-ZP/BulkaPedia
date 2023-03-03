@@ -7,6 +7,8 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
@@ -28,11 +30,12 @@ fun MechanicScreen(ctx: ToolbarCtx, id: String, viewModel: MechanicViewModel) {
     val parser = Parser()
     // UI
     val viewState = viewModel.mechanic.observeAsState()
+    val fullScreen = remember { mutableStateOf(false) }
     ScreenWithError { action ->
         when (val state = viewState.value) {
             null -> action.showError("Не удалось загрузить данные")
             else -> {
-                YouTubeScreen(state.video) {
+                YouTubeScreen(state.video, fullScreen) {
                     Block(marginStart = 0.dp, marginEnd = 0.dp, marginTop = 20.dp, marginBottom = 0.dp) {
                         Text(text = "Описание", color = Teal200, fontSize = 18.sp, fontWeight = FontWeight.Bold)
                         Text(

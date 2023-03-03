@@ -28,12 +28,13 @@ fun HeroInfoScreen(ctx: ToolbarCtx, heroId: String, viewModel: HeroInfoViewModel
     // State
     val parser = Parser()
     val viewState = viewModel.heroData.observeAsState()
+    val fullScreen = remember { mutableStateOf(false) }
     // UI
     val pair = viewState.value!!
     when (pair.first) {
         null -> CenteredBox { CircularProgressIndicator(color = Teal200) }
         else -> {
-            YouTubeScreen(pair.first!!.video) {
+            YouTubeScreen(pair.first!!.video, fullScreen) {
                 /* TODO: Кол-во героев (изменить при добавлении) */
                 if (pair.second < 23) {
                     InfoBox(text = "Скоро выйдут гайды и на других персонажей", color = Color.Green, bgColor = PrimaryDark)

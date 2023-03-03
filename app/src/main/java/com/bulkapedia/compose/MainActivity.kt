@@ -2,6 +2,10 @@
 package com.bulkapedia.compose
 
 import android.annotation.SuppressLint
+import android.app.Activity
+import android.content.Context
+import android.content.ContextWrapper
+import android.content.pm.ActivityInfo
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.compose.setContent
@@ -90,6 +94,7 @@ fun MainScreen(
         listOf(Screen.Heroes, Screen.Wiki, Screen.SignIn)
 
     toolbarCtx.navController = childNC
+    LockScreenOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
     Scaffold (
         modifier = Modifier.fillMaxSize(),
         backgroundColor = Primary,
@@ -139,4 +144,23 @@ fun MainScreen(
             }
         }
     }
+}
+
+@Composable
+fun LockScreenOrientation(orientation: Int) {
+    val context = LocalContext.current
+    DisposableEffect(Unit) {
+        val activity = context.findActivity() ?: return@DisposableEffect onDispose {}
+        val originalOrientation = activity.requestedOrientation
+        activity.requestedOrientation = orientation
+        onDispose {
+            activity.requestedOrientation = originalOrientation
+        }
+    }
+}
+
+fun Context.findActivity(): Activity? = when (this) {
+    is Activity -> this
+    is ContextWrapper -> baseContext.findActivity()
+    else -> null
 }
