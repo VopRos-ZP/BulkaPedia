@@ -32,4 +32,18 @@ sealed class ScreenAction {
 
     }
 
+    class InfoAction(
+        val show: MutableState<Boolean>,
+        val text: MutableState<String>,
+        val onClose: MutableState<() -> Unit>
+    ): ScreenAction() {
+
+        fun showInfo(text: String, onClose: () -> Unit = {}) {
+            this.text.value = text
+            this.onClose.value = onClose
+            this.show.value = true
+        }
+
+    }
+
 }
