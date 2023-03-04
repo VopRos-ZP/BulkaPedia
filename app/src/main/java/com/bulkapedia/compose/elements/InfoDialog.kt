@@ -18,7 +18,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.bulkapedia.compose.ui.theme.PrimaryDark
-import com.bulkapedia.compose.ui.theme.Teal
 import com.bulkapedia.compose.ui.theme.Teal200
 
 @Composable
@@ -43,7 +42,7 @@ fun InfoDialog(action: ScreenAction.InfoAction) {
         onDismissRequest = {/* On touch outside */},
         shape = RoundedCornerShape(20.dp),
         backgroundColor = PrimaryDark,
-        text = { Text(text = action.text.value, color = Teal) },
+        text = { Text(text = action.text.value, color = Teal200) },
         title = { Text(text = "Информация", color = Color.Green, fontSize = 18.sp, fontWeight = FontWeight.Bold) },
         modifier = Modifier.border(2.dp, Teal200, RoundedCornerShape(20.dp)),
         confirmButton = {
