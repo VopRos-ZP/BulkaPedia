@@ -40,13 +40,26 @@ import com.bulkapedia.compose.screens.profile.ProfileNav
 import com.bulkapedia.compose.ui.theme.*
 import com.bulkapedia.compose.util.CTX
 import com.bulkapedia.compose.data.gears.GearsList
+import com.bulkapedia.compose.elements.ScreenWithInfo
 import com.bulkapedia.compose.screens.information.InfoListNav
 import com.bulkapedia.compose.util.GEARS_RES
 import com.bulkapedia.compose.util.HEROES_RES
+import com.google.android.play.core.appupdate.AppUpdateInfo
+import com.google.android.play.core.appupdate.AppUpdateManager
+import com.google.android.play.core.appupdate.AppUpdateManagerFactory
+import com.google.android.play.core.install.model.AppUpdateType
+import com.google.android.play.core.install.model.InstallStatus
+import com.google.android.play.core.install.model.UpdateAvailability
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
+
+    private lateinit var appUpdateManager: AppUpdateManager
+    private val updateAvailable = MutableLiveData<Boolean>().apply {
+        value = false
+    }
+    private val showUpdate = mutableStateOf(false)
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -54,6 +67,11 @@ class MainActivity : AppCompatActivity() {
         CTX = this
         GEARS_LIST = GearsList()
         ICON_LIST = (HEROES_RES + GEARS_RES).toMutableMap()
+        appUpdateManager = AppUpdateManagerFactory.create(this)
+        appUpdateManager.registerListener { state ->
+            showUpdate.value = state.installStatus() == InstallStatus.DOWNLOADED
+        }
+        checkUpdate()
         setContent {
             val nc = rememberNavController()
             val ctx = remember { mutableStateOf(
@@ -62,14 +80,38 @@ class MainActivity : AppCompatActivity() {
             ) }
             MainTheme(ctx.value) {
                 Surface(color = LocalBulkaPediaColors.current.primary) {
-                    NavHost(navController = nc, startDestination = "splash") {
-                        composable("splash") { SplashScreen(nc) }
-                        composable("main") { MainScreen(ctx.value) }
+                    ScreenWithInfo { action ->
+                        NavHost(navController = nc, startDestination = "splash") {
+                            composable("splash") { SplashScreen(nc) }
+                            composable("main") { MainScreen(ctx.value) }
+                        }
+                        if (showUpdate.value) {
+                            action.showInfo("Обновление загружено, нажмите ок, чтобы перезапустить приложение") {
+                                appUpdateManager.completeUpdate()
+                            }
+                        }
                     }
                 }
             }
         }
     }
+
+    private fun checkUpdate() {
+        appUpdateManager.appUpdateInfo.addOnSuccessListener { info ->
+            if (info.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE
+                && info.isUpdateTypeAllowed(AppUpdateType.FLEXIBLE)) {
+                updateAvailable.value = true
+                startUpdate(info)
+            } else {
+                updateAvailable.value = false
+            }
+        }
+    }
+
+    private fun startUpdate(info: AppUpdateInfo) {
+        appUpdateManager.startUpdateFlowForResult(info, AppUpdateType.FLEXIBLE, this, 1101)
+    }
+
 }
 
 @Composable
