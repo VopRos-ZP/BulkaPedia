@@ -9,6 +9,8 @@
 .cxx
 local.properties
 app/src/google-services.json
+*.jks
+key.json
 gradle
 app/release/
 app/src/androidTest/
