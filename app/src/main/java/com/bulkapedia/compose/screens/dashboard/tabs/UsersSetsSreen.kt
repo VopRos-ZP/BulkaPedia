@@ -3,6 +3,7 @@ package com.bulkapedia.compose.screens.dashboard.tabs
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
@@ -18,7 +19,9 @@ import androidx.compose.ui.zIndex
 import com.bulkapedia.compose.data.Database
 import com.bulkapedia.compose.data.User
 import com.bulkapedia.compose.data.User.Companion.toUser
+import com.bulkapedia.compose.data.sets.UserSet
 import com.bulkapedia.compose.elements.ScreenWithDelete
+import com.bulkapedia.compose.elements.SearchView
 import com.bulkapedia.compose.navigation.ToolbarCtx
 import com.bulkapedia.compose.screens.CustomIndicator
 import com.bulkapedia.compose.ui.theme.Primary
@@ -57,7 +60,7 @@ fun UsersSetsScreen(ctx: ToolbarCtx, viewModel: UsersSetsViewModel) {
     val defWR = remember { mutableStateOf("50") }
     val defRevives = remember { mutableStateOf("0") }
     // Search
-
+    val searchText = remember { mutableStateOf("") }
     // UI
     ScreenWithDelete { action ->
         Column (
@@ -65,6 +68,7 @@ fun UsersSetsScreen(ctx: ToolbarCtx, viewModel: UsersSetsViewModel) {
                 .padding(vertical = 20.dp)
                 .background(Primary)
         ) {
+            SearchView(searchText)
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -112,6 +116,7 @@ fun UsersSetsScreen(ctx: ToolbarCtx, viewModel: UsersSetsViewModel) {
                     .fillMaxHeight(fraction = 0.923f)
                     .padding(horizontal = 20.dp)
                     .background(PrimaryDark, RoundedCornerShape(20.dp))
+                    .border(2.dp, Teal200, RoundedCornerShape(20.dp))
                     .clip(RoundedCornerShape(20.dp))
             ) {
                 HorizontalPager(
@@ -120,7 +125,7 @@ fun UsersSetsScreen(ctx: ToolbarCtx, viewModel: UsersSetsViewModel) {
                 ) { page ->
                     when (page) {
                         0 -> UsersRecycler(
-                            usersState.value ?: emptyList(), userState,
+                            filterUsersList(searchText, usersState.value ?: emptyList()), userState,
                             showAddMainDialog, defHero, defKills, defWR, defRevives
                         ) { hero, user ->
                             action.showDelete("мейн героя") {
@@ -137,11 +142,12 @@ fun UsersSetsScreen(ctx: ToolbarCtx, viewModel: UsersSetsViewModel) {
                                             }
                                         }
                                     }
+
                                     override fun onCancelled(error: DatabaseError) {}
                                 })
                             }
                         }
-                        1 -> SetsRecycler(setsState.value ?: emptyList()) { s ->
+                        1 -> SetsRecycler(filterSetsList(searchText, setsState.value ?: emptyList())) { s ->
                             action.showDelete("сет") {
                                 Database().removeSet(s)
                             }
@@ -155,5 +161,25 @@ fun UsersSetsScreen(ctx: ToolbarCtx, viewModel: UsersSetsViewModel) {
         viewModel.listenUsers()
         viewModel.listenSets()
         onDispose { viewModel.removeListeners() }
+    }
+}
+
+private fun filterUsersList(searchState: MutableState<String>, list: List<User>): List<User> {
+    val text = searchState.value
+    return if (text.isEmpty()) list
+    else {
+        list.filter { user ->
+            user.email.contains(text) || user.nickname.contains(text)
+        }
+    }
+}
+
+private fun filterSetsList(searchState: MutableState<String>, list: List<UserSet>): List<UserSet> {
+    val text = searchState.value
+    return if (text.isEmpty()) list
+    else {
+        list.filter { set ->
+            set.from.contains(text) || set.hero.contains(text)
+        }
     }
 }

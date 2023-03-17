@@ -1,5 +1,4 @@
 @file:Suppress("FunctionName")
-
 package com.bulkapedia.compose.screens.dashboard.tabs
 
 import androidx.compose.foundation.BorderStroke
@@ -48,8 +47,6 @@ fun UsersRecycler(
 ) {
     LazyColumn (
         modifier = Modifier.fillMaxWidth()
-            .background(PrimaryDark, RoundedCornerShape(20.dp))
-            .border(2.dp, Teal200, RoundedCornerShape(20.dp))
     ) {
         items(users) {user ->
             UserRecyclerItem(user, userState, showDialog, defHero, defKills, defWR, defRevives, onDelete)
