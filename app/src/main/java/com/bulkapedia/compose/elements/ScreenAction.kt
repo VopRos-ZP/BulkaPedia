@@ -1,6 +1,7 @@
 package com.bulkapedia.compose.elements
 
 import androidx.compose.runtime.MutableState
+import com.bulkapedia.compose.data.User
 
 sealed class ScreenAction {
 
@@ -42,6 +43,26 @@ sealed class ScreenAction {
             this.text.value = text
             this.onClose.value = onClose
             this.show.value = true
+        }
+
+    }
+
+    class AddTagAction(
+        val userState: MutableState<User?>,
+        val show: MutableState<Boolean>,
+        val defHero: MutableState<String>,
+        val defKills: MutableState<String>,
+        val defWR: MutableState<String>,
+        val defRevives: MutableState<String>
+    ): ScreenAction() {
+
+        fun showAddTag(user: User, hero: String, kills: String, wr: String, revives: String) {
+            userState.value = user
+            defHero.value = hero
+            defKills.value = kills
+            defWR.value = wr
+            defRevives.value = revives
+            show.value = true
         }
 
     }
