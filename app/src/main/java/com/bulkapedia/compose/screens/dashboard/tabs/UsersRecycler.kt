@@ -31,25 +31,21 @@ import com.bulkapedia.compose.util.clickable
 import com.bulkapedia.compose.data.labels.Stats
 import com.bulkapedia.compose.data.User
 import com.bulkapedia.R
+import com.bulkapedia.compose.elements.ScreenAction
 import com.bulkapedia.compose.navigation.Destinations
 import com.bulkapedia.compose.ui.theme.LocalToolbarContext
 
 @Composable
 fun UsersRecycler(
     users: List<User>,
-    userState: MutableState<User?>,
-    showDialog: MutableState<Boolean>,
-    defHero: MutableState<String>,
-    defKills: MutableState<String>,
-    defWR: MutableState<String>,
-    defRevives: MutableState<String>,
+    action: ScreenAction.AddTagAction,
     onDelete: (String, User) -> Unit
 ) {
     LazyColumn (
         modifier = Modifier.fillMaxWidth()
     ) {
         items(users) {user ->
-            UserRecyclerItem(user, userState, showDialog, defHero, defKills, defWR, defRevives, onDelete)
+            UserRecyclerItem(user, action, onDelete)
         }
     }
 }
@@ -57,12 +53,7 @@ fun UsersRecycler(
 @Composable
 fun UserRecyclerItem(
     user: User,
-    userState: MutableState<User?>,
-    showDialog: MutableState<Boolean>,
-    defHero: MutableState<String>,
-    defKills: MutableState<String>,
-    defWR: MutableState<String>,
-    defRevives: MutableState<String>,
+    action: ScreenAction.AddTagAction,
     onDelete: (String, User) -> Unit
 ) {
     val nav = LocalToolbarContext.current.navController
@@ -104,13 +95,10 @@ fun UserRecyclerItem(
                 }
             }
             UserItemLazyRow {
-                item { AddTagView(user, userState, showDialog) }
+                item { AddTagView(user, action.userState, action.show) }
                 user.mains?.map {
                     item {
-                        MainTagView(
-                            user, userState, it.key, it.value, showDialog,
-                            defHero, defKills, defWR, defRevives, onDelete
-                        )
+                        MainTagView(user, action, it.key, it.value, onDelete)
                     }
                 }
             }
@@ -152,14 +140,9 @@ fun AddTagView(
 @Composable
 fun MainTagView(
     user: User,
-    userState: MutableState<User?>,
+    action: ScreenAction.AddTagAction,
     main: String,
     stats: Stats,
-    showDialog: MutableState<Boolean>,
-    defHero: MutableState<String>,
-    defKills: MutableState<String>,
-    defWR: MutableState<String>,
-    defRevives: MutableState<String>,
     onDelete: (String, User) -> Unit
 ) {
     val expanded = remember { mutableStateOf(false) }
@@ -173,12 +156,7 @@ fun MainTagView(
             MainTagSettingsMenu(
                 expanded, Pair(main, stats),
                 onEditClick = {
-                    showDialog.value = true
-                    userState.value = user
-                    defHero.value = it.first
-                    defKills.value = "${it.second.kills}"
-                    defWR.value = "${it.second.winrate}"
-                    defRevives.value = "${it.second.revives}"
+                    action.showAddTag(user, it.first, "${it.second.kills}", "${it.second.winrate}", "${it.second.revives}")
                               },
                 onDeleteClick = { onDelete.invoke(main, user) }
             )

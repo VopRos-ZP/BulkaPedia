@@ -26,18 +26,14 @@ import com.bulkapedia.compose.data.labels.Stats
 
 @Composable
 fun MainTagDialog(
-    showDialog: MutableState<Boolean>,
-    defaultHero: String = "Арни",
-    defaultKills: String = "",
-    defaultWinrate: String = "",
-    defaultRevives: String = "",
+    action: ScreenAction.AddTagAction,
     onSave: (String, Stats) -> Unit
 ) {
-    val hero = remember { mutableStateOf(defaultHero) }
+    val hero = remember { action.defHero }
     val showMenu = remember { mutableStateOf(false) }
-    val kills = remember { mutableStateOf(defaultKills) }
-    val winrate = remember { mutableStateOf(defaultWinrate) }
-    val revives = remember { mutableStateOf(defaultRevives) }
+    val kills = remember { action.defKills }
+    val winrate = remember { action.defWR }
+    val revives = remember { action.defRevives }
     // UI
     Dialog(onDismissRequest = {/* On touch outside */}) {
         Column (
@@ -86,10 +82,10 @@ fun MainTagDialog(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 InRowOutlinedButton(text = "Отмена", color = Color.Red) {
-                    showDialog.value = false
+                    action.show.value = false
                 }
                 InRowOutlinedButton(text = "Сохранить", color = Color.Green) {
-                    showDialog.value = false
+                    action.show.value = false
                     onSave.invoke( hero.value,
                         Stats(
                             kills = kills.value.toInt(),
