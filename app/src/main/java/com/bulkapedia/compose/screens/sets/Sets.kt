@@ -1,6 +1,7 @@
 @file:Suppress("FunctionName")
 package com.bulkapedia.compose.screens.sets
 
+import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -222,7 +223,9 @@ fun GearImage(
 
 @Composable
 fun LikeRow(set: UserSet) {
-    val store = com.bulkapedia.compose.DataStore(LocalContext.current)
+    val context = LocalContext.current
+    val store = com.bulkapedia.compose.DataStore(context)
+    val signed = store.getSign.collectAsState(initial = false)
     val emailState = store.getEmail.collectAsState(initial = "")
     val nickname = store.getNickname.collectAsState(initial = "")
     val liked = set.userLikeIds.contains(emailState.value)
@@ -239,15 +242,19 @@ fun LikeRow(set: UserSet) {
             contentDescription = "like",
             modifier = Modifier.size(40.dp)
                 .clickable {
-                    if (set.from != nickname.value) {
-                        if (liked) {
-                            set.likes--
-                            set.userLikeIds.remove(emailState.value)
-                        } else {
-                            set.likes++
-                            set.userLikeIds.add(emailState.value!!)
+                    if (signed.value == false) {
+                        Toast.makeText(context, "Чтобы поставить лайк, надо зарегистрироватся!", Toast.LENGTH_SHORT).show()
+                    } else {
+                        if (set.from != nickname.value) {
+                            if (liked) {
+                                set.likes--
+                                set.userLikeIds.remove(emailState.value)
+                            } else {
+                                set.likes++
+                                set.userLikeIds.add(emailState.value!!)
+                            }
+                            scope.launch { Database().updateSet(set) }
                         }
-                        scope.launch { Database().addSet(set) }
                     }
                 }
                 .padding(5.dp)
