@@ -70,23 +70,7 @@ fun SetInProfileCard(
                 .fillMaxWidth()
                 .height(60.dp)
         ) {
-            Row(
-                modifier = Modifier.fillMaxSize(),
-                horizontalArrangement = Arrangement.Center
-            ) {
-                VCenteredBox(
-                    modifier = Modifier
-                        .padding(end = 10.dp)
-                        .fillMaxHeight()
-                ) {
-                    CommentsButton(set, disableComments)
-                }
-                if (see) {
-                    VCenteredBox { ProfileButton(set, disableSettings) }
-                } else {
-                    SettingsButton(expanded, set, disableSettings, onDelete)
-                }
-            }
+            ButtonsRow(expanded, set, see, disableComments, disableSettings, onDelete)
         }
     }
 }
@@ -125,23 +109,7 @@ fun SetTabCard(
                 .fillMaxWidth()
                 .height(75.dp)
         ) {
-            Row(
-                modifier = Modifier.fillMaxSize(),
-                horizontalArrangement = Arrangement.Center
-            ) {
-                VCenteredBox(
-                    modifier = Modifier
-                        .padding(end = 10.dp)
-                        .fillMaxHeight()
-                ) {
-                    CommentsButton(set, disableComments)
-                }
-                if (see) {
-                    VCenteredBox { ProfileButton(set, disableSettings) }
-                } else {
-                    SettingsButton(expanded, set, disableSettings, onDelete)
-                }
-            }
+            ButtonsRow(expanded, set, see, disableComments, disableSettings, onDelete)
         }
     }
 }
@@ -261,6 +229,34 @@ fun LikeRow(set: UserSet) {
         )
         VCenteredBox (Modifier.size(40.dp)) {
             Text(text = "${set.likes}", color = Teal200)
+        }
+    }
+}
+
+@Composable
+fun ButtonsRow(
+    expanded: MutableState<Boolean>,
+    set: UserSet,
+    see: Boolean = false,
+    disableComments: Boolean = false,
+    disableSettings: Boolean = false,
+    onDelete: (UserSet) -> Unit = {}
+) {
+    Row(
+        modifier = Modifier.fillMaxSize(),
+        horizontalArrangement = Arrangement.Center
+    ) {
+        VCenteredBox(
+            modifier = Modifier
+                .padding(end = 10.dp)
+                .fillMaxHeight()
+        ) {
+            CommentsButton(set, disableComments)
+        }
+        if (see) {
+            VCenteredBox { ProfileButton(set, disableSettings) }
+        } else {
+            SettingsButton(expanded, set, disableSettings, onDelete)
         }
     }
 }
