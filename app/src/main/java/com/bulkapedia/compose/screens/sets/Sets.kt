@@ -242,9 +242,7 @@ fun LikeRow(set: UserSet) {
             contentDescription = "like",
             modifier = Modifier.size(40.dp)
                 .clickable {
-                    if (signed.value == false) {
-                        Toast.makeText(context, "Чтобы поставить лайк, надо зарегистрироватся!", Toast.LENGTH_SHORT).show()
-                    } else {
+                    if (signed.value == true) {
                         if (set.from != nickname.value) {
                             if (liked) {
                                 set.likes--
@@ -255,6 +253,8 @@ fun LikeRow(set: UserSet) {
                             }
                             scope.launch { Database().updateSet(set) }
                         }
+                    } else {
+                        Toast.makeText(context, "Чтобы поставить лайк, надо зарегистрироватся!", Toast.LENGTH_SHORT).show()
                     }
                 }
                 .padding(5.dp)
