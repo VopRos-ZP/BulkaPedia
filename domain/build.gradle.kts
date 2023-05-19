@@ -1,13 +1,12 @@
 plugins {
     id(androidLib)
-    id(Hilt.plugin)
-    kotlin(androidPlugin)
     kotlin(serialization)
+    kotlin(androidPlugin)
     kotlin(kaptPlugin)
 }
 
 android {
-    namespace = "com.vopros.data"
+    namespace = "com.vopros.domain"
     compileSdk = 33
 
     defaultConfig {
@@ -34,16 +33,9 @@ android {
 }
 
 dependencies {
-    implementation(project(":domain"))
+    implementation(Deps.kotlin_serialization)
     with(Firebase) {
-        implementation(databaseKtx)
         implementation(firestoreKtx)
-        implementation(authKtx)
         implementation(core)
     }
-    with(Hilt) {
-        implementation(android)
-        kapt(compiler)
-    }
-    implementation(Deps.kotlin_serialization)
 }

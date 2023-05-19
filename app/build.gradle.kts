@@ -4,6 +4,7 @@ plugins {
     id("com.google.gms.google-services")
     id("androidx.navigation.safeargs.kotlin")
     id("kotlin-parcelize")
+    kotlin("plugin.serialization")
     id(Hilt.plugin)
     kotlin("kapt")
 }
@@ -33,7 +34,7 @@ android {
         targetCompatibility = JavaVersion.VERSION_1_8
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.3.2"
+        kotlinCompilerExtensionVersion = "1.4.6"
     }
     buildFeatures {
         viewBinding = true
@@ -48,8 +49,8 @@ android {
 }
 
 dependencies {
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.5.1")
-    // compose
+    implementation(project(":domain"))
+    implementation(project(":data"))
     with (Compose) {
         implementation(activity)
         implementation(ui)
@@ -64,23 +65,14 @@ dependencies {
         implementation(constraintLayout)
         debugImplementation(uiTool)
     }
-    implementation(Deps.material)
-    implementation(Deps.coroutinesCore)
-    implementation(Deps.coroutinesAndroid)
-    implementation(Deps.datastorePreferences)
-    implementation(Deps.fragment)
-
-    implementation(Deps.pager)
-    implementation(Deps.pagerIndicators)
-
-    // androidx base
-    implementation("androidx.core:core-ktx:1.9.0")
-    implementation("androidx.appcompat:appcompat:1.6.1")
-    implementation("androidx.constraintlayout:constraintlayout:2.1.4")
-    implementation("androidx.navigation:navigation-runtime-ktx:2.5.3")
-    implementation("androidx.navigation:navigation-fragment-ktx:2.5.3")
-    implementation("androidx.navigation:navigation-ui-ktx:2.5.3")
-    // firebase
+    with(Deps) {
+        implementation(material)
+        implementation(coroutinesCore)
+        implementation(coroutinesAndroid)
+        implementation(datastorePreferences)
+        implementation(fragment)
+        implementation(kotlin_serialization)
+    }
     with (Firebase) {
         implementation(database)
         implementation(databaseKtx)
@@ -97,7 +89,7 @@ dependencies {
     with(Glide) {
         implementation(glide)
         implementation(compose)
-        annotationProcessor(compiler)
+        kapt(compiler)
     }
     with(Hilt) {
         implementation(android)
@@ -107,7 +99,16 @@ dependencies {
     with(InAppUpdate) {
         implementation(updateKtx)
     }
-    implementation("com.pierfrancescosoffritti.androidyoutubeplayer:core:11.1.0")
+    // androidx base
+    implementation("androidx.core:core-ktx:1.10.0")
+    implementation("androidx.appcompat:appcompat:1.6.1")
+    implementation("androidx.constraintlayout:constraintlayout:2.1.4")
+    implementation("androidx.navigation:navigation-runtime-ktx:2.5.3")
+    implementation("androidx.navigation:navigation-fragment-ktx:2.5.3")
+    implementation("androidx.navigation:navigation-ui-ktx:2.5.3")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.1")
+    // YouTube
+    implementation("com.pierfrancescosoffritti.androidyoutubeplayer:core:12.0.0")
 }
 
 kapt {

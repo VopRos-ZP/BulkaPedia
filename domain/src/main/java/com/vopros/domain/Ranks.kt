@@ -1,4 +1,4 @@
-package com.bulkapedia.compose.data.labels
+package com.vopros.domain
 
 enum class Ranks {
     COMMON,

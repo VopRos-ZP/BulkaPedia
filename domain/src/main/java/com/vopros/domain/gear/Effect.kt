@@ -1,15 +1,13 @@
-package com.bulkapedia.compose.data.gears
+package com.vopros.domain.gear
 
-import android.os.Parcelable
-import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.Serializable
 
-@Parcelize
+@Serializable
 data class Effect(
-    var number: Int,
-    val percent: Boolean,
-    val description: String
-): Parcelable {
-
+    var number: Int = 0,
+    var percent: Boolean = false,
+    var description: String = ""
+) {
     override fun hashCode(): Int {
         var result = 51
         result = 31 * result + percent.hashCode()
@@ -28,5 +26,4 @@ data class Effect(
     override fun toString(): String {
         return "${if (number > 0) "+" else ""}$number${if (percent) "%" else ""} $description"
     }
-
 }
