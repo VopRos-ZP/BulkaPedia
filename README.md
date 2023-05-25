@@ -11,16 +11,16 @@
 
 
 ## Список героев
-<img src="readme/heroes.jpg" alt="heroes" style="width: 108px; height: 240px" />
+<img src="readme/heroes.jpg" alt="heroes" style="width: 120px; height: 240px" />
 
 ## Сеты героя
-<img src="readme/heroinfo.jpg" alt="heroes" style="width: 108px; height: 240px" />
+<img src="readme/heroinfo.jpg" alt="heroes" style="width: 120px; height: 240px" />
 
 ## Вики
-<img src="readme/wiki.jpg" alt="heroes" style="width: 108px; height: 240px" />
+<img src="readme/wiki.jpg" alt="heroes" style="width: 120px; height: 240px" />
 
 ## Профиль
-<img src="readme/profile.jpg" alt="heroes" style="width: 108px; height: 240px" />
+<img src="readme/profile.jpg" alt="heroes" style="width: 120px; height: 240px" />
 
 ## Скачать
 
