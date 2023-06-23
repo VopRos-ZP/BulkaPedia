@@ -1,69 +1,43 @@
 package com.bulkapedia.compose.screens.devchat
 
-import android.annotation.SuppressLint
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.bulkapedia.compose.data.Database
-import com.bulkapedia.compose.data.User
-import com.bulkapedia.compose.data.Message
-import com.bulkapedia.compose.events.EventHandler
+import androidx.lifecycle.viewModelScope
+import com.bulkapedia.compose.data.repos.messages.Message
+import com.bulkapedia.compose.data.repos.messages.MessagesRepository
+import com.bulkapedia.compose.data.toDateTime
 import com.google.firebase.firestore.ListenerRegistration
 import dagger.hilt.android.lifecycle.HiltViewModel
-import java.text.SimpleDateFormat
-import java.util.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-sealed class DevChatEvent {
-    data class LoadMessages(val author: String, val receiver: String): DevChatEvent()
-    data class SendMessage(val message: Message): DevChatEvent()
-}
-
 @HiltViewModel
-class DevChatViewModel @Inject constructor() : ViewModel(), EventHandler<DevChatEvent> {
+class DevChatViewModel @Inject constructor(
+    private val messagesRepository: MessagesRepository
+) : ViewModel() {
 
-    val user: MutableLiveData<User> = MutableLiveData(null)
-    val messages: MutableLiveData<List<Message>> = MutableLiveData(null)
+    private val _messagesFlow: MutableStateFlow<List<Message>> = MutableStateFlow(emptyList())
+    val messagesFlow: StateFlow<List<Message>> = _messagesFlow
 
     private var listener: ListenerRegistration? = null
 
-    override fun obtainEvent(event: DevChatEvent) {
-        when (event) {
-            is DevChatEvent.LoadMessages -> fetchMessages(event.author, event.receiver)
-            is DevChatEvent.SendMessage -> sendMessage(event.message)
-        }
+    fun sendMessage(message: Message) {
+        messagesRepository.create(message) {}
     }
 
-    private fun sendMessage(message: Message) {
-        Database().addMessage(message)
-    }
-
-    private fun fetchMessages(author: String, receiver: String) {
-        listener = Database().addMessagesSnapshotListener { msg ->
+    fun fetchMessages(author: String, receiver: String) {
+        listener = messagesRepository.fetchAll { msg ->
             val filtered = msg
                 .filter { (it.author == author && it.receiver == receiver)
                         || (it.author == receiver && it.receiver == author) }
-                .sortedWith { obj1, obj2 -> getDate(obj1.date).compareTo(getDate(obj2.date)) }
-            messages.postValue(filtered)
-        }
-    }
-
-    fun userListener(author: String) {
-        Database().addUsersSnapshotListener { users ->
-            user.postValue(users.find { it.nickname == author })
+                .sortedWith { m1, m2 -> m1.date.toDateTime().compareTo(m2.date.toDateTime()) }
+            viewModelScope.launch { _messagesFlow.emit(filtered) }
         }
     }
 
     fun removeListener() {
         listener?.remove()
-    }
-
-    @SuppressLint("SimpleDateFormat")
-    private fun getDate(strDate: String): Date {
-        return try {
-            SimpleDateFormat("dd.MM.yyyy HH:mm:ss").parse(strDate)!!
-        } catch (_: Exception) {
-            Date()
-        }
     }
 
 }

@@ -1,4 +1,3 @@
-@file:Suppress("FunctionName")
 package com.bulkapedia.compose.screens.aboutapp
 
 import androidx.compose.foundation.background
@@ -12,15 +11,16 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.unit.dp
-import com.bulkapedia.compose.navigation.ToolbarCtx
+import com.bulkapedia.compose.screens.titled.ScreenView
 import com.bulkapedia.compose.ui.theme.PrimaryDark
 import com.bulkapedia.compose.ui.theme.Teal200
 
 @Composable
-fun AboutAppScreen(ctx: ToolbarCtx) {
+fun AboutAppScreen() {
     // Toolbar
-    ctx.observeAsState()
-    ctx.setData(title = "О приложении", showBackButton = true)
+    ScreenView(title = "О приложении", showBack = true) {
+
+    }
     // UI
     Box(
         modifier = Modifier.fillMaxWidth()

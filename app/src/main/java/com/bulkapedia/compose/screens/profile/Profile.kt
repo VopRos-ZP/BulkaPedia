@@ -1,15 +1,17 @@
-@file:Suppress("FunctionName")
 package com.bulkapedia.compose.screens.profile
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.SpanStyle
@@ -22,36 +24,38 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavType
-import com.bulkapedia.compose.data.NavigationScreen
-import com.bulkapedia.compose.data.*
+import com.bulkapedia.compose.navigation.NavigationScreen
 import com.bulkapedia.compose.elements.*
-import com.bulkapedia.compose.navigation.ToolbarCtx
 import com.bulkapedia.compose.navigation.Navigation
-import com.bulkapedia.compose.screens.profile.visit.VisitProfileViewModel
-import com.bulkapedia.compose.screens.profile.visit.VisitProfileViewState
 import com.bulkapedia.compose.screens.sets.SetInProfileCard
 import com.bulkapedia.compose.ui.theme.*
 import com.bulkapedia.compose.util.CenteredBox
 import com.bulkapedia.compose.util.VCenteredBox
 import com.bulkapedia.compose.util.clickable
 import com.bulkapedia.compose.data.labels.Stats
-import com.bulkapedia.compose.data.sets.UserSet
-import com.bulkapedia.compose.data.User
-import com.google.accompanist.pager.ExperimentalPagerApi
-import com.google.accompanist.pager.HorizontalPager
-import com.google.accompanist.pager.rememberPagerState
+import com.bulkapedia.compose.data.repos.sets.UserSet
+import com.bulkapedia.compose.data.repos.database.User
+import com.bulkapedia.compose.navigation.ToCATEGORY_MANAGE
+import com.bulkapedia.compose.navigation.ToCOMMENTS
+import com.bulkapedia.compose.navigation.ToCREATE_SET
+import com.bulkapedia.compose.navigation.ToDASHBOARD
+import com.bulkapedia.compose.navigation.ToDEV_CHAT
+import com.bulkapedia.compose.navigation.ToMANAGE_HEROES_INFO
+import com.bulkapedia.compose.navigation.ToSETTINGS
+import com.bulkapedia.compose.navigation.ToSIGN_IN
+import com.bulkapedia.compose.navigation.ToUSERS_SETS
+import com.bulkapedia.compose.navigation.ToVISIT
+import com.bulkapedia.compose.navigation.navArg
+import com.bulkapedia.compose.screens.Loading
+import com.bulkapedia.compose.screens.titled.ScreenView
 import kotlinx.coroutines.launch
 
 @Composable
-fun ProfileNav(toolbarCtx: ToolbarCtx, startDestination: String, dEmail: String) {
-    Navigation(startDestination, toolbarCtx = toolbarCtx,
-        screens = listOf(
-            NavigationScreen(startDestination,
-                listOf(navArg("email", NavType.StringType, dEmail))) { ctx, args ->
-                val email = args?.getString("email") ?: ""
-                val viewModel = hiltViewModel<ProfileViewModel>()
-                Profile(ctx, email, viewModel)
-            }, ToSETTINGS,
+fun ProfileListNav(startDestination: String, dEmail: String) {
+    Navigation(startDestination, screens = listOf(
+        NavigationScreen(startDestination,
+            listOf(navArg("email", NavType.StringType, dEmail))) { args ->
+            Profile(args?.getString("email")!!, hiltViewModel()) }, ToSETTINGS,
             ToSIGN_IN, ToDASHBOARD, ToCOMMENTS,
             ToVISIT, ToCREATE_SET, ToDEV_CHAT,
             ToCATEGORY_MANAGE, ToUSERS_SETS, ToMANAGE_HEROES_INFO,
@@ -60,123 +64,92 @@ fun ProfileNav(toolbarCtx: ToolbarCtx, startDestination: String, dEmail: String)
 }
 
 @Composable
-fun Profile(ctx: ToolbarCtx, email: String, viewModel: ProfileViewModel) {
-    val viewState = viewModel.liveData.observeAsState()
-    ScreenWithError { action ->
-        when (val state = viewState.value!!) {
-            is ProfileViewState.EnterScreen -> ProfileScreen(
-                ctx, user = state.user,
-                viewModel = hiltViewModel(),
-                visit = false
-            )
-            is ProfileViewState.ErrorScreen -> {
-                action.showError(state.message) {
-                    viewModel.obtainEvent(ProfileEvent.Loading(email))
-                }
-            }
-            else -> LoadingProfile()
-        }
+fun Profile(email: String, viewModel: ProfileViewModel = hiltViewModel()) {
+    val userState = viewModel.userFlow.collectAsState()
+    when (val user = userState.value) {
+        null -> Loading()
+        else -> ProfileScreen(user, viewModel)
     }
-    DisposableEffect(ctx.navController.currentDestination) {
-        viewModel.obtainEvent(ProfileEvent.Loading(email))
+    DisposableEffect(null) {
+        viewModel.fetchUser { it.email == email }
         onDispose { viewModel.removeListener() }
     }
 }
 
 @Composable
-fun VisitProfileScreen(ctx: ToolbarCtx, nickname: String, viewModel: VisitProfileViewModel) {
-    val viewState = viewModel.liveData.observeAsState()
-    ScreenWithError { action ->
-        when (val state = viewState.value!!) {
-            is VisitProfileViewState.Enter -> ProfileScreen(
-                ctx, state.user, hiltViewModel(), true
-            )
-            is VisitProfileViewState.Error -> action.showError(state.message) {
-                viewModel.fetchUser(nickname)
-            }
-            else -> LoadingProfile()
-        }
+fun VisitProfileScreen(nickname: String, viewModel: ProfileViewModel) {
+    val userState = viewModel.userFlow.collectAsState()
+    when (val user = userState.value) {
+        null -> Loading()
+        else -> ProfileScreen(user, viewModel, true)
     }
-    LaunchedEffect(ctx.navController.currentDestination) {
-        viewModel.fetchUser(nickname)
+    DisposableEffect(null) {
+        viewModel.fetchUser { it.nickname == nickname }
+        onDispose { viewModel.removeListener() }
     }
 }
 
-@OptIn(ExperimentalPagerApi::class)
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun ProfileScreen(
-    ctx: ToolbarCtx,
-    user: User,
-    viewModel: SetsProfileViewModel,
-    visit: Boolean = false
-) {
-    // Init toolbar
-    ctx.observeAsState()
-    ctx.setData(title = user.nickname, showBackButton = visit)
-    // variables
-    val viewState = viewModel.liveData.observeAsState()
+fun ProfileScreen(user: User, viewModel: ProfileViewModel, visit: Boolean = false) {
+    val setsState = viewModel.userSetsFlow.collectAsState()
     val scope = rememberCoroutineScope()
     val pagerState = rememberPagerState()
-    val startOnClick: (UserSet) -> Boolean = { it.from == user.nickname }
-    val setsState = remember { mutableStateListOf<UserSet>() }
-    val isShowLiked = remember { mutableStateOf(false) }
-    val isShowMainStat = remember { mutableStateOf(false) }
     val showMainStat = remember { mutableStateOf<Stats?>(null) }
     val tabs = if (visit) {
-        listOf(
-            ProfileTab(title = "Сеты") {
-                viewModel.obtainEvent(SetsProfileEvent.OnProfileTabClick(startOnClick, setsState))
-            }
-        )
+        listOf(ProfileTab(title = "Cеты") { set -> set.from == user.nickname })
     } else {
         listOf(
-            ProfileTab(title = "Ваши сеты") {
-                viewModel.obtainEvent(SetsProfileEvent.OnProfileTabClick(startOnClick, setsState))
-            },
-            ProfileTab(title = "Любимое") {
-                viewModel.obtainEvent(SetsProfileEvent.OnProfileTabClick(
-                    { it.userLikeIds.contains(user.email) },
-                    setsState
-                ))
-            }
+            ProfileTab(title = "Ваши сеты") { set -> set.from == user.nickname },
+            ProfileTab(title = "Любимое") { set -> set.userLikeIds.contains(user.email) }
         )
     }
-    // UI
-    Column(modifier = Modifier.fillMaxSize()) {
-        // 1) mains
-        if (user.mains != null && user.mains?.isNotEmpty() == true) {
-            MainsRecycler(mains = user.mains!!, isShowMainStat.value) { stats ->
-                showMainStat.value = stats
-                isShowMainStat.value = !isShowMainStat.value
-            }
-        }
-        // Tabs
-        ITabRow(pagerState, marginTop = 10.dp) {
-            tabs.mapIndexed { i, tabItem ->
-                Tab(
-                    modifier = Modifier.zIndex(2f),
-                    selected = pagerState.currentPage == i,
-                    onClick = {
-                        scope.launch { pagerState.animateScrollToPage(i)
-                            tabItem.onClick.invoke()
-                        } },
-                    selectedContentColor = PrimaryDark,
-                    unselectedContentColor = PrimaryDark
-                ) {
-                    Text(
-                        tabItem.title,
-                        color = if (pagerState.currentPage == i) PrimaryDark
-                        else Teal
-                    )
+
+    ScreenView(title = user.nickname, showBack = visit) {
+        Column(modifier = Modifier.fillMaxSize()) {
+            // 1) mains
+            if (user.mains != null && user.mains?.isNotEmpty() == true) {
+                MainsRecycler(mains = user.mains!!, showMainStat.value != null) { stats ->
+                    if (showMainStat.value == stats)
+                        showMainStat.value = null
+                    else showMainStat.value = stats
                 }
             }
+            // Tabs
+            ITabRow(pagerState, marginTop = 10.dp) {
+                tabs.mapIndexed { i, tabItem ->
+                    Tab(
+                        modifier = Modifier.zIndex(2f),
+                        selected = pagerState.currentPage == i,
+                        onClick = {
+                            scope.launch { pagerState.animateScrollToPage(i)
+                                viewModel.filterSets(tabItem.onClick)
+                            } },
+                        selectedContentColor = PrimaryDark,
+                        unselectedContentColor = PrimaryDark
+                    ) {
+                        Text(
+                            tabItem.title,
+                            color = if (pagerState.currentPage == i) PrimaryDark
+                            else Teal
+                        )
+                    }
+                }
+            }
+            // 3) recycler
+            when (val sets = setsState.value) {
+                emptyList<UserSet>() -> CenteredBox {
+                    Text(text = "Список пуст...")
+                }
+                else -> HorizontalPager(
+                    pageCount = tabs.size,
+                    state = pagerState
+                ) { SetsRecycler(sets, visit, it == 1) }
+            }
         }
-        // 3) recycler
-        HorizontalPager(
-            count = tabs.size,
-            state = pagerState
-        ) { SetsRecycler(viewState, visit, isShowLiked.value) }
     }
+    val isShowMainStat = remember { mutableStateOf(false) }
+
     if (isShowMainStat.value && showMainStat.value != null) {
         CenteredBox {
             Dialog(onDismissRequest = { isShowMainStat.value = false }) {
@@ -209,27 +182,20 @@ fun ProfileScreen(
     }
     LaunchedEffect(pagerState) {
         snapshotFlow { pagerState.currentPage }.collect { page ->
-            tabs[page].onClick.invoke()
-            isShowLiked.value = page == 1
+            viewModel.filterSets(tabs[page].onClick)
         }
     }
     DisposableEffect(pagerState) {
-        viewModel.obtainEvent(SetsProfileEvent.OnProfileTabClick(startOnClick, setsState))
+        viewModel.filterSets(tabs[0].onClick)
         onDispose { viewModel.removeListener() }
-    }
-}
-
-@Composable
-fun LoadingProfile() {
-    CenteredBox (modifier = Modifier.fillMaxSize().background(Primary)) {
-        CircularProgressIndicator(color = Teal200)
     }
 }
 
 @Composable
 fun MainsRecycler(mains: Map<String, Stats>, isSelected: Boolean, onItemClick: (Stats) -> Unit) {
     LazyRow (
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier
+            .fillMaxWidth()
             .padding(top = 10.dp)
     ) {
         mains.map { main ->
@@ -247,54 +213,27 @@ fun MainsRecycler(mains: Map<String, Stats>, isSelected: Boolean, onItemClick: (
 
 @Composable
 fun SetsRecycler(
-    viewState: State<SetsProfileViewState?>,
+    sets: List<UserSet>,
     visit: Boolean = false,
     isShowLiked: Boolean = true
 ) {
-    // UI
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(Primary)
     ) {
         ScreenWithDelete { delete ->
-            ScreenWithError { error ->
-                when (val state = viewState.value!!) {
-                    is SetsProfileViewState.EnterScreen -> {
-                        LazyColumn (
-                            modifier = Modifier
-                                .fillMaxHeight()
-                                .background(Color.Transparent),
-                        ) {
-                            val sets = state.sets
-                            if (sets.isNotEmpty()) {
-                                sets.map { uSet ->
-                                    item {
-                                        SetInProfileCard(uSet, visit || isShowLiked, disableSettings = visit) { s ->
-                                            delete.showDelete("сет") {
-                                                Database().removeSet(s)
-                                            }
-                                        }
-                                    }
-                                }
-                            } else {
-                                item { CenteredBox {
-                                    Text(
-                                        text = "Список пуст...",
-                                        color = Teal200,
-                                        textAlign = TextAlign.Center,
-                                        modifier = Modifier.fillMaxWidth()
-                                            .padding(vertical = 20.dp)
-                                    )
-                                } }
-                            }
+            LazyColumn (
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .background(Color.Transparent),
+            ) {
+                items(sets) { set ->
+                    SetInProfileCard(set, visit || isShowLiked, disableSettings = visit) { s ->
+                        delete.showDelete("сет") {
+
                         }
                     }
-                    is SetsProfileViewState.ErrorScreen -> error.showError(state.message)
-                    else -> CenteredBox (
-                        modifier = Modifier.fillMaxSize()
-                            .background(Color.Transparent)
-                    ) { CircularProgressIndicator(color = Teal200) }
                 }
             }
         }
@@ -303,7 +242,7 @@ fun SetsRecycler(
 
 data class ProfileTab(
     val title: String,
-    val onClick: () -> Unit
+    val onClick: (UserSet) -> Boolean
 )
 
 @Composable

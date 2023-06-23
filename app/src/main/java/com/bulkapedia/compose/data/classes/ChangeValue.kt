@@ -7,7 +7,7 @@ data class ChangeValue(
     val title: MutableState<String>,
     val fieldLabel: MutableState<String>,
     val infoText: MutableState<String>,
-    val value: Value,
+    var value: Value,
     val onSave: MutableState<(Value) -> Unit>
 )
 

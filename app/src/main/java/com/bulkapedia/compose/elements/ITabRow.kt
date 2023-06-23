@@ -1,11 +1,12 @@
-@file:Suppress("FunctionName")
 package com.bulkapedia.compose.elements
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.TabRow
@@ -14,13 +15,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.UiComposable
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.bulkapedia.compose.screens.CustomIndicator
 import com.bulkapedia.compose.ui.theme.PrimaryDark
 import com.bulkapedia.compose.ui.theme.Teal200
-import com.google.accompanist.pager.ExperimentalPagerApi
-import com.google.accompanist.pager.PagerState
 
-@OptIn(ExperimentalPagerApi::class)
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ITabRow(
     pagerState: PagerState,
@@ -35,7 +33,7 @@ fun ITabRow(
     )
 }
 
-@OptIn(ExperimentalPagerApi::class)
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ITabRow(
     pagerState: PagerState,
@@ -45,7 +43,7 @@ fun ITabRow(
     ITabRow(pagerState, marginVertical, marginVertical, tabs)
 }
 
-@OptIn(ExperimentalPagerApi::class)
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ITabRow(
     pagerState: PagerState,
@@ -62,7 +60,7 @@ fun ITabRow(
     )
 }
 
-@OptIn(ExperimentalPagerApi::class)
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ITabRow(
     pagerState: PagerState,

@@ -1,11 +1,9 @@
-@file:Suppress("FunctionName")
 package com.bulkapedia.compose.screens.login
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
@@ -15,75 +13,66 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.bulkapedia.compose.navigation.Destinations
 import com.bulkapedia.compose.navigation.Navigation
-import com.bulkapedia.compose.navigation.ToolbarCtx
 import com.bulkapedia.R
 import com.bulkapedia.compose.ui.theme.*
 import com.bulkapedia.compose.util.HCenteredBox
 import com.bulkapedia.compose.util.clickable
 import com.bulkapedia.compose.DataStore
-import kotlinx.coroutines.launch
-import com.bulkapedia.compose.data.*
 import com.bulkapedia.compose.elements.*
+import com.bulkapedia.compose.navigation.ToFORGOT_PASSWORD
+import com.bulkapedia.compose.navigation.ToPROFILE
+import com.bulkapedia.compose.navigation.ToSETTINGS
+import com.bulkapedia.compose.navigation.ToSIGN_IN
+import com.bulkapedia.compose.navigation.ToSIGN_UP
+import com.bulkapedia.compose.navigation.ToVISIT
+import com.bulkapedia.compose.screens.titled.ScreenView
 
 @Composable
-fun LoginNav(toolbarCtx: ToolbarCtx) {
-    Navigation(startDestination = Destinations.SING_IN, toolbarCtx = toolbarCtx,
-        screens = listOf(
-            ToSETTINGS, ToFORGOT_PASSWORD,
-            ToSIGN_IN, ToSIGN_UP,
-            ToPROFILE, ToVISIT
-        )
-    )
+fun LoginNav() {
+    Navigation(startDestination = Destinations.SING_IN, screens = listOf(
+        ToSETTINGS, ToFORGOT_PASSWORD,
+        ToSIGN_IN, ToSIGN_UP,
+        ToPROFILE, ToVISIT
+    ))
 }
 
 @Composable
-fun Login(ctx: ToolbarCtx, viewModel: LoginViewModel) {
-    // init toolbar
-    ctx.observeAsState()
-    ctx.setTitle("Вход")
-    // get stored data
+fun Login(viewModel: LoginViewModel = hiltViewModel()) {
+    val navController = LocalNavController.current
     val store = DataStore(LocalContext.current)
-    val scope = rememberCoroutineScope()
-    // init view
-    val viewState = viewModel.loginLiveData.observeAsState()
-    ScreenWithError { action ->
-        when (val state = viewState.value) {
-            is LoginViewState.Error -> action.showError(state.error) {
-                viewModel.obtainEvent(LoginEvent.EnterScreen)
-            }
-            else -> LoginPage(
+    val error by viewModel.errorFlow.collectAsState()
+
+    ScreenView("Вход") {
+        ScreenWithError { action ->
+            if (error != null) { action.showError(error!!) {} }
+            LoginPage(
                 onLoginClick = { email, password ->
-                    viewModel.obtainEvent(LoginEvent.OnSignInClick(email, password) { u ->
-                        ctx.navController.navigate("${Destinations.PROFILE}/${u.email}")
-                        scope.launch {
-                            store.saveEmail(u.email)
-                            store.saveSign(true)
-                            store.saveNickname(u.nickname)
-                        }
-                    })
+                    viewModel.login(email, password) { u ->
+                        navController.navigate("${Destinations.PROFILE}/${u.email}")
+                        store.saveEmail(u.email)
+                        store.saveSign(true)
+                        store.saveNickname(u.nickname)
+                    }
                 },
-                onRegistrationClick = { ctx.navController.navigate(Destinations.SING_UP) },
-                onForgotPasswordClick = { ctx.navController.navigate(Destinations.FORGOT_PASSWORD) }
+                onRegistrationClick = { navController.navigate(Destinations.SING_UP) },
+                onForgotPasswordClick = { navController.navigate(Destinations.FORGOT_PASSWORD) }
             )
         }
-    }
-    LaunchedEffect(null) {
-        viewModel.obtainEvent(LoginEvent.EnterScreen)
     }
 }
 
 @Composable
 fun LoginPage(
-    onLoginClick: (String, String) -> Unit = { _, _ -> },
+    onLoginClick: (String, String) -> Unit,
     onRegistrationClick: () -> Unit = {},
     onForgotPasswordClick: () -> Unit = {}
 ) {
     // state variables
     val email = remember { mutableStateOf("") }
     val password = remember { mutableStateOf("") }
-    var visiblePassword by remember { mutableStateOf(false) }
     // UI
     Column(
         modifier = Modifier.fillMaxSize()
@@ -96,22 +85,7 @@ fun LoginPage(
                     .fillMaxWidth()
                     .padding(bottom = 10.dp)
             )
-            OutlinedTextField(
-                text = password,
-                label = stringResource(id = R.string.hint_password),
-                modifier = Modifier.fillMaxWidth(),
-                trailingIcon = {
-                    val icon = if (visiblePassword) R.drawable.password_visibility_off
-                    else R.drawable.password_visibility
-                    Image(painter = painterResource(id = icon),
-                        colorFilter = ColorFilter.tint(Teal),
-                        contentDescription = "password_visibility",
-                        modifier = Modifier.clickable { visiblePassword = visiblePassword.not() }
-                    )
-                },
-                visualTransformation = if (visiblePassword) VisualTransformation.None
-                else PasswordVisualTransformation(),
-            )
+            OutlinedPasswordField(password)
         }
         LoginBlock {
             OutlinedButton(text = "Войти") {

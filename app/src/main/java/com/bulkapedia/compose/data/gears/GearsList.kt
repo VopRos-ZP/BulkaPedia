@@ -1,8 +1,11 @@
 package com.bulkapedia.compose.data.gears
 
 import com.bulkapedia.R
-import com.bulkapedia.compose.data.heroes.Hero
-import com.bulkapedia.compose.data.sets.GearCell
+import com.bulkapedia.compose.data.repos.gears.Effect
+import com.bulkapedia.compose.data.repos.gears.Gear
+import com.bulkapedia.compose.data.repos.gears.GearSet
+import com.bulkapedia.compose.data.repos.heroes.Hero
+import com.bulkapedia.compose.data.repos.sets.GearCell
 import com.bulkapedia.compose.util.resourceToString
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.toObject

@@ -1,7 +1,7 @@
 package com.bulkapedia.compose.elements
 
 import androidx.compose.runtime.MutableState
-import com.bulkapedia.compose.data.User
+import com.bulkapedia.compose.data.repos.database.User
 
 sealed class ScreenAction {
 

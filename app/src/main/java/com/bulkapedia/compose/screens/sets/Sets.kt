@@ -1,4 +1,3 @@
-@file:Suppress("FunctionName")
 package com.bulkapedia.compose.screens.sets
 
 import android.widget.Toast
@@ -19,7 +18,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.bulkapedia.R
-import com.bulkapedia.compose.data.Database
 import com.bulkapedia.compose.elements.CommentsButton
 import com.bulkapedia.compose.elements.ProfileButton
 import com.bulkapedia.compose.elements.SettingsButton
@@ -29,8 +27,8 @@ import com.bulkapedia.compose.util.CenteredBox
 import com.bulkapedia.compose.util.HCenteredBox
 import com.bulkapedia.compose.util.VCenteredBox
 import com.bulkapedia.compose.util.clickable
-import com.bulkapedia.compose.data.sets.GearCell
-import com.bulkapedia.compose.data.sets.UserSet
+import com.bulkapedia.compose.data.repos.sets.GearCell
+import com.bulkapedia.compose.data.repos.sets.UserSet
 import com.bulkapedia.compose.util.stringToResource
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
@@ -197,7 +195,6 @@ fun LikeRow(set: UserSet) {
     val emailState = store.getEmail.collectAsState(initial = "")
     val nickname = store.getNickname.collectAsState(initial = "")
     val liked = set.userLikeIds.contains(emailState.value)
-    val scope = rememberCoroutineScope()
     Row (
         modifier = Modifier
             .fillMaxWidth()
@@ -219,7 +216,7 @@ fun LikeRow(set: UserSet) {
                                 set.likes++
                                 set.userLikeIds.add(emailState.value!!)
                             }
-                            scope.launch { Database().updateSet(set) }
+                            // update set in Firebase
                         }
                     } else {
                         Toast.makeText(context, "Чтобы поставить лайк, надо зарегистрироватся!", Toast.LENGTH_SHORT).show()

@@ -1,11 +1,10 @@
 plugins {
-    id(androidApp)
-    kotlin(androidPlugin)
+    id("com.android.application")
+    kotlin("android")
     id("com.google.gms.google-services")
+    kotlin("plugin.serialization") version "1.8.20"
+    id("com.google.dagger.hilt.android") version "2.46.1"
     id("androidx.navigation.safeargs.kotlin")
-    id("kotlin-parcelize")
-    kotlin("plugin.serialization")
-    id(Hilt.plugin)
     kotlin("kapt")
 }
 
@@ -30,8 +29,8 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.4.6"
@@ -40,7 +39,7 @@ android {
         viewBinding = true
         compose = true
     }
-    packagingOptions {
+    packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
@@ -49,68 +48,50 @@ android {
 }
 
 dependencies {
-    implementation(project(":domain"))
-    implementation(project(":data"))
-    with (Compose) {
-        implementation(activity)
-        implementation(ui)
-        implementation(uiPreview)
-        implementation(foundation)
-        implementation(material)
-        implementation(materialIcons)
-        implementation(compiler)
-        implementation(navigation)
-        implementation(viewModel)
-        implementation(livedata)
-        implementation(constraintLayout)
-        debugImplementation(uiTool)
+    // compose
+    implementation(libs.androidx.foundation)
+    implementation(libs.androidx.runtime)
+    implementation(libs.androidx.ui)
+    implementation(libs.androidx.ui.tooling.preview)
+    implementation(libs.androidx.material)
+    implementation(libs.androidx.material.icons.extended)
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
+    implementation(libs.androidx.navigation.compose)
+    implementation(libs.androidx.compiler)
+    implementation(libs.androidx.constraintlayout.compose)
+    debugImplementation(libs.androidx.ui.tooling)
+    // Coroutines
+    implementation(libs.kotlinx.coroutines.core)
+    implementation(libs.kotlinx.coroutines.android)
+    // Json
+    implementation(libs.kotlinx.serialization.json)
+    // AndroidX
+    implementation(libs.core.ktx)
+    implementation(libs.appcompat)
+    implementation(libs.constraintlayout)
+    implementation(libs.navigation.runtime.ktx)
+    implementation(libs.lifecycle.runtime.ktx)
+    implementation(libs.androidx.navigation.fragment.ktx)
+    implementation(libs.androidx.navigation.ui.ktx)
+    implementation(libs.androidx.fragment.ktx)
+    implementation(libs.androidx.datastore.preferences)
+    // firebase
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.database)
+    implementation(libs.firebase.firestore)
+    implementation(libs.firebase.storage)
+    implementation(libs.firebase.auth) {
+        exclude(module = "play-services-safetynet")
     }
-    with(Deps) {
-        implementation(material)
-        implementation(coroutinesCore)
-        implementation(coroutinesAndroid)
-        implementation(datastorePreferences)
-        implementation(fragment)
-        implementation(kotlin_serialization)
-    }
-    with (Firebase) {
-        implementation(database)
-        implementation(databaseKtx)
-        implementation(firestore)
-        implementation(firestoreKtx)
-        implementation(auth) {
-            exclude(module = "play-services-safetynet")
-        }
-        implementation(authKtx)
-        implementation(storage)
-        implementation(storageKtx)
-        implementation(core)
-    }
-    with(Glide) {
-        implementation(glide)
-        implementation(compose)
-        kapt(compiler)
-    }
-    with(Hilt) {
-        implementation(android)
-        implementation(navigation)
-        kapt(compiler)
-    }
-    with(InAppUpdate) {
-        implementation(updateKtx)
-    }
-    // androidx base
-    implementation("androidx.core:core-ktx:1.10.0")
-    implementation("androidx.appcompat:appcompat:1.6.1")
-    implementation("androidx.constraintlayout:constraintlayout:2.1.4")
-    implementation("androidx.navigation:navigation-runtime-ktx:2.5.3")
-    implementation("androidx.navigation:navigation-fragment-ktx:2.5.3")
-    implementation("androidx.navigation:navigation-ui-ktx:2.5.3")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.1")
+    // DI
+    implementation(libs.hilt.android)
+    implementation(libs.androidx.hilt.navigation.compose)
+    kapt(libs.hilt.compiler)// replace to ksp
+    // In-App-Update
+    implementation(libs.app.update.ktx)
     // YouTube
-    implementation("com.pierfrancescosoffritti.androidyoutubeplayer:core:12.0.0")
-}
-
-kapt {
-    correctErrorTypes = true
+    implementation(libs.core)
+    // Glide
+    implementation(libs.glide)
+    implementation(libs.compose)
 }

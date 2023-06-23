@@ -13,10 +13,8 @@ import com.bulkapedia.compose.ui.theme.Primary
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.PlayerConstants
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener
-import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.YouTubePlayerFullScreenListener
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
 import kotlinx.coroutines.launch
-
 
 /**
  * @param video is video id for example: comM42_dsa
@@ -46,14 +44,6 @@ fun YouTubeScreen(
                 youtubeView.addYouTubePlayerListener(object : AbstractYouTubePlayerListener() {
                     override fun onReady(youTubePlayer: YouTubePlayer) {
                         super.onReady(youTubePlayer)
-                        youtubeView.addFullScreenListener(object : YouTubePlayerFullScreenListener {
-                            override fun onYouTubePlayerEnterFullScreen() {
-                                isFullScreen.value = true
-                            }
-                            override fun onYouTubePlayerExitFullScreen() {
-                                isFullScreen.value = false
-                            }
-                        })
                         youTubePlayer.cueVideo(video, 0f)
                     }
                     override fun onError(youTubePlayer: YouTubePlayer, error: PlayerConstants.PlayerError) {

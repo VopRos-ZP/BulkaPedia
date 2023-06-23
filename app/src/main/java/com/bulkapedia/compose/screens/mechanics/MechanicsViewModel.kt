@@ -1,41 +1,29 @@
 package com.bulkapedia.compose.screens.mechanics
 
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.bulkapedia.compose.data.Database
-import com.bulkapedia.compose.data.category.Mechanic
+import androidx.lifecycle.viewModelScope
+import com.bulkapedia.compose.data.repos.mechanics.Mechanic
+import com.bulkapedia.compose.data.repos.mechanics.MechanicsRepository
 import com.google.firebase.firestore.ListenerRegistration
 import dagger.hilt.android.lifecycle.HiltViewModel
-import org.checkerframework.framework.qual.DefaultQualifier
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class MechanicsViewModel @Inject constructor() : ViewModel() {
+class MechanicsViewModel @Inject constructor(
+    private val mechanicsRepository: MechanicsRepository
+) : ViewModel() {
 
-    val mechanicsData: MutableLiveData<List<Mechanic>> = MutableLiveData(emptyList())
+    private val _mechanicsFlow: MutableStateFlow<List<Mechanic>> = MutableStateFlow(emptyList())
+    val mechanicsFlow: StateFlow<List<Mechanic>> = _mechanicsFlow
 
     private var listener: ListenerRegistration? = null
 
     fun listenMechanics() {
-        listener = Database().addMechanicsSnapshotListener(mechanicsData::postValue)
-    }
-
-    fun removeListener() {
-        listener?.remove()
-    }
-
-}
-
-@HiltViewModel
-class MechanicViewModel @Inject constructor() : ViewModel() {
-
-    val mechanic: MutableLiveData<Mechanic?> = MutableLiveData(null)
-
-    private var listener: ListenerRegistration? = null
-
-    fun listenMechanic(id: String) {
-        listener = Database().addMechanicsSnapshotListener { mechanics ->
-            mechanic.postValue(mechanics.find { it.id == id })
+        listener = mechanicsRepository.fetchAll {
+            viewModelScope.launch { _mechanicsFlow.emit(it) }
         }
     }
 

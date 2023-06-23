@@ -1,35 +1,107 @@
 package com.bulkapedia.compose.screens.settings
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
-import com.bulkapedia.compose.data.Database
-import com.bulkapedia.compose.data.User
+import androidx.lifecycle.viewModelScope
+import com.bulkapedia.compose.data.classes.ChangeValue
+import com.bulkapedia.compose.data.classes.Value
+import com.bulkapedia.compose.data.repos.database.User
+import com.bulkapedia.compose.data.repos.database.UsersRepository
+import com.bulkapedia.compose.data.repos.sets.SetsRepository
+import com.bulkapedia.compose.data.toYearDate
+import com.bulkapedia.compose.data.yearFormat
+import com.google.firebase.database.ValueEventListener
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
+import java.time.LocalDate
+import java.time.Period
 import javax.inject.Inject
 
-sealed class SettingsViewState {
-    object Loading: SettingsViewState()
-    data class Enter(val user: User): SettingsViewState()
-    data class Error(val message: String): SettingsViewState()
-}
-
 @HiltViewModel
-class SettingsViewModel @Inject constructor() : ViewModel() {
+class SettingsViewModel @Inject constructor(
+    private val usersRepository: UsersRepository,
+    private val setsRepository: SetsRepository
+) : ViewModel() {
 
-    private val _liveData: MutableLiveData<SettingsViewState> = MutableLiveData(SettingsViewState.Loading)
-    val liveData: LiveData<SettingsViewState> = _liveData
+    private val _userFlow: MutableStateFlow<User?> = MutableStateFlow(null)
+    val userFlow: StateFlow<User?> = _userFlow
+
+    private var listener: ValueEventListener? = null
 
     fun fetchUser(nickname: String) {
-        Database().findUserByNickname(nickname, {
-            if (it == "Пользователь не найден") {
-                _liveData.postValue(SettingsViewState.Loading)
-            } else {
-                _liveData.postValue(SettingsViewState.Error(it))
-            }
-        }) { _, user ->
-            _liveData.postValue(SettingsViewState.Enter(user))
+        listener = usersRepository.fetchAll { all ->
+            viewModelScope.launch { _userFlow.emit(all.find { it.nickname == nickname }) }
         }
+    }
+
+    fun logout(onSuccess: suspend () -> Unit = {}) {
+        usersRepository.logout()
+        viewModelScope.launch { onSuccess() }
+    }
+
+    fun changeEmail(user: User, changeValue: ChangeValue, onSuccess: suspend (User) -> Unit): ChangeValue {
+        return change(user, changeValue,
+            listOf("почты", "почту", "Почта"),
+            user.updateEmail.toYearDate(),
+            user.email, { s, u -> u.apply { email = s } }) { old, it ->
+            setsRepository.fetchAll { all ->
+                all.filter { s -> s.userLikeIds.contains(old) }.forEach { s ->
+                    s.userLikeIds.remove(it.email)
+                    s.userLikeIds.add(it.email)
+                    setsRepository.update(s)
+                }
+            }
+            viewModelScope.launch { onSuccess(it) }
+        }
+    }
+
+    fun changeNickname(user: User, changeValue: ChangeValue, onSuccess: suspend (User) -> Unit): ChangeValue {
+        return change(user, changeValue,
+            listOf("ника", "ник", "Ник"),
+            user.updateNickname.toYearDate(),
+            user.nickname, { s, u -> u.apply { nickname = s } }) { old, it ->
+            setsRepository.fetchAll { all ->
+                all.filter { s -> s.from == old }.forEach { s ->
+                    s.from = it.nickname
+                    setsRepository.update(s)
+                }
+            }
+            viewModelScope.launch { onSuccess(it) }
+        }
+    }
+
+    private fun change(
+        user: User, changeValue: ChangeValue,
+        names: List<String>, lastUpdate: LocalDate,
+        value: String,
+        update: (String, User) -> User,
+        onSuccess: (String, User) -> Unit
+    ): ChangeValue {
+        val period = Period.between(lastUpdate, LocalDate.now()).toTotalMonths()
+        if (period >= 2) {
+            changeValue.infoText.value = "Последущая смена ${names[0]} будет возможна только через 2 месяца"
+            changeValue.onSave.value = { newValue ->
+                val v = newValue as Value.TextValue
+                usersRepository.update(update(v.v.value, user)) {
+                    onSuccess(value, it)
+                }
+            }
+        } else {
+            val newDate = lastUpdate.plusMonths(2 - period).format(yearFormat)
+            changeValue.infoText.value = "Вы уже сменили ${names[1]} ${lastUpdate.format(yearFormat)}, " +
+                    "смена будет доступна: " + newDate
+            changeValue.onSave.value = {}
+        }
+        changeValue.title.value = "Изменить ${names[1]}"
+        changeValue.value = Value.TextValue(mutableStateOf(value))
+        changeValue.fieldLabel.value = names[2]
+        return changeValue
+    }
+
+    fun dispose() {
+        listener?.let(usersRepository::remove)
     }
 
 }

@@ -1,16 +1,11 @@
-@file:Suppress("FunctionName")
-
 package com.bulkapedia.compose.screens.createset
 
 import android.content.Context
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.OutlinedButton
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -26,10 +21,8 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.bulkapedia.compose.GEARS_LIST
 import com.bulkapedia.R
-import com.bulkapedia.compose.navigation.ToolbarCtx
 import com.bulkapedia.compose.screens.createset.selectgear.SelectGearScreen
 import com.bulkapedia.compose.screens.hero.TopHeroCard
-import com.bulkapedia.compose.screens.profile.LoadingProfile
 import com.bulkapedia.compose.screens.sets.Set
 import com.bulkapedia.compose.ui.theme.Primary
 import com.bulkapedia.compose.ui.theme.PrimaryDark
@@ -37,15 +30,19 @@ import com.bulkapedia.compose.ui.theme.Teal200
 import com.bulkapedia.compose.util.CenteredBox
 import com.bulkapedia.compose.util.HCenteredBox
 import com.bulkapedia.compose.util.clickable
-import com.bulkapedia.compose.data.gears.Effect
-import com.bulkapedia.compose.data.gears.Gear
-import com.bulkapedia.compose.data.gears.Gear.Companion.toGear
-import com.bulkapedia.compose.data.gears.GearSet
+import com.bulkapedia.compose.data.repos.gears.Effect
+import com.bulkapedia.compose.data.repos.gears.Gear
+import com.bulkapedia.compose.data.repos.gears.Gear.Companion.toGear
+import com.bulkapedia.compose.data.repos.gears.GearSet
 import com.bulkapedia.compose.data.gears.PersonalGears
-import com.bulkapedia.compose.data.heroes.Hero
-import com.bulkapedia.compose.data.sets.GearCell
-import com.bulkapedia.compose.data.sets.UserSet
-import com.bulkapedia.compose.elements.ScreenWithError
+import com.bulkapedia.compose.data.repos.heroes.Hero
+import com.bulkapedia.compose.data.repos.sets.GearCell
+import com.bulkapedia.compose.data.repos.sets.UserSet
+import com.bulkapedia.compose.elements.InRowOutlinedButton
+import com.bulkapedia.compose.elements.OutlinedCard
+import com.bulkapedia.compose.screens.Loading
+import com.bulkapedia.compose.screens.titled.ScreenView
+import com.bulkapedia.compose.ui.theme.LocalNavController
 import com.bulkapedia.compose.util.stringToResource
 import com.bulkapedia.compose.util.toHeroStats
 import com.google.firebase.firestore.ktx.firestore
@@ -54,46 +51,134 @@ import kotlin.math.roundToInt
 
 @Composable
 fun CreateSetScreen(
-    ctx: ToolbarCtx,
     nickname: String,
-    hero: String,
+    heroId: String,
     setId: String,
     viewModel: CreateSetViewModel
 ) {
-    // UI
-    val viewState = viewModel.liveData.observeAsState()
-    ScreenWithError { action ->
-        when (val state = viewState.value!!) {
-            is CreateSetViewState.Error -> action.showError(state.message) {
-                viewModel.obtainEvent(CreateSetEvent.LoadContent(nickname, hero, setId))
-            }
-            is CreateSetViewState.Enter -> CreateSetFragment(ctx, state.hero, state.set, viewModel)
-            else -> LoadingProfile()
-        }
+    val heroState = viewModel.heroFlow.collectAsState()
+    val set by viewModel.setFlow.collectAsState()
+    when (val hero = heroState.value) {
+        null -> Loading()
+        else -> CreateSetFragment(hero, set, viewModel)
     }
     DisposableEffect(null) {
-        viewModel.obtainEvent(CreateSetEvent.LoadContent(nickname, hero, setId))
+        viewModel.fetchData(heroId, setId, nickname)
         onDispose { viewModel.removeListeners() }
     }
 }
 
 @Composable
-fun CreateSetFragment(
-    ctx: ToolbarCtx,
-    hero: Hero,
-    set: UserSet,
-    viewModel: CreateSetViewModel
-) {
-    ctx.observeAsState()
-    ctx.setData(title = hero.name, showBackButton = true)
-
+fun CreateSetFragment(hero: Hero, set: UserSet, viewModel: CreateSetViewModel) {
     val context = LocalContext.current
+    val navController = LocalNavController.current
     // states
     val gearsEffectState = remember { mutableStateOf<Map<GearCell, Gear>>(emptyMap()) }
     val showEffects = remember { mutableStateOf(false) }
     val effectsTitle = remember { mutableStateOf("Показать характеристики") }
     val selectedGearCell = remember { mutableStateOf(GearCell.HEAD) }
     val showSelectGears = remember { mutableStateOf(false) }
+
+    ScreenView(title = hero.name, showBack = true) {
+        if (!showSelectGears.value) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState()),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                // Hero card
+                TopHeroCard(hero.icon) {
+                    CenteredBox {
+                        InRowOutlinedButton(text = "Сохранить") {
+                            viewModel.saveSet(UserSet(
+                                set.id, set.from, set.hero,
+                                gearsEffectState.value.mapValues { it.value.icon },
+                                set.likes, set.userLikeIds
+                            ))
+                            navController.navigateUp()
+                        }
+                    }
+                }
+                // Set view
+                HCenteredBox(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 20.dp, end = 20.dp, bottom = 20.dp)
+                        .background(PrimaryDark, RoundedCornerShape(20.dp))
+                        .border(2.dp, Teal200, RoundedCornerShape(20.dp)),
+                ) {
+                    Set(
+                        PaddingValues(20.dp), gearsEffectState.value.mapValues { it.value.icon },
+                        onHeadClick = {
+                            showSelectGears.value = true
+                            selectedGearCell.value = GearCell.HEAD
+                        },
+                        onBodyClick = {
+                            showSelectGears.value = true
+                            selectedGearCell.value = GearCell.BODY
+                        },
+                        onArmClick = {
+                            showSelectGears.value = true
+                            selectedGearCell.value = GearCell.ARM
+                        },
+                        onLegClick = {
+                            showSelectGears.value = true
+                            selectedGearCell.value = GearCell.LEG
+                        },
+                        onDecorClick = {
+                            showSelectGears.value = true
+                            selectedGearCell.value = GearCell.DECOR
+                        },
+                        onDeviceClick = {
+                            showSelectGears.value = true
+                            selectedGearCell.value = GearCell.DEVICE
+                        }
+                    )
+                }
+                // Show effects
+                OutlinedCard {
+                    HCenteredBox(modifier = Modifier.padding(10.dp)) {
+                        Text(
+                            text = effectsTitle.value,
+                            color = Teal200,
+                            fontSize = 16.sp,
+                            modifier = Modifier.clickable {
+                                effectsTitle.value = if (effectsTitle.value == "Показать характеристики") {
+                                    "Скрыть характеристики"
+                                } else {
+                                    "Показать характеристики"
+                                }
+                                showEffects.value = showEffects.value.not()
+                            }
+                        )
+                    }
+                    if (showEffects.value) {
+                        HCenteredBox {
+                            Text(
+                                text = sumEffects(showEffects.value, context, hero, gearsEffectState.value),
+                                color = Color.Gray,
+                                fontSize = 14.sp,
+                                modifier = Modifier.padding(top = 10.dp)
+                            )
+                        }
+                    }
+                }
+            }
+        } else {
+            CenteredBox(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Primary)
+            ) {
+                SelectGearScreen(
+                    showSelectGears,
+                    selectedGearCell, hero,
+                    gearsEffectState, hiltViewModel()
+                )
+            }
+        }
+    }
     // UI
     DisposableEffect(null) {
         val newMap = mutableMapOf<GearCell, Gear>()
@@ -105,120 +190,6 @@ fun CreateSetFragment(
             gearsEffectState.value = newMap
         }
         onDispose { listener.remove() }
-    }
-    if (!showSelectGears.value) {
-        Column(
-            modifier = Modifier.fillMaxWidth()
-                .fillMaxHeight(fraction = 0.923f)
-                .verticalScroll(rememberScrollState()),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            // Hero card
-            TopHeroCard(hero.icon) {
-                CenteredBox {
-                    OutlinedButton(
-                        onClick = {
-                            viewModel.obtainEvent(
-                                CreateSetEvent.SaveSet(
-                                    UserSet(
-                                        set.userSetId, set.from, set.hero,
-                                        gearsEffectState.value.mapValues { it.value.icon },
-                                        set.likes, set.userLikeIds
-                                    )
-                                )
-                            )
-                            ctx.onBackPressed()
-                        },
-                        shape = RoundedCornerShape(10.dp),
-                        border = BorderStroke(2.dp, Teal200),
-                        colors = ButtonDefaults.outlinedButtonColors(backgroundColor = Color.Transparent)
-                    ) {
-                        Text(text = "Сохранить", color = Teal200, fontSize = 16.sp)
-                    }
-                }
-            }
-            // Set view
-            HCenteredBox(
-                modifier = Modifier.fillMaxWidth()
-                    .padding(start = 20.dp, end = 20.dp, bottom = 20.dp)
-                    .background(PrimaryDark, RoundedCornerShape(20.dp))
-                    .border(2.dp, Teal200, RoundedCornerShape(20.dp)),
-            ) {
-                Set(
-                    PaddingValues(20.dp), gearsEffectState.value.mapValues { it.value.icon },
-                    onHeadClick = {
-                        showSelectGears.value = true
-                        selectedGearCell.value = GearCell.HEAD
-                    },
-                    onBodyClick = {
-                        showSelectGears.value = true
-                        selectedGearCell.value = GearCell.BODY
-                    },
-                    onArmClick = {
-                        showSelectGears.value = true
-                        selectedGearCell.value = GearCell.ARM
-                    },
-                    onLegClick = {
-                        showSelectGears.value = true
-                        selectedGearCell.value = GearCell.LEG
-                    },
-                    onDecorClick = {
-                        showSelectGears.value = true
-                        selectedGearCell.value = GearCell.DECOR
-                    },
-                    onDeviceClick = {
-                        showSelectGears.value = true
-                        selectedGearCell.value = GearCell.DEVICE
-                    }
-                )
-            }
-            // Show effects
-            Column(
-                modifier = Modifier.fillMaxWidth()
-                    .padding(horizontal = 20.dp)
-                    .background(PrimaryDark, RoundedCornerShape(20.dp))
-                    .border(2.dp, Teal200, RoundedCornerShape(20.dp))
-                    .padding(10.dp)
-            ) {
-                HCenteredBox {
-                    Text(
-                        text = effectsTitle.value,
-                        color = Teal200,
-                        fontSize = 16.sp,
-                        modifier = Modifier.clickable {
-                            effectsTitle.value = if (effectsTitle.value == "Показать характеристики") {
-                                "Скрыть характеристики"
-                            } else {
-                                "Показать характеристики"
-                            }
-                            showEffects.value = showEffects.value.not()
-                        }
-                    )
-                }
-                if (showEffects.value) {
-                    HCenteredBox {
-                        Text(
-                            text = sumEffects(showEffects.value, context, hero, gearsEffectState.value),
-                            color = Color.Gray,
-                            fontSize = 14.sp,
-                            modifier = Modifier.padding(top = 10.dp)
-                        )
-                    }
-                }
-            }
-        }
-    } else {
-        CenteredBox(
-            modifier = Modifier.fillMaxWidth()
-                .fillMaxHeight(fraction = 0.923f)
-                .background(Primary)
-        ) {
-            SelectGearScreen(
-                ctx, showSelectGears,
-                selectedGearCell, hero,
-                gearsEffectState, hiltViewModel()
-            )
-        }
     }
 }
 
@@ -451,8 +422,7 @@ private fun sumValueEffects(eff: Int, val1: Number, val2: Number, percent: Boole
 
 private fun doubleToIntIfNotDouble(db: Double): Int? {
     val round = db.roundToInt()
-    return if (db - round.toDouble() != 0.0)
-        null
+    return if (db - round.toDouble() != 0.0) null
     else round
 }
 

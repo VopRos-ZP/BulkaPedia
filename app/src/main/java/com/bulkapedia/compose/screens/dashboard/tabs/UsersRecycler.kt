@@ -1,4 +1,3 @@
-@file:Suppress("FunctionName")
 package com.bulkapedia.compose.screens.dashboard.tabs
 
 import androidx.compose.foundation.BorderStroke
@@ -29,11 +28,11 @@ import com.bulkapedia.compose.ui.theme.Teal200
 import com.bulkapedia.compose.util.VCenteredBox
 import com.bulkapedia.compose.util.clickable
 import com.bulkapedia.compose.data.labels.Stats
-import com.bulkapedia.compose.data.User
+import com.bulkapedia.compose.data.repos.database.User
 import com.bulkapedia.R
 import com.bulkapedia.compose.elements.ScreenAction
 import com.bulkapedia.compose.navigation.Destinations
-import com.bulkapedia.compose.ui.theme.LocalToolbarContext
+import com.bulkapedia.compose.ui.theme.LocalNavController
 
 @Composable
 fun UsersRecycler(
@@ -41,12 +40,8 @@ fun UsersRecycler(
     action: ScreenAction.AddTagAction,
     onDelete: (String, User) -> Unit
 ) {
-    LazyColumn (
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        items(users) {user ->
-            UserRecyclerItem(user, action, onDelete)
-        }
+    LazyColumn (modifier = Modifier.fillMaxWidth()) {
+        items(users) { UserRecyclerItem(it, action, onDelete) }
     }
 }
 
@@ -56,39 +51,21 @@ fun UserRecyclerItem(
     action: ScreenAction.AddTagAction,
     onDelete: (String, User) -> Unit
 ) {
-    val nav = LocalToolbarContext.current.navController
+    val nav = LocalNavController.current
     Card (
         backgroundColor = PrimaryDark,
         shape = RoundedCornerShape(20.dp),
         border = BorderStroke(2.dp, Teal200),
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier
+            .fillMaxWidth()
             .padding(20.dp)
     ) {
         Column (
             modifier = Modifier.padding(start = 15.dp, end = 15.dp, bottom = 15.dp)
         ) {
-            // email
-            UserItemRow {
-                Text("Почта: ", color = Teal200)
-                Text(
-                    text = user.email,
-                    color = Teal200
-                )
-            }
-            UserItemRow {
-                Text("Пароль: ", color = Teal200)
-                Text(
-                    text = user.password,
-                    color = Teal200
-                )
-            }
-            UserItemRow {
-                Text("Ник: ", color = Teal200)
-                Text(
-                    text = user.nickname,
-                    color = Teal200
-                )
-            }
+            TextUserItemRow(title = "Почта: ", text = user.email)
+            TextUserItemRow(title = "Пароль: ", text = user.password)
+            TextUserItemRow(title = "Ник: ", text = user.nickname)
             UserItemRow {
                 DarkButton(R.drawable.comment) {
                     nav.navigate("${Destinations.DEV_CHAT}/$ADMIN_NICKNAME/${user.nickname}")
@@ -107,9 +84,22 @@ fun UserRecyclerItem(
 }
 
 @Composable
+fun TextUserItemRow(title: String, text: String) {
+    UserItemRow {
+        Text(title, color = Teal200)
+        Text(
+            text = text,
+            color = Teal200
+        )
+    }
+}
+
+@Composable
 fun UserItemRow(content: @Composable RowScope.() -> Unit) {
     Row(
-        modifier = Modifier.fillMaxWidth().padding(top = 15.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 15.dp),
         content = content
     )
 }
@@ -117,7 +107,9 @@ fun UserItemRow(content: @Composable RowScope.() -> Unit) {
 @Composable
 fun UserItemLazyRow(content: LazyListScope.() -> Unit) {
     LazyRow(
-        modifier = Modifier.fillMaxWidth().padding(top = 15.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 15.dp),
         content = content
     )
 }

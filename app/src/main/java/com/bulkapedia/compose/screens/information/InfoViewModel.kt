@@ -1,28 +1,33 @@
 package com.bulkapedia.compose.screens.information
 
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.bulkapedia.compose.data.Database
-import com.bulkapedia.compose.data.category.Category
+import androidx.lifecycle.viewModelScope
+import com.bulkapedia.compose.data.repos.categories.Category
+import com.bulkapedia.compose.data.repos.firestore.Repository
 import com.google.firebase.firestore.ListenerRegistration
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class InfoViewModel @Inject constructor() : ViewModel() {
+class InfoViewModel @Inject constructor(
+    private val categoryRepository: Repository<Category>
+) : ViewModel() {
 
-    val categoryLiveData: MutableLiveData<List<Category>> = MutableLiveData(emptyList())
+    private val _categoryFlow: MutableStateFlow<List<Category>> = MutableStateFlow(emptyList())
+    val categoryFlow: StateFlow<List<Category>> = _categoryFlow
 
     private var categoryListener: ListenerRegistration? = null
 
-    fun listenCategories() {
-        val db = Database()
-        db.addCategoriesSnapshotListener { categories -> categoryLiveData.postValue(categories) }
+    fun fetchCategories() {
+        categoryListener = categoryRepository.fetchAll {
+            viewModelScope.launch { _categoryFlow.emit(it) }
+        }
     }
 
-    fun removeListeners() {
-        categoryListener?.remove()
-    }
+    fun dispose() = categoryListener?.remove()
 
 }
 

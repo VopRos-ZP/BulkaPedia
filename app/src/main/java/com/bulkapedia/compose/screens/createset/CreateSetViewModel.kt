@@ -1,27 +1,18 @@
 package com.bulkapedia.compose.screens.createset
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.bulkapedia.compose.data.Database
-import com.bulkapedia.compose.events.EventHandler
-import com.bulkapedia.compose.data.heroes.Hero
-import com.bulkapedia.compose.data.sets.GearCell
-import com.bulkapedia.compose.data.sets.UserSet
+import androidx.lifecycle.viewModelScope
+import com.bulkapedia.compose.data.repos.heroes.Hero
+import com.bulkapedia.compose.data.repos.heroes.HeroesRepository
+import com.bulkapedia.compose.data.repos.sets.GearCell
+import com.bulkapedia.compose.data.repos.sets.SetsRepository
+import com.bulkapedia.compose.data.repos.sets.UserSet
 import com.google.firebase.firestore.ListenerRegistration
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
-
-sealed class CreateSetEvent {
-    data class LoadContent(val author: String, val heroId: String, val setId: String): CreateSetEvent()
-    data class SaveSet(val set: UserSet): CreateSetEvent()
-}
-
-sealed class CreateSetViewState {
-    object Loading: CreateSetViewState()
-    data class Enter(val hero: Hero, val set: UserSet): CreateSetViewState()
-    data class Error(val message: String): CreateSetViewState()
-}
 
 val emptyIcons = listOf(
     "https://firebasestorage.googleapis.com/v0/b/bulkapedia-e46fe.appspot.com/o/gears%2Fhead%2Fempty_head.jpg?alt=media&token=ef3f8ac1-a217-4ff7-a0c1-1116d848e449",
@@ -42,66 +33,30 @@ val emptyGears = mapOf(
 )
 
 @HiltViewModel
-class CreateSetViewModel @Inject constructor() : ViewModel(), EventHandler<CreateSetEvent> {
+class CreateSetViewModel @Inject constructor(
+    private val setsRepository: SetsRepository,
+    private val heroesRepository: HeroesRepository
+) : ViewModel() {
 
-    private val _liveData: MutableLiveData<CreateSetViewState> = MutableLiveData(CreateSetViewState.Loading)
-    val liveData: LiveData<CreateSetViewState> = _liveData
+    private val _heroFlow: MutableStateFlow<Hero?> = MutableStateFlow(null)
+    val heroFlow: StateFlow<Hero?> = _heroFlow
+
+    private val _setFlow: MutableStateFlow<UserSet> = MutableStateFlow(UserSet.EMPTY)
+    val setFlow: StateFlow<UserSet> = _setFlow
 
     private var heroListener: ListenerRegistration? = null
     private var setListener: ListenerRegistration? = null
 
-    override fun obtainEvent(event: CreateSetEvent) {
-        when (val state = _liveData.value!!) {
-            is CreateSetViewState.Loading -> reduce(event, state)
-            is CreateSetViewState.Enter -> reduce(event, state)
-            else -> {}
+    fun saveSet(set: UserSet) {
+        setsRepository.create(set) {}
+    }
+
+    fun fetchData(heroId: String, setId: String, author: String) {
+        heroListener = heroesRepository.fetchAll { heroes ->
+            viewModelScope.launch { _heroFlow.emit(heroes.find { it.id == heroId }) }
         }
-    }
-
-    private fun reduce(event: CreateSetEvent, state: CreateSetViewState.Loading) {
-        when (event) {
-            is CreateSetEvent.LoadContent -> fetchData(event.heroId, event.setId, event.author)
-            is CreateSetEvent.SaveSet -> saveSet(event.set)
-        }
-    }
-
-    private fun reduce(event: CreateSetEvent, state: CreateSetViewState.Enter) {
-        when (event) {
-            is CreateSetEvent.LoadContent -> fetchData(event.heroId, event.setId, event.author)
-            is CreateSetEvent.SaveSet -> saveSet(event.set)
-        }
-    }
-
-    private fun saveSet(set: UserSet) {
-        Database().addSet(set)
-    }
-
-    private fun fetchData(heroId: String, setId: String, author: String) {
-        val db = Database()
-        if (setId.isEmpty()) {
-            heroListener = db.addHeroesSnapshotListener { heroes ->
-                val hero = heroes.find { it.heroId == heroId }
-                if (hero != null) {
-                    _liveData.postValue(CreateSetViewState.Enter(hero, UserSet(
-                        "", author, heroId, emptyGears, 0, mutableListOf()
-                    )
-                    ))
-                } else {
-                    _liveData.postValue(CreateSetViewState.Error("Герой не найден"))
-                }
-            }
-        } else {
-            setListener = db.addSetsSnapshotListener { sets ->
-                val current = sets.find { it.userSetId == setId }!!
-                heroListener = db.addHeroesSnapshotListener { heroes ->
-                    val hero = heroes.find { it.heroId == heroId }
-                    if (hero != null) {
-                        _liveData.postValue(CreateSetViewState.Enter(hero, current))
-                    } else {
-                        _liveData.postValue(CreateSetViewState.Error("Герой не найден"))
-                    }
-                }
-            }
+        setListener = setsRepository.fetchAll { sets ->
+            viewModelScope.launch { _setFlow.emit(sets.find { it.id == setId } ?: UserSet.EMPTY) }
         }
     }
 

@@ -1,42 +1,35 @@
 package com.bulkapedia.compose.screens.heroinfo
 
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.bulkapedia.compose.data.Database
-import com.bulkapedia.compose.data.category.HeroInfo
+import androidx.lifecycle.viewModelScope
+import com.bulkapedia.compose.data.repos.hero_info.HeroInfo
+import com.bulkapedia.compose.data.repos.hero_info.HeroInfoRepository
 import com.google.firebase.firestore.ListenerRegistration
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class HeroesInfoViewModel @Inject constructor() : ViewModel() {
+class HeroInfoViewModel @Inject constructor(
+    private val heroInfoRepository: HeroInfoRepository
+) : ViewModel() {
 
-    val heroesData: MutableLiveData<List<HeroInfo>> = MutableLiveData(emptyList())
+    private val _heroInfoFlow: MutableStateFlow<HeroInfo?> = MutableStateFlow(null)
+    val heroInfoFlow: StateFlow<HeroInfo?> = _heroInfoFlow
 
-    private var listener: ListenerRegistration? = null
-
-    fun listenHeroInfo() {
-        listener = Database().addHeroInfoSnapshotListener { heroInfos ->
-            heroesData.postValue(heroInfos)
-        }
-    }
-
-    fun removeListener() {
-        listener?.remove()
-    }
-
-}
-
-@HiltViewModel
-class HeroInfoViewModel @Inject constructor() : ViewModel() {
-
-    val heroData: MutableLiveData<Pair<HeroInfo?, Int>> = MutableLiveData(Pair(null, 0))
+    private val _heroesInfoCount: MutableStateFlow<Int> = MutableStateFlow(0)
+    val heroesInfoCount: StateFlow<Int> = _heroesInfoCount
 
     private var listener: ListenerRegistration? = null
 
     fun listenHeroInfo(id: String) {
-        listener = Database().addHeroInfoSnapshotListener { heroInfos ->
-            heroData.postValue(Pair(heroInfos.find { it.id == id }, heroInfos.size))
+        listener = heroInfoRepository.fetchAll { heroInfos ->
+            viewModelScope.launch {
+                _heroInfoFlow.emit(heroInfos.find { it.id == id })
+                _heroesInfoCount.emit(heroInfos.size)
+            }
         }
     }
 

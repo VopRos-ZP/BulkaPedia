@@ -5,7 +5,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import com.bulkapedia.compose.data.User
+import com.bulkapedia.compose.data.repos.database.User
 import com.bulkapedia.compose.util.CenteredBox
 
 @Composable

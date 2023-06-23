@@ -1,18 +1,22 @@
-@file:Suppress("FunctionName")
 package com.bulkapedia.compose.screens.information
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Card
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -21,25 +25,38 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.bulkapedia.compose.data.*
-import com.bulkapedia.compose.data.category.Category
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.bulkapedia.compose.navigation.ToCATEGORY_MANAGE
+import com.bulkapedia.compose.navigation.ToDASHBOARD
+import com.bulkapedia.compose.navigation.ToDEV_CHAT
+import com.bulkapedia.compose.navigation.ToHEROES_INFO
+import com.bulkapedia.compose.navigation.ToHERO_INFO
+import com.bulkapedia.compose.navigation.ToINFO
+import com.bulkapedia.compose.navigation.ToMANAGE_HEROES_INFO
+import com.bulkapedia.compose.navigation.ToMAP
+import com.bulkapedia.compose.navigation.ToMAPS
+import com.bulkapedia.compose.navigation.ToMECHANIC
+import com.bulkapedia.compose.navigation.ToMECHANICS
+import com.bulkapedia.compose.navigation.ToSETTINGS
+import com.bulkapedia.compose.navigation.ToUSERS_SETS
+import com.bulkapedia.compose.data.repos.categories.Category
 import com.bulkapedia.compose.data.snackbars.TextSnackbar
+import com.bulkapedia.compose.elements.OutlinedCard
 import com.bulkapedia.compose.navigation.Destinations
 import com.bulkapedia.compose.navigation.Navigation
-import com.bulkapedia.compose.navigation.ToolbarCtx
+import com.bulkapedia.compose.screens.titled.ScreenView
+import com.bulkapedia.compose.ui.theme.LocalNavController
 import com.bulkapedia.compose.ui.theme.Primary
-import com.bulkapedia.compose.ui.theme.PrimaryDark
 import com.bulkapedia.compose.ui.theme.Teal
 import com.bulkapedia.compose.ui.theme.Teal200
-import com.bulkapedia.compose.util.clickable
 import com.bulkapedia.compose.util.stringToResource
 import kotlinx.coroutines.launch
 
 @Composable
-fun InfoListNav(toolbarCtx: ToolbarCtx) {
-    Navigation(Destinations.INFO, toolbarCtx, listOf(
+fun InfoListNav() {
+    Navigation(Destinations.INFO, listOf(
         ToINFO, ToDEV_CHAT, ToSETTINGS, ToDASHBOARD,
-        /* Dashboard */
+        /** Dashboard **/
         ToCATEGORY_MANAGE, ToUSERS_SETS, ToMANAGE_HEROES_INFO,
         /** Maps category **/
         ToMAPS, ToMAP,
@@ -51,25 +68,23 @@ fun InfoListNav(toolbarCtx: ToolbarCtx) {
 }
 
 @Composable
-fun InfoScreen(ctx: ToolbarCtx, viewModel: InfoViewModel) {
-    // Toolbar
-    ctx.observeAsState()
-    ctx.setData(title = "Выберите категорию", showBackButton = false)
-    // Vars
+fun InfoScreen(viewModel: InfoViewModel = hiltViewModel()) {
+    val navController = LocalNavController.current
     val scope = rememberCoroutineScope()
-    val categoryState = viewModel.categoryLiveData.observeAsState()
-    // UI
-    TextSnackbar { action ->
-        LazyColumn (
-            modifier = Modifier.fillMaxSize()
-                .background(Primary)
-        ) {
-            items(categoryState.value ?: emptyList()) { cat ->
-                Category(cat, (categoryState.value ?: emptyList()).first() == cat) { destination ->
-                    if (cat.enabled) {
-                        ctx.navController.navigate(destination)
-                    } else {
-                        scope.launch { action.showSnackbar("Скоро откроется") }
+    val categories by viewModel.categoryFlow.collectAsState()
+    ScreenView(title = "Выберите категорию") {
+        TextSnackbar { action ->
+            LazyColumn (
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Primary)
+            ) {
+                items(categories) { cat ->
+                    CategoryCard(cat) {
+                        when (cat.enabled) {
+                            true -> navController.navigate(cat.destination)
+                            else -> scope.launch { action.showSnackbar("Скоро откроется") }
+                        }
                     }
                 }
             }
@@ -77,27 +92,21 @@ fun InfoScreen(ctx: ToolbarCtx, viewModel: InfoViewModel) {
     }
     // Listeners
     DisposableEffect(null) {
-        viewModel.listenCategories()
-        onDispose { viewModel.removeListeners() }
+        viewModel.fetchCategories()
+        onDispose { viewModel.dispose() }
     }
 }
 
 @Composable
-fun Category(
-    category: Category,
-    isFirst: Boolean,
-    onClick: (String) -> Unit
-) {
-    val top = if (isFirst) 0.dp else 20.dp
-    Card(
-        shape = RoundedCornerShape(20.dp),
-        backgroundColor = PrimaryDark,
-        border = BorderStroke(2.dp, Teal200),
+fun CategoryCard(category: Category, onClick: () -> Unit) {
+    OutlinedCard(
         modifier = Modifier.fillMaxWidth()
-            .padding(start = 20.dp, end = 20.dp, top = top)
+            .padding(horizontal = 20.dp),
+        onClick = onClick
     ) {
         Row (
-            modifier = Modifier.fillMaxSize().padding(20.dp),
+            modifier = Modifier.fillMaxSize()
+                .padding(20.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(20.dp)
         ) {
@@ -105,25 +114,25 @@ fun Category(
                 painter = painterResource(stringToResource(category.icon)),
                 contentDescription = "category_icon",
                 tint = Teal200,
-                modifier = Modifier.size(60.dp)
+                modifier = Modifier.size(50.dp)
             )
             Column (
-                modifier = Modifier.fillMaxWidth()
-                    .clickable { onClick.invoke(category.destination) },
+                modifier = Modifier.fillMaxWidth(),
                 verticalArrangement = Arrangement.SpaceEvenly
             ) {
                 Text(
                     text = category.title,
                     color = Teal200,
-                    fontSize = 18.sp,
+                    fontSize = 16.sp,
                     fontWeight = FontWeight.Bold,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier
+                        .fillMaxWidth()
                         .padding(start = 20.dp)
                 )
                 Text(
                     text = category.subTitle,
                     color = Teal,
-                    fontSize = 16.sp,
+                    fontSize = 14.sp,
                     fontStyle = FontStyle.Italic
                 )
             }

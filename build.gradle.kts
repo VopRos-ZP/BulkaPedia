@@ -7,18 +7,20 @@ buildscript {
     }
 
     dependencies {
-        classpath(Deps.kotlin_gradle_plugin)
-        classpath(Deps.android_gradle_plugin)
-        classpath("com.google.gms:google-services:4.3.15")
-        classpath("androidx.navigation:navigation-safe-args-gradle-plugin:2.5.3")
+        classpath(libs.build.gradle)
+        classpath(libs.kotlin.gradle)
+        classpath(libs.google.services)
+        classpath(libs.androidx.navigation.safe.args.gradle.plugin)
     }
 
 }
 
+@Suppress("DSL_SCOPE_VIOLATION") // TODO: Remove once KTIJ-19369 is fixed
 plugins {
-    id(Hilt.plugin) version "2.44" apply false
+    alias(libs.plugins.hiltAndroid) apply false
 }
 
 tasks.register("clean", Delete::class) {
     delete(rootProject.buildDir)
 }
+true

@@ -1,14 +1,15 @@
 package com.bulkapedia.compose.data.gears
 
 import com.bulkapedia.R
-import com.bulkapedia.compose.data.heroes.Hero
+import com.bulkapedia.compose.data.repos.gears.Effect
+import com.bulkapedia.compose.data.repos.heroes.Hero
 import com.bulkapedia.compose.util.resourceToString
 
 class PersonalGears {
 
     companion object {
         fun getPersonalGears(hero: Hero, count: Int) : List<Effect> {
-            return when (hero.heroId) {
+            return when (hero.id) {
                 "arnie" -> {
                     when (count) {
                         2, 3 -> listOf(

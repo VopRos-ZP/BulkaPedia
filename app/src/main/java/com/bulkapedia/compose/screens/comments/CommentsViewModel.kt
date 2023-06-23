@@ -1,92 +1,65 @@
 package com.bulkapedia.compose.screens.comments
 
-import android.annotation.SuppressLint
-import androidx.compose.runtime.snapshots.SnapshotStateList
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.bulkapedia.compose.data.Comment
-import com.bulkapedia.compose.data.Database
-import com.bulkapedia.compose.data.sets.GearCell
-import com.bulkapedia.compose.data.sets.UserSet
-import com.bulkapedia.compose.data.sets.UserSet.Companion.toUserSet
+import androidx.lifecycle.viewModelScope
+import com.bulkapedia.compose.data.repos.comments.Comment
+import com.bulkapedia.compose.data.repos.comments.CommentsRepository
+import com.bulkapedia.compose.data.repos.sets.SetsRepository
+import com.bulkapedia.compose.data.repos.sets.UserSet
+import com.bulkapedia.compose.data.toDateTime
 import com.google.firebase.firestore.ListenerRegistration
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import java.text.SimpleDateFormat
-import java.util.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-sealed class CommentsViewState {
-    object Loading: CommentsViewState()
-    data class Enter(val set: UserSet): CommentsViewState()
-    data class Error(val message: String): CommentsViewState()
-}
-
 @HiltViewModel
-class CommentsViewModel @Inject constructor() : ViewModel() {
+class CommentsViewModel @Inject constructor(
+    private val setsRepository: SetsRepository,
+    private val commentsRepository: CommentsRepository
+) : ViewModel() {
 
-    companion object {
-        val emptySet = UserSet(
-            "", "", "", mapOf(
-                GearCell.HEAD to "empty_head", GearCell.BODY to "empty_body",
-                GearCell.ARM to "empty_arm", GearCell.LEG to "empty_leg",
-                GearCell.DECOR to "empty_decor", GearCell.DEVICE to "empty_device",
-            ), 0, mutableListOf()
-        )
-    }
+    private val _setFlow: MutableStateFlow<UserSet?> = MutableStateFlow(null)
+    val setFlow: StateFlow<UserSet?> = _setFlow
 
-    val setLiveData: MutableLiveData<UserSet> = MutableLiveData(emptySet)
+    private val _commentsFlow: MutableStateFlow<List<Comment>> = MutableStateFlow(emptyList())
+    val commentsFlow: StateFlow<List<Comment>> = _commentsFlow
 
     private var setListener: ListenerRegistration? = null
+    private var commentsListener: ListenerRegistration? = null
 
     fun addListener(setId: String) {
-        setListener = Firebase.firestore.collection("sets").document(setId).addSnapshotListener { value, _ ->
-            setLiveData.postValue(value?.toUserSet() ?: emptySet)
+        setListener = setsRepository.fetchAll { allSets ->
+            viewModelScope.launch { _setFlow.emit(allSets.find { it.id == setId } ) }
+        }
+        commentsListener = commentsRepository.fetchAll { allComments ->
+            val filtered = allComments
+                .filter { it.set == setId }
+                .sortedWith { c1, c2 -> c1.date.toDateTime().compareTo(c2.date.toDateTime()) }
+            viewModelScope.launch { _commentsFlow.emit(filtered) }
         }
     }
 
-    fun removeListener() { setListener?.remove() }
-
-}
-
-@HiltViewModel
-class CommentsVM @Inject constructor() : ViewModel() {
-
-    private val _liveData: MutableLiveData<SnapshotStateList<Comment>> = MutableLiveData(null)
-    val liveData: LiveData<SnapshotStateList<Comment>> = _liveData
-
-    private var listener: ListenerRegistration? = null
-
     fun sendComment(comment: Comment) {
-        Database().addComment(comment)
+        commentsRepository.create(comment) {}
     }
 
     fun updateComment(comment: Comment) {
-        Database().updateComment(comment)
+        commentsRepository.update(comment)
     }
 
-    fun addListener(setId: String, state: SnapshotStateList<Comment>) {
-        listener = Database().addCommentsSnapshotListener { list ->
-            val comments = list
-                .filter { it.set == setId }
-                .sortedWith { obj1, obj2 -> getDate(obj1.date).compareTo(getDate(obj2.date)) }
-            state.clear()
-            state.addAll(comments)
-            _liveData.postValue(state)
-        }
+    fun deleteUserSet(set: UserSet) {
+        setsRepository.delete(set)
     }
 
-    fun removeListener() { listener?.remove() }
+    fun deleteComment(comment: Comment) {
+        commentsRepository.delete(comment)
+    }
 
-    @SuppressLint("SimpleDateFormat")
-    private fun getDate(strDate: String): Date {
-        return try {
-            SimpleDateFormat("dd.MM.yyyy HH:mm:ss").parse(strDate)!!
-        } catch (_: Exception) {
-            Date()
-        }
+    fun dispose() {
+        setListener?.remove()
+        commentsListener?.remove()
     }
 
 }

@@ -4,8 +4,7 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.bulkapedia.compose.data.sets.UserSet
-import com.bulkapedia.compose.data.Database
+import com.bulkapedia.compose.data.repos.sets.UserSet
 import com.bulkapedia.compose.events.EventHandler
 import com.google.firebase.firestore.ListenerRegistration
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -62,19 +61,7 @@ class SetTabViewModel @Inject constructor() : ViewModel(), EventHandler<HeroTabE
     }
 
     private fun fetchSets(hero: String, setsState: SnapshotStateList<UserSet>) {
-        if (hero.isEmpty()) {
-            _liveData.postValue(SetTabViewState.Loading)
-        } else {
-            setsListener = Database().addSetsSnapshotListener { setList ->
-                val sets = setList
-                    .filter { it.hero == hero }
-                    .sortedByDescending { it.likes }
-                    .take(3)
-                setsState.clear()
-                setsState.addAll(sets)
-                _liveData.postValue(SetTabViewState.Enter(setsState))
-            }
-        }
+
     }
 
 }

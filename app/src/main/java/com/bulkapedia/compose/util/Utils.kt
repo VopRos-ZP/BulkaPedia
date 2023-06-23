@@ -8,7 +8,7 @@ import androidx.compose.ui.composed
 import com.bulkapedia.compose.ICON_LIST
 import com.bulkapedia.R
 import com.bulkapedia.compose.MainActivity
-import com.bulkapedia.compose.data.gears.Effect
+import com.bulkapedia.compose.data.repos.gears.Effect
 import com.bulkapedia.compose.data.labels.Ranks
 
 lateinit var CTX: MainActivity

@@ -1,64 +1,36 @@
 package com.bulkapedia.compose.screens.createset.selectgear
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.bulkapedia.compose.data.Database
+import androidx.lifecycle.viewModelScope
 import com.bulkapedia.compose.events.EventHandler
 import com.bulkapedia.compose.util.HeroType
-import com.bulkapedia.compose.data.gears.Gear
-import com.bulkapedia.compose.data.gears.GearSet
-import com.bulkapedia.compose.data.heroes.Hero
-import com.bulkapedia.compose.data.sets.GearCell
+import com.bulkapedia.compose.data.repos.gears.Gear
+import com.bulkapedia.compose.data.repos.gears.GearSet
+import com.bulkapedia.compose.data.repos.gears.GearsRepository
+import com.bulkapedia.compose.data.repos.heroes.Hero
+import com.bulkapedia.compose.data.repos.sets.GearCell
+import com.bulkapedia.compose.data.repos.sets.SetsRepository
+import com.google.firebase.firestore.ListenerRegistration
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-sealed class SelectGearEvent {
-    data class LoadingData(val cell: GearCell, val hero: Hero): SelectGearEvent()
-}
-
-sealed class SelectGearViewState {
-    object Loading: SelectGearViewState()
-    data class Enter(val gears: List<Gear>): SelectGearViewState()
-    data class Error(val message: String): SelectGearViewState()
-}
-
 @HiltViewModel
-class SelectGearViewModel @Inject constructor() : ViewModel(), EventHandler<SelectGearEvent> {
+class SelectGearViewModel @Inject constructor(
+    private val setsRepository: SetsRepository,
+    private val gearsRepository: GearsRepository
+) : ViewModel() {
 
-    private val _liveData: MutableLiveData<SelectGearViewState> = MutableLiveData(SelectGearViewState.Loading)
-    val liveData: LiveData<SelectGearViewState> = _liveData
+    private val _gearsFlow: MutableStateFlow<List<Gear>> = MutableStateFlow(emptyList())
+    val gearsFlow: StateFlow<List<Gear>> = _gearsFlow
 
-    override fun obtainEvent(event: SelectGearEvent) {
-        when (val state = _liveData.value!!) {
-            is SelectGearViewState.Loading -> reduce(event, state)
-            is SelectGearViewState.Enter -> reduce(event, state)
-            is SelectGearViewState.Error -> reduce(event, state)
-        }
-    }
+    private var listener: ListenerRegistration? = null
 
-    private fun reduce(event: SelectGearEvent, state: SelectGearViewState.Loading) {
-        when (event) {
-            is SelectGearEvent.LoadingData -> fetchGears(event.cell, event.hero)
-        }
-    }
-
-    private fun reduce(event: SelectGearEvent, state: SelectGearViewState.Enter) {
-        when (event) {
-            is SelectGearEvent.LoadingData -> fetchGears(event.cell, event.hero)
-        }
-    }
-
-    private fun reduce(event: SelectGearEvent, state: SelectGearViewState.Error) {
-        when (event) {
-            is SelectGearEvent.LoadingData -> fetchGears(event.cell, event.hero)
-        }
-    }
-
-    private fun fetchGears(cell: GearCell, hero: Hero) {
-        Database().addGearsSnapshotListener { allGears ->
+    fun fetchGears(cell: GearCell, hero: Hero) {
+        listener = gearsRepository.fetchAll { allGears ->
             val allGS = allGears.filter { it.cell == cell.name.lowercase() }
-
             val defaultGears = allGS.filter { it.gearSet == GearSet.NONE.name }
             val setsGears = allGS
                 .filter { it.gearSet == fetchGearTypeByHeroType(hero.type) }
@@ -72,7 +44,7 @@ class SelectGearViewModel @Inject constructor() : ViewModel(), EventHandler<Sele
                     removeAt(index)
                     add(0, g)
                 }
-            _liveData.postValue(SelectGearViewState.Enter(gears))
+            viewModelScope.launch { _gearsFlow.emit(gears) }
         }
     }
 
@@ -85,6 +57,10 @@ class SelectGearViewModel @Inject constructor() : ViewModel(), EventHandler<Sele
             HeroType.TROOPERS.str() -> GearSet.BIO_NODE.name
             else -> ""
         }
+    }
+
+    fun dispose() {
+        listener?.remove()
     }
 
 }

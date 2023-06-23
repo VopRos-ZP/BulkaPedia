@@ -8,31 +8,29 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.bulkapedia.R
 import com.bulkapedia.compose.navigation.Destinations
 import com.bulkapedia.compose.ui.theme.BulkaPediaTheme
-import com.bulkapedia.compose.ui.theme.LocalToolbarContext
 import com.bulkapedia.compose.ui.theme.PrimaryDark
 import com.bulkapedia.compose.ui.theme.Teal200
 import com.bulkapedia.compose.util.VCenteredBox
 import com.bulkapedia.compose.util.clickable
-import com.bulkapedia.compose.data.sets.UserSet
+import com.bulkapedia.compose.data.repos.sets.UserSet
+import com.bulkapedia.compose.ui.theme.LocalNavController
 import com.bulkapedia.compose.util.stringToResource
-
 
 @Composable
 fun CommentsButton(
     set: UserSet,
     isDisable: Boolean
 ) {
-    val nc = LocalToolbarContext.current.navController
+    val nc = LocalNavController.current
     SetButton(id = R.drawable.comment) {
         if (!isDisable) {
-            nc.navigate("${Destinations.COMMENTS}/${set.userSetId}")
+            nc.navigate("${Destinations.COMMENTS}/${set.id}")
         }
     }
 }
@@ -42,7 +40,7 @@ fun ProfileButton(
     set: UserSet,
     isDisable: Boolean
 ) {
-    val nc = LocalToolbarContext.current.navController
+    val nc = LocalNavController.current
     SetButton(id = R.drawable.person) {
         if (!isDisable) {
             nc.navigate("${Destinations.VISIT_PROFILE}/${set.from}")
@@ -57,7 +55,7 @@ fun SettingsButton(
     isDisable: Boolean,
     onDelete: (UserSet) -> Unit = {}
 ) {
-    val nc = LocalToolbarContext.current.navController
+    val nc = LocalNavController.current
     VCenteredBox {
         SetButton(id = R.drawable.settings) {
             if (!isDisable) {
@@ -66,7 +64,7 @@ fun SettingsButton(
         }
         SetSettingsMenu(expanded = expanded, set = set,
             onEditClick = { set ->
-                nc.navigate("${Destinations.CREATE_SET}/${set.hero}/${set.from}?setId=${set.userSetId}")
+                nc.navigate("${Destinations.CREATE_SET}/${set.hero}/${set.from}?setId=${set.id}")
             },
             onDeleteClick = onDelete
         )
@@ -74,18 +72,12 @@ fun SettingsButton(
 }
 
 @Composable
-fun SetButton(
-    string: String,
-    onClick: () -> Unit
-) {
+fun SetButton(string: String, onClick: () -> Unit) {
     SetButton(id = stringToResource(string), onClick)
 }
 
 @Composable
-fun SetButton(
-    id: Int,
-    onClick: () -> Unit
-) {
+fun SetButton(id: Int, onClick: () -> Unit) {
     Image(
         painter = painterResource(id = id),
         contentDescription = "comments",

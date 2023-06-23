@@ -11,7 +11,8 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
-import com.bulkapedia.compose.navigation.ToolbarCtx
+import androidx.navigation.NavController
+import com.bulkapedia.compose.elements.topbar.ToolbarViewModel
 
 private val LightColorPalette = lightColors(
     primary = Primary,
@@ -30,6 +31,10 @@ fun BulkaPediaTheme(content: @Composable () -> Unit) {
 }
 
 object BulkaPediaTheme {
+
+    val navController: NavController
+        @Composable
+        get() = LocalNavController.current
 
     val colors: BulkaPediaColors
         @Composable
@@ -59,20 +64,22 @@ val LocalBulkaPediaShapes = staticCompositionLocalOf<BulkaPediaShapes> {
     error("")
 }
 
-val LocalToolbarContext = compositionLocalOf<ToolbarCtx> {
-    error("ctx no provides")
+val LocalNavController = compositionLocalOf<NavController> {
+    error("NavController not provides")
+}
+
+val LocalTopBar = compositionLocalOf<ToolbarViewModel> {
+    error("ToolbarViewModel not provides")
 }
 
 @Composable
 fun MainTheme(
-    ctx: ToolbarCtx,
     colors: BulkaPediaColors = basePalette,
     shapes: BulkaPediaShapes = roundedShapes,
     rippleTheme: RippleTheme = NoRipple,
     content: @Composable () -> Unit
 ) {
     CompositionLocalProvider(
-        LocalToolbarContext provides ctx,
         LocalBulkaPediaColors provides colors,
         LocalBulkaPediaShapes provides shapes,
         LocalRippleTheme provides rippleTheme,
