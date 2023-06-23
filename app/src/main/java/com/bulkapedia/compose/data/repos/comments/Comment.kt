@@ -29,7 +29,12 @@ data class Comment(
     companion object {
         fun DocumentSnapshot.toComment(): Comment? {
             return try {
-                toObject(Comment::class.java).apply { this?.id = id }
+                Comment(id,
+                    get("set") as String,
+                    get("from") as String,
+                    get("text") as String,
+                    get("date") as String
+                )
             } catch (_: Exception) { null }
         }
     }

@@ -24,7 +24,7 @@ data class User(
 
         fun DataSnapshot.toUser(): User? {
             return try {
-                getValue(User::class.java)
+                getValue(User::class.java).apply { this?.userId = key }
             } catch (_: Exception) { null }
         }
 

@@ -31,7 +31,14 @@ data class Message(
     companion object {
         fun DocumentSnapshot.toMessage(): Message? {
             return try {
-                toObject(Message::class.java).apply { this?.id = id }
+                Message(id,
+                    get("author") as String,
+                    get("date") as String,
+                    get("image") as String,
+                    get("receiver") as String,
+                    get("text") as String,
+                    get("read") as Boolean
+                )
             } catch (_: Exception) { null }
         }
     }

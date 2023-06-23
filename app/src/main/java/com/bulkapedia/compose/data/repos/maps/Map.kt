@@ -25,7 +25,12 @@ data class Map(
     companion object {
         fun DocumentSnapshot.toMap(): Map? {
             return try {
-                toObject(Map::class.java).apply { this?.id = id }
+                Map(id,
+                    get("image") as String,
+                    get("imageSpawns") as String,
+                    get("name") as String,
+                    get("mode") as String
+                )
             } catch (_: Exception) { null }
         }
     }

@@ -29,7 +29,12 @@ data class Mechanic(
     companion object {
         fun DocumentSnapshot.toMechanic(): Mechanic? {
             return try {
-                toObject(Mechanic::class.java).apply { this?.id = id }
+                Mechanic(id,
+                    get("title") as String,
+                    get("video") as String,
+                    get("description") as String,
+                    get("icon") as String
+                )
             } catch (_: Exception) { null }
         }
     }
