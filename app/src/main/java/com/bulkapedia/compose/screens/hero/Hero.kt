@@ -43,6 +43,7 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun HeroSets(heroId: String, viewModel: HeroViewModel = hiltViewModel()) {
+    println("heroId -> $heroId")
     val heroState = viewModel.heroFlow.collectAsState()
     val sets by viewModel.setsFlow.collectAsState()
     val navController = LocalNavController.current

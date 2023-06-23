@@ -2,6 +2,7 @@ package com.bulkapedia.compose.elements.topbar
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.NavController
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -17,29 +18,30 @@ class ToolbarViewModel @Inject constructor(): ViewModel() {
     private val _showBack: MutableStateFlow<Boolean> = MutableStateFlow(false)
     val showBackFlow: StateFlow<Boolean> = _showBack
 
-    private val _onBackClick: MutableStateFlow<() -> Unit> = MutableStateFlow {}
-    val onBackClickFlow: StateFlow<() -> Unit> = _onBackClick
+    private val _navController: MutableStateFlow<NavController?> = MutableStateFlow(null)
+    val navController: StateFlow<NavController?> = _navController
 
-    fun update(title: String, showBack: Boolean) {
+    fun update(title: String, showBack: Boolean, navController: NavController) {
         setTitle(title)
         setShowBack(showBack)
+        setNavController(navController)
     }
 
-    fun setTitle(title: String) {
+    private fun setTitle(title: String) {
         viewModelScope.launch {
             _title.emit(title)
         }
     }
 
-    fun setShowBack(show: Boolean) {
+    private fun setShowBack(show: Boolean) {
         viewModelScope.launch {
             _showBack.emit(show)
         }
     }
 
-    fun setOnBackClick(onBackClick: () -> Unit) {
+    private fun setNavController(navController: NavController) {
         viewModelScope.launch {
-            _onBackClick.emit(onBackClick)
+            _navController.emit(navController)
         }
     }
 

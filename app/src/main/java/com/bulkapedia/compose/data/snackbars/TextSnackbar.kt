@@ -1,4 +1,3 @@
-@file:Suppress("FunctionName")
 package com.bulkapedia.compose.data.snackbars
 
 import androidx.compose.foundation.background
@@ -28,8 +27,7 @@ fun TextSnackbar(
     val scaffoldState = rememberScaffoldState()
     val action = TextSnackbarAction(scaffoldState.snackbarHostState)
     CenteredBox (
-        modifier = Modifier.fillMaxWidth()
-            .fillMaxHeight(fraction = 0.923f)
+        modifier = Modifier.fillMaxSize()
             .background(Primary)
             .padding(top = 20.dp)
     ) {

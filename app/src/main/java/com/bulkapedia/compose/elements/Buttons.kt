@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
@@ -84,8 +85,8 @@ fun SetButton(id: Int, onClick: () -> Unit) {
         colorFilter = ColorFilter.tint(Teal200),
         modifier = Modifier
             .size(40.dp)
-            .background(PrimaryDark, BulkaPediaTheme.shapes.round10)
-            .border(1.dp, Teal200, BulkaPediaTheme.shapes.round10)
+            .background(PrimaryDark, RoundedCornerShape(10.dp))
+            .border(1.dp, Teal200, RoundedCornerShape(10.dp))
             .clickable(onClick)
             .padding(5.dp)
     )

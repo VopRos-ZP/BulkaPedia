@@ -44,7 +44,7 @@ data class Hero (
     companion object {
         fun DocumentSnapshot.toHero(): Hero? {
             return try {
-                Hero(this.id,
+                Hero(id,
                     get("name") as String,
                     get("icon") as String,
                     get("type") as String,

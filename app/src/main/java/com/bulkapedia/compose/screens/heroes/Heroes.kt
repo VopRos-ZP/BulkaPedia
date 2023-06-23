@@ -80,10 +80,10 @@ fun HeroCard(hero: Hero) {
                 horizontalAlignment = CenterHorizontally
             ) {
                 OutlinedButton(text = "Сеты", marginStart = 10.dp, marginEnd = 10.dp) {
-                    navController.navigate("${Destinations.SETS}/${hero}") { launchSingleTop = true }
+                    navController.navigate("${Destinations.SETS}/${hero.id}") { launchSingleTop = true }
                 }
                 OutlinedButton(text = "Топ 100", marginStart = 10.dp, marginEnd = 10.dp) {
-                    navController.navigate("${Destinations.TOP}/${hero}") { launchSingleTop = true }
+                    navController.navigate("${Destinations.TOP}/${hero.id}") { launchSingleTop = true }
                 }
             }
         }

@@ -1,5 +1,6 @@
 package com.bulkapedia.compose.screens
 
+import android.content.pm.ActivityInfo
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
@@ -30,6 +31,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.bulkapedia.compose.DataStore
+import com.bulkapedia.compose.LockScreenOrientation
 import com.bulkapedia.compose.elements.Toolbar
 import com.bulkapedia.compose.elements.topbar.ToolbarViewModel
 import com.bulkapedia.compose.navigation.Destinations
@@ -58,7 +60,7 @@ fun Home() {
         listOf(Screen.Heroes, Screen.Wiki, Screen.SignIn)
 
     val viewModel = hiltViewModel<ToolbarViewModel>()
-    //LockScreenOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
+    LockScreenOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
     CompositionLocalProvider(
         LocalNavController provides childNC,
         LocalTopBar provides viewModel
