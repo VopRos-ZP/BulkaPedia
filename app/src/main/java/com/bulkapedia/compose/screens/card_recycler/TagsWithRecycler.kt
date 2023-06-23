@@ -28,12 +28,7 @@ fun <T> TagsWithRecycler(
             .fillMaxSize()
             .background(Color.Transparent)
     ) {
-        Tags(tags) { tag ->
-            when (tag.selected) {
-                true -> selectedTag.value = tag.id
-                else -> selectedTag.value = -1
-            }
-        }
+        Tags(tags, selectedTag)
         when (list.isEmpty()) {
             true -> Loading()
             else -> BorderedLazyColumnH20 {
