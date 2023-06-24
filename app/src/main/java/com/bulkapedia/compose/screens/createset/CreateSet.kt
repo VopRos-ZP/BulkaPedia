@@ -109,29 +109,9 @@ fun CreateSetFragment(hero: Hero, set: UserSet, viewModel: CreateSetViewModel) {
                 ) {
                     Set(
                         PaddingValues(20.dp), gearsEffectState.value.mapValues { it.value.icon },
-                        onHeadClick = {
+                        onCellClick = {
                             showSelectGears.value = true
-                            selectedGearCell.value = GearCell.HEAD
-                        },
-                        onBodyClick = {
-                            showSelectGears.value = true
-                            selectedGearCell.value = GearCell.BODY
-                        },
-                        onArmClick = {
-                            showSelectGears.value = true
-                            selectedGearCell.value = GearCell.ARM
-                        },
-                        onLegClick = {
-                            showSelectGears.value = true
-                            selectedGearCell.value = GearCell.LEG
-                        },
-                        onDecorClick = {
-                            showSelectGears.value = true
-                            selectedGearCell.value = GearCell.DECOR
-                        },
-                        onDeviceClick = {
-                            showSelectGears.value = true
-                            selectedGearCell.value = GearCell.DEVICE
+                            selectedGearCell.value = it
                         }
                     )
                 }
