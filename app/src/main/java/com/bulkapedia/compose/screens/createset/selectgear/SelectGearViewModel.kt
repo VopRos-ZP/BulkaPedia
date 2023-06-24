@@ -1,30 +1,24 @@
 package com.bulkapedia.compose.screens.createset.selectgear
 
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.bulkapedia.compose.events.EventHandler
 import com.bulkapedia.compose.util.HeroType
 import com.bulkapedia.compose.data.repos.gears.Gear
 import com.bulkapedia.compose.data.repos.gears.GearSet
 import com.bulkapedia.compose.data.repos.gears.GearsRepository
 import com.bulkapedia.compose.data.repos.heroes.Hero
 import com.bulkapedia.compose.data.repos.sets.GearCell
-import com.bulkapedia.compose.data.repos.sets.SetsRepository
 import com.google.firebase.firestore.ListenerRegistration
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class SelectGearViewModel @Inject constructor(
-    private val setsRepository: SetsRepository,
     private val gearsRepository: GearsRepository
 ) : ViewModel() {
 
-    private val _gearsFlow: MutableStateFlow<List<Gear>> = MutableStateFlow(emptyList())
-    val gearsFlow: StateFlow<List<Gear>> = _gearsFlow
+    val _gears: SnapshotStateList<Gear> = mutableStateListOf()
 
     private var listener: ListenerRegistration? = null
 
@@ -44,7 +38,8 @@ class SelectGearViewModel @Inject constructor(
                     removeAt(index)
                     add(0, g)
                 }
-            viewModelScope.launch { _gearsFlow.emit(gears) }
+            _gears.clear()
+            _gears.addAll(gears)
         }
     }
 

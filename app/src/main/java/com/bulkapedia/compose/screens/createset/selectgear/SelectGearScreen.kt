@@ -10,6 +10,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -37,7 +38,7 @@ fun SelectGearScreen(
     gearsState: MutableState<Map<GearCell, Gear>>,
     viewModel: SelectGearViewModel
 ) {
-    val gears by viewModel.gearsFlow.collectAsState()
+    val gears = viewModel._gears
     SelectGearFragment(gears, showSelectGears, cellState.value, gearsState)
     DisposableEffect(cellState) {
         viewModel.fetchGears(cellState.value, hero)
@@ -48,7 +49,7 @@ fun SelectGearScreen(
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun SelectGearFragment(
-    gears: List<Gear>,
+    gears: SnapshotStateList<Gear>,
     showSelectGears: MutableState<Boolean>,
     cell: GearCell,
     gearsState: MutableState<Map<GearCell, Gear>>
@@ -91,9 +92,9 @@ fun SelectGearFragment(
                 .fillMaxSize()
                 .padding(20.dp)
                 .background(PrimaryDark, RoundedCornerShape(20.dp))
-                .border(2.dp, Teal200, RoundedCornerShape(20.dp))
-                .padding(horizontal = 10.dp),
-            verticalArrangement = Arrangement.spacedBy(10.dp)
+                .border(2.dp, Teal200, RoundedCornerShape(20.dp)),
+            verticalArrangement = Arrangement.spacedBy(10.dp),
+            contentPadding = PaddingValues(10.dp)
         ) {
             items(gears) { gear ->
                 SelectGearItem(gear) {
