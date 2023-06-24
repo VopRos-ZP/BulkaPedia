@@ -4,9 +4,6 @@ import com.bulkapedia.compose.data.Entity
 import com.google.firebase.firestore.DocumentSnapshot
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
-import kotlinx.serialization.decodeFromString
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
 
 @Serializable
 data class Comment(
@@ -23,7 +20,12 @@ data class Comment(
         set(value) { commentId = value }
 
     override fun toData(): MutableMap<String, Any> {
-        return Json.decodeFromString(Json.encodeToString(this))
+        return mutableMapOf(
+            "set" to set,
+            "from" to from,
+            "text" to text,
+            "date" to date
+        )
     }
 
     companion object {

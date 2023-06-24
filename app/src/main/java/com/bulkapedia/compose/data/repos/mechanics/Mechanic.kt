@@ -4,9 +4,6 @@ import com.bulkapedia.compose.data.Entity
 import com.google.firebase.firestore.DocumentSnapshot
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
-import kotlinx.serialization.decodeFromString
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
 
 @Serializable
 data class Mechanic(
@@ -23,7 +20,12 @@ data class Mechanic(
         set(value) { mechanicId = value }
 
     override fun toData(): MutableMap<String, Any> {
-        return Json.decodeFromString(Json.encodeToString(this))
+        return mutableMapOf(
+            "title" to title,
+            "description" to description,
+            "video" to video,
+            "icon" to icon
+        )
     }
 
     companion object {

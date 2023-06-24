@@ -5,9 +5,6 @@ import com.bulkapedia.compose.data.repos.gears.longToInt
 import com.google.firebase.firestore.DocumentSnapshot
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
-import kotlinx.serialization.decodeFromString
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
 
 @Serializable
 data class UserSet(
@@ -25,7 +22,18 @@ data class UserSet(
         set(value) { userSetId = value }
 
     override fun toData(): MutableMap<String, Any> {
-        return Json.decodeFromString(Json.encodeToString(this))
+        return mutableMapOf(
+            "from" to from,
+            "hero" to hero,
+            "likes" to likes,
+            "head" to gears.getValue(GearCell.HEAD),
+            "body" to gears.getValue(GearCell.BODY),
+            "arm" to gears.getValue(GearCell.ARM),
+            "leg" to gears.getValue(GearCell.LEG),
+            "decor" to gears.getValue(GearCell.DECOR),
+            "device" to gears.getValue(GearCell.DEVICE),
+            "userLikeIds" to userLikeIds
+        )
     }
 
     companion object {

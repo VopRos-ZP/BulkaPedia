@@ -26,7 +26,13 @@ data class Category(
         set(value) { categoryId = value }
 
     override fun toData(): MutableMap<String, Any> {
-        return Json.decodeFromString(Json.encodeToString(this))
+        return mutableMapOf(
+            "title" to title,
+            "subTitle" to subTitle,
+            "enabled" to enabled,
+            "destination" to destination,
+            "icon" to icon
+        )
     }
 
     companion object {
