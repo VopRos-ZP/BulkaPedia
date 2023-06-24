@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
@@ -81,76 +82,88 @@ fun CreateSetFragment(hero: Hero, set: UserSet, viewModel: CreateSetViewModel) {
 
     ScreenView(title = hero.name, showBack = true) {
         if (!showSelectGears.value) {
-            Column(
+            LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
-                    .verticalScroll(rememberScrollState()),
+                    .background(Primary),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                // Hero card
-                TopHeroCard(hero.icon) {
-                    CenteredBox {
-                        InRowOutlinedButton(text = "Сохранить") {
-                            viewModel.saveSet(UserSet(
-                                set.id, set.from, hero.id,
-                                gearsEffectState.value.mapValues { it.value.icon },
-                                set.userLikeIds
-                            ))
-                            navController.navigateUp()
-                        }
-                    }
-                }
-                // Set view
-                HCenteredBox(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(start = 20.dp, end = 20.dp, bottom = 20.dp)
-                        .background(PrimaryDark, RoundedCornerShape(20.dp))
-                        .border(2.dp, Teal200, RoundedCornerShape(20.dp)),
-                ) {
-                    Set(
-                        PaddingValues(20.dp), gearsEffectState.value.mapValues { it.value.icon },
-                        onCellClick = {
-                            showSelectGears.value = true
-                            selectedGearCell.value = it
-                        }
-                    )
-                }
-                // Show effects
-                OutlinedCard(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 20.dp)
-                ) {
-                    Column(modifier = Modifier.fillMaxWidth()) {
-                        HCenteredBox(modifier = Modifier.padding(10.dp)) {
-                            Text(
-                                text = effectsTitle.value,
-                                color = Teal200,
-                                fontSize = 16.sp,
-                                textAlign = TextAlign.Center,
-                                modifier = Modifier.fillMaxWidth().clickable {
-                                    effectsTitle.value = if (effectsTitle.value == "Показать характеристики") {
-                                        "Скрыть характеристики"
-                                    } else {
-                                        "Показать характеристики"
-                                    }
-                                    showEffects.value = showEffects.value.not()
-                                }
-                            )
-                        }
-                        AnimatedVisibility(showEffects.value) {
-                            HCenteredBox(modifier = Modifier.fillMaxWidth().padding(horizontal = 10.dp)) {
-                                Text(
-                                    text = sumEffects(showEffects.value, context, hero, gearsEffectState.value),
-                                    color = Color.Gray,
-                                    fontSize = 14.sp,
-                                    modifier = Modifier.fillMaxSize().padding(top = 10.dp)
-                                )
+                item { Spacer(modifier = Modifier.fillMaxWidth().height(20.dp)) }
+                item {
+                    TopHeroCard(hero.icon) {
+                        CenteredBox {
+                            InRowOutlinedButton(text = "Сохранить") {
+                                viewModel.saveSet(UserSet(
+                                    set.id, set.from, hero.id,
+                                    gearsEffectState.value.mapValues { it.value.icon },
+                                    set.userLikeIds
+                                ))
+                                navController.navigateUp()
                             }
                         }
                     }
                 }
+                item {
+                    HCenteredBox(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(start = 20.dp, end = 20.dp, bottom = 20.dp)
+                            .background(PrimaryDark, RoundedCornerShape(20.dp))
+                            .border(2.dp, Teal200, RoundedCornerShape(20.dp)),
+                    ) {
+                        Set(
+                            PaddingValues(20.dp), gearsEffectState.value.mapValues { it.value.icon },
+                            onCellClick = {
+                                showSelectGears.value = true
+                                selectedGearCell.value = it
+                            }
+                        )
+                    }
+                }
+                item {
+                    OutlinedCard(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 20.dp)
+                    ) {
+                        Column(modifier = Modifier.fillMaxWidth()) {
+                            HCenteredBox(modifier = Modifier.padding(10.dp)) {
+                                Text(
+                                    text = effectsTitle.value,
+                                    color = Teal200,
+                                    fontSize = 16.sp,
+                                    textAlign = TextAlign.Center,
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .clickable {
+                                            effectsTitle.value =
+                                                if (effectsTitle.value == "Показать характеристики") {
+                                                    "Скрыть характеристики"
+                                                } else {
+                                                    "Показать характеристики"
+                                                }
+                                            showEffects.value = showEffects.value.not()
+                                        }
+                                )
+                            }
+                            AnimatedVisibility(showEffects.value) {
+                                HCenteredBox(modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 10.dp)) {
+                                    Text(
+                                        text = sumEffects(showEffects.value, context, hero, gearsEffectState.value),
+                                        color = Color.Gray,
+                                        fontSize = 14.sp,
+                                        modifier = Modifier
+                                            .fillMaxSize()
+                                            .padding(top = 10.dp)
+                                    )
+                                }
+                            }
+                        }
+                    }
+                }
+                item { Spacer(modifier = Modifier.fillMaxWidth().height(20.dp)) }
             }
         } else {
             CenteredBox(

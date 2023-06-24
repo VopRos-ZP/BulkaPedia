@@ -177,7 +177,7 @@ fun TopHeroCard(icon: String, trailingContent: @Composable ColumnScope.() -> Uni
     HCenteredBox (
         modifier = Modifier
             .fillMaxWidth()
-            .height((40 + 180).dp)
+            .height((40 + 160).dp)
             .padding(start = 20.dp, end = 20.dp, bottom = 20.dp)
             .background(PrimaryDark, RoundedCornerShape(20.dp))
             .border(2.dp, Teal200, RoundedCornerShape(20.dp))
