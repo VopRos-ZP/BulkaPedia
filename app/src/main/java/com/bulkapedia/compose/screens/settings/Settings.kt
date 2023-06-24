@@ -45,8 +45,8 @@ fun SettingsScreen(viewModel: SettingsViewModel = hiltViewModel()) {
     // store
     val context = LocalContext.current
     val store = DataStore(context)
-    val nickname = store.getNickname.collectAsState(initial = "")
-    val signStore = store.getSign.collectAsState(initial = false)
+    val nickname = store.getNickname.collectAsState("")
+    val signStore = store.getSign.collectAsState(false)
     val scope = rememberCoroutineScope()
     // Change value dialog arguments
     val showChange = remember { mutableStateOf(false) }
@@ -71,7 +71,7 @@ fun SettingsScreen(viewModel: SettingsViewModel = hiltViewModel()) {
                         .background(Primary)
                 ) {
                     SettingBlock(title = stringResource(id = R.string.account)) {
-                        if (nickname.value == ADMIN_NICKNAME && signStore.value == true) {
+                        if (nickname.value == ADMIN_NICKNAME && signStore.value) {
                             OutlinedButton(
                                 text = "Доска управления",
                                 marginStart = 40.dp,
@@ -88,7 +88,7 @@ fun SettingsScreen(viewModel: SettingsViewModel = hiltViewModel()) {
                             marginBottom = 0.dp,
                             color = Color.Yellow
                         ) {
-                            if (signStore.value == true && user != null) {
+                            if (signStore.value && user != null) {
                                 change.value = viewModel.changeEmail(user!!, change.value) {
                                     store.saveEmail(it.email)
                                 }
@@ -106,7 +106,7 @@ fun SettingsScreen(viewModel: SettingsViewModel = hiltViewModel()) {
                             marginBottom = 0.dp,
                             color = Color.Yellow
                         ) {
-                            if (signStore.value == true && user != null) {
+                            if (signStore.value && user != null) {
                                 change.value = viewModel.changeNickname(user!!, change.value) {
                                     store.saveNickname(it.nickname)
                                 }
@@ -120,7 +120,7 @@ fun SettingsScreen(viewModel: SettingsViewModel = hiltViewModel()) {
                         }
                         OutlinedButton(
                             text = "Выход",
-                            enabled = signStore.value == true,
+                            enabled = signStore.value,
                             marginStart = 40.dp,
                             marginEnd = 40.dp,
                             color = Color.Red
@@ -146,13 +146,13 @@ fun SettingsScreen(viewModel: SettingsViewModel = hiltViewModel()) {
                                     .clip(CircleShape)
                                     .padding(10.dp)
                                     .clickable {
-                                        if (signStore.value == false) {
+                                        if (!signStore.value) {
                                             scope.launch {
                                                 action.showSnackbar("Вы должны войти в аккаунт!")
                                             }
                                             return@clickable
                                         }
-                                        if (nickname.value != ADMIN_NICKNAME && nickname.value != null) {
+                                        if (nickname.value != ADMIN_NICKNAME && nickname.value != "") {
                                             navController.navigate("${Destinations.DEV_CHAT}/${nickname.value}/$ADMIN_NICKNAME")
                                         }
                                     }

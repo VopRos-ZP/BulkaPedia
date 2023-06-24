@@ -46,13 +46,13 @@ import com.bulkapedia.compose.util.CenteredBox
 fun Home() {
     val ctx = LocalContext.current
     val store = DataStore(ctx)
-    val sign by store.getSign.collectAsState(initial = false)
-    val email by store.getEmail.collectAsState(initial = "")
+    val sign by store.getSign.collectAsState(false)
+    val email by store.getEmail.collectAsState("")
 
     val childNC = rememberNavController()
-    val isUserSign = sign == true && email != null && email?.isNotEmpty() == true
+    val isUserSign = sign && email.isNotEmpty()
     val bottomItems = if (isUserSign)
-        listOf(Screen.Heroes, Screen.Wiki, Screen.Profile(email ?: ""))
+        listOf(Screen.Heroes, Screen.Wiki, Screen.Profile(email))
     else
         listOf(Screen.Heroes, Screen.Wiki, Screen.SignIn)
 
@@ -101,7 +101,7 @@ fun Home() {
                 composable(Screen.Wiki.route) { InfoListNav() }
                 if (isUserSign) {
                     composable("${Destinations.PROFILE}/$email") {
-                        ProfileListNav("${Destinations.PROFILE}/$email", email!!)
+                        ProfileListNav("${Destinations.PROFILE}/$email", email)
                     }
                 } else {
                     composable(Screen.SignIn.route) { LoginNav() }

@@ -18,9 +18,9 @@ class DataStore (private val context: Context) {
         val SIGN_KEY = booleanPreferencesKey("sign")
     }
 
-    val getEmail: Flow<String?> = context.dataStore.data.map { it[EMAIL_KEY] }
-    val getNickname: Flow<String?> = context.dataStore.data.map { it[NICKNAME_KEY] }
-    val getSign: Flow<Boolean?> = context.dataStore.data.map { it[SIGN_KEY] }
+    val getEmail: Flow<String> = context.dataStore.data.map { it[EMAIL_KEY] ?: "" }
+    val getNickname: Flow<String> = context.dataStore.data.map { it[NICKNAME_KEY] ?: "" }
+    val getSign: Flow<Boolean> = context.dataStore.data.map { it[SIGN_KEY] ?: false }
 
     suspend fun saveEmail(email: String) {
         context.dataStore.edit { it[EMAIL_KEY] = email }
