@@ -25,6 +25,7 @@ open class FirestoreRepository<T : Entity>(
     }
 
     override fun delete(t: T): Task<Void> {
+        println("delete -> ${t.id}")
         return collection.document(t.id).delete()
     }
 

@@ -58,10 +58,10 @@ fun CreateSetScreen(
     val set by viewModel.setFlow.collectAsState()
     when (val hero = heroState.value) {
         null -> Loading()
-        else -> CreateSetFragment(hero, set, viewModel)
+        else -> CreateSetFragment(hero, set.apply { from = nickname }, viewModel)
     }
     DisposableEffect(null) {
-        viewModel.fetchData(heroId, setId, nickname)
+        viewModel.fetchData(heroId, setId)
         onDispose { viewModel.removeListeners() }
     }
 }
@@ -91,7 +91,7 @@ fun CreateSetFragment(hero: Hero, set: UserSet, viewModel: CreateSetViewModel) {
                     CenteredBox {
                         InRowOutlinedButton(text = "Сохранить") {
                             viewModel.saveSet(UserSet(
-                                set.id, set.from, set.hero,
+                                set.id, set.from, hero.id,
                                 gearsEffectState.value.mapValues { it.value.icon },
                                 set.likes, set.userLikeIds
                             ))

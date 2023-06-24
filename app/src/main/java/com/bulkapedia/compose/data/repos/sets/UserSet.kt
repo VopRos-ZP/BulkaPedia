@@ -23,7 +23,7 @@ data class UserSet(
 
     override fun toData(): MutableMap<String, Any> {
         return mutableMapOf(
-            "from" to from,
+            "author" to from,
             "hero" to hero,
             "likes" to likes,
             "head" to gears.getValue(GearCell.HEAD),
@@ -32,7 +32,7 @@ data class UserSet(
             "leg" to gears.getValue(GearCell.LEG),
             "decor" to gears.getValue(GearCell.DECOR),
             "device" to gears.getValue(GearCell.DEVICE),
-            "userLikeIds" to userLikeIds
+            "user_like_ids" to userLikeIds
         )
     }
 

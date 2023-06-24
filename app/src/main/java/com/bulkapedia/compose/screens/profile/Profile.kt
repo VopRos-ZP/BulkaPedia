@@ -145,7 +145,7 @@ fun ProfileScreen(user: User, viewModel: ProfileViewModel, visit: Boolean = fals
                     emptyList<UserSet>() -> CenteredBox {
                         Text(text = "Список пуст...", color = Teal200)
                     }
-                    else -> SetsRecycler(sets, visit, it == 1)
+                    else -> SetsRecycler(sets, visit, it == 1, viewModel)
                 }
             }
         }
@@ -217,7 +217,8 @@ fun MainsRecycler(mains: Map<String, Stats>, isSelected: Boolean, onItemClick: (
 fun SetsRecycler(
     sets: List<UserSet>,
     visit: Boolean = false,
-    isShowLiked: Boolean = true
+    isShowLiked: Boolean = true,
+    viewModel: ProfileViewModel
 ) {
     Box(
         modifier = Modifier
@@ -233,7 +234,7 @@ fun SetsRecycler(
                 items(sets) { set ->
                     SetInProfileCard(set, visit || isShowLiked, disableSettings = visit) { s ->
                         delete.showDelete("сет") {
-
+                            viewModel.deleteSet(s)
                         }
                     }
                 }

@@ -14,6 +14,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 val emptyIcons = listOf(
@@ -53,16 +54,25 @@ class CreateSetViewModel @Inject constructor(
     private var setListener: ListenerRegistration? = null
     private var gearsListener: ListenerRegistration? = null
 
+    private var isEdit = false
+
     fun saveSet(set: UserSet) {
-        viewModelScope.launch { setsRepository.create(set) }
+        viewModelScope.launch { when (isEdit) {
+            true -> setsRepository.update(set).await()
+            else -> setsRepository.create(set).await()
+        } }
     }
 
-    fun fetchData(heroId: String, setId: String, author: String) {
+    fun fetchData(heroId: String, setId: String) {
         heroListener = heroesRepository.fetchAll { heroes ->
             viewModelScope.launch { _heroFlow.emit(heroes.find { it.id == heroId }) }
         }
         setListener = setsRepository.fetchAll { sets ->
-            viewModelScope.launch { _setFlow.emit(sets.find { it.id == setId } ?: UserSet.EMPTY) }
+            viewModelScope.launch {
+                val set = sets.find { it.id == setId } ?: UserSet.EMPTY
+                isEdit = set != UserSet.EMPTY
+                _setFlow.emit(set)
+            }
         }
     }
 

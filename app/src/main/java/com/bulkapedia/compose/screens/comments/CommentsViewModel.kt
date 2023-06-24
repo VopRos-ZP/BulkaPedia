@@ -50,7 +50,7 @@ class CommentsViewModel @Inject constructor(
         commentsRepository.update(comment)
     }
 
-    fun deleteUserSet(set: UserSet) {
+    fun deleteSet(set: UserSet) {
         setsRepository.delete(set)
     }
 

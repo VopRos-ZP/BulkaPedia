@@ -68,7 +68,7 @@ fun CommentsScreen(setId: String, viewModel: CommentsViewModel = hiltViewModel()
                     ) {
                         AnimatedVisibility(!hideSetState.value) {
                             SetTabCard(set, set.from != nickname, disableComments = true, disableSettings = false) { s ->
-                                delete.showDelete("Сет") { viewModel.deleteUserSet(s) }
+                                delete.showDelete("Сет") { viewModel.deleteSet(s) }
                             }
                         }
                         IconToggleButton(

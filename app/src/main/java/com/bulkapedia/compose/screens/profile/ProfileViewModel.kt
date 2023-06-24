@@ -13,12 +13,13 @@ import com.google.firebase.firestore.ListenerRegistration
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
     private val usersRepository: UsersRepository,
     private val setsRepository: SetsRepository
-) : ViewModel() {
+): ViewModel() {
 
     private val _userFlow: MutableStateFlow<User?> = MutableStateFlow(null)
     val userFlow: StateFlow<User?> = _userFlow
@@ -31,9 +32,12 @@ class ProfileViewModel @Inject constructor(
 
     fun fetchUser(by: (User) -> Boolean) {
         listener = usersRepository.fetchAll { all ->
-            val user = all.find(by)
-            viewModelScope.launch { _userFlow.emit(user) }
+            viewModelScope.launch { _userFlow.emit(all.find(by)) }
         }
+    }
+
+    fun deleteSet(set: UserSet) {
+        viewModelScope.launch { setsRepository.delete(set).await() }
     }
 
     fun filterSets(filter: (UserSet) -> Boolean) {
