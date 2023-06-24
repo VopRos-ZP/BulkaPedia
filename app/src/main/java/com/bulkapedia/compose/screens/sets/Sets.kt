@@ -18,6 +18,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.bulkapedia.R
@@ -45,12 +46,13 @@ fun SetInProfileCard(
     disableSettings: Boolean = false,
     onDelete: (UserSet) -> Unit = {}
 ) {
-    SetCard(set, see, disableComments, disableSettings, onDelete) {
+    val iconDp = (75 * 3 / 2).dp
+    SetCard(set, see, disableComments, disableSettings, onDelete, iconDp, 50.dp) {
         HCenteredBox {
             Image(
                 painter = painterResource(stringToResource(set.hero.plus("_icon"))),
                 contentDescription = set.hero,
-                modifier = Modifier.height((75 * 3 / 2).dp)
+                modifier = Modifier.height(iconDp)
             )
         }
     }
@@ -64,8 +66,9 @@ fun SetTabCard(
     disableSettings: Boolean = false,
     onDelete: (UserSet) -> Unit = {}
 ) {
-    SetCard(set, see, disableComments, disableSettings, onDelete) {
-        Box(modifier = Modifier.fillMaxWidth().height((75 * 3 / 2).dp)) {
+    val dp = 75.dp
+    SetCard(set, see, disableComments, disableSettings, onDelete, dp, dp) {
+        Box(modifier = Modifier.fillMaxWidth().height(dp)) {
             CenteredBox { Text(text = set.from, color = Teal200) }
         }
     }
@@ -78,8 +81,10 @@ fun SetCard(
     disableComments: Boolean = false,
     disableSettings: Boolean = false,
     onDelete: (UserSet) -> Unit = {},
+    icon: Dp,
+    height: Dp,
     viewModel: SetTabViewModel = hiltViewModel(),
-    content: @Composable BoxScope.() -> Unit
+    content: @Composable BoxScope.(Dp) -> Unit
 ) {
     val context = LocalContext.current
     val store = DataStore(context)
@@ -104,10 +109,10 @@ fun SetCard(
                 modifier = Modifier.padding(top = 20.dp, bottom = 20.dp, end = 20.dp),
                 verticalArrangement = Arrangement.SpaceBetween
             ) {
-                Box(modifier = Modifier.fillMaxWidth(), content = content)
+                Box(modifier = Modifier.fillMaxWidth()) { content(this, icon) }
                 Box(modifier = Modifier
                     .fillMaxWidth()
-                    .height(50.dp)) {
+                    .height(height)) {
                     CenteredBox {
                         Row(
                             modifier = Modifier.fillMaxWidth(),
@@ -133,7 +138,7 @@ fun SetCard(
                 }
                 Box(modifier = Modifier
                     .fillMaxWidth()
-                    .height(50.dp)) {
+                    .height(height)) {
                     ButtonsRow(expanded, set, see, disableComments, disableSettings, onDelete)
                 }
             }
