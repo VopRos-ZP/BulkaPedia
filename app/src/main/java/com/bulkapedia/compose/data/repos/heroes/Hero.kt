@@ -3,33 +3,19 @@ package com.bulkapedia.compose.data.repos.heroes
 import com.bulkapedia.compose.data.Entity
 import com.bulkapedia.compose.data.repos.gears.Gear
 import com.google.firebase.firestore.DocumentSnapshot
-import com.google.firebase.firestore.Exclude
-import com.google.firebase.firestore.IgnoreExtraProperties
-import com.google.firebase.firestore.PropertyName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
-import kotlinx.serialization.decodeFromString
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
 
 @Serializable
 data class Hero (
     @Transient
-    @Exclude
     private var heroId: String = "",
-    @PropertyName("name")
     val name: String,
-    @PropertyName("icon")
     val icon: String,
-    @PropertyName("type")
     val type: String,
-    @PropertyName("counterpicks")
     val counterpicks: List<String>,
-    @PropertyName("personalGears")
     val personalGears: Map<String, String>,
-    @PropertyName("stats")
     val stats: Map<String, Double>,
-    @PropertyName("difficult")
     val difficult: String
 ): Entity() {
 
@@ -38,7 +24,15 @@ data class Hero (
         set(value) { heroId = value }
 
     override fun toData(): MutableMap<String, Any> {
-        return Json.decodeFromString(Json.encodeToString(this))
+        return mutableMapOf(
+            "name" to name,
+            "icon" to icon,
+            "type" to type,
+            "stats" to stats,
+            "difficult" to difficult,
+            "counterpicks" to counterpicks,
+            "personalGears" to personalGears
+        )
     }
 
     companion object {

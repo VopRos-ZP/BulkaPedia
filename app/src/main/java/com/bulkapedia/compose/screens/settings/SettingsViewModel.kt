@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bulkapedia.compose.data.classes.ChangeValue
 import com.bulkapedia.compose.data.classes.Value
+import com.bulkapedia.compose.data.now
 import com.bulkapedia.compose.data.repos.database.User
 import com.bulkapedia.compose.data.repos.database.UsersRepository
 import com.bulkapedia.compose.data.repos.sets.SetsRepository
@@ -16,6 +17,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.Period
 import javax.inject.Inject
 
@@ -74,12 +76,12 @@ class SettingsViewModel @Inject constructor(
 
     private fun change(
         user: User, changeValue: ChangeValue,
-        names: List<String>, lastUpdate: LocalDate,
+        names: List<String>, lastUpdate: LocalDateTime,
         value: String,
         update: (String, User) -> User,
         onSuccess: (String, User) -> Unit
     ): ChangeValue {
-        val period = Period.between(lastUpdate, LocalDate.now()).toTotalMonths()
+        val period = Period.between(lastUpdate.toLocalDate(), now().toLocalDate()).toTotalMonths()
         if (period >= 2) {
             changeValue.infoText.value = "Последущая смена ${names[0]} будет возможна только через 2 месяца"
             changeValue.onSave.value = { newValue ->

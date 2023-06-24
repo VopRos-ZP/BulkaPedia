@@ -2,6 +2,8 @@ package com.bulkapedia.compose.elements
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
@@ -54,14 +56,17 @@ fun Toolbar() {
                 .fillMaxHeight()
                 .padding(end = 20.dp)
         ) {
-            Image(
-                painter = painterResource(R.drawable.settings),
-                contentDescription = "settings",
-                colorFilter = ColorFilter.tint(Teal200),
-                modifier = Modifier
-                    .size(40.dp)
-                    .clickable { navController?.navigate(Destinations.SETTINGS) { launchSingleTop = true } }
-            )
+            IconButton(onClick = {
+                navController?.navigate(Destinations.SETTINGS) {
+                    launchSingleTop = true
+                }
+            }) {
+                Icon(
+                    painter = painterResource(R.drawable.settings),
+                    contentDescription = "settings",
+                    tint = Teal200
+                )
+            }
         }
     }
 }

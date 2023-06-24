@@ -18,11 +18,9 @@ class LoginViewModel @Inject constructor(
     private val _errorFlow: MutableStateFlow<String?> = MutableStateFlow(null)
     val errorFlow: StateFlow<String?> = _errorFlow
 
-    fun login(email: String, password: String, onSuccess: suspend (User) -> Unit) {
+    fun login(email: String, password: String, onSuccess: (User) -> Unit) {
         if (email.isNotEmpty() && password.isNotEmpty()) {
-            usersRepository.login(email, password, {
-                viewModelScope.launch { onSuccess(it) }
-            }) {
+            usersRepository.login(email, password, onSuccess) {
                 viewModelScope.launch { _errorFlow.emit(it) }
             }
         } else {

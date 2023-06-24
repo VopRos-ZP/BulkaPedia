@@ -24,7 +24,7 @@ fun OutlinedCard(
     onClick: () -> Unit = {},
     content: @Composable () -> Unit
 ) {
-    Card (
+    Card(
         modifier = modifier.clickable(onClick),
         backgroundColor = backgroundColor,
         shape = shape,

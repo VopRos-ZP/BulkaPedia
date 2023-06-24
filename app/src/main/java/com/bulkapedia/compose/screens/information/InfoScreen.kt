@@ -3,7 +3,6 @@ package com.bulkapedia.compose.screens.information
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -77,7 +76,8 @@ fun InfoScreen(viewModel: InfoViewModel = hiltViewModel()) {
             LazyColumn (
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(Primary)
+                    .background(Primary),
+                verticalArrangement = Arrangement.spacedBy(20.dp)
             ) {
                 items(categories) { cat ->
                     CategoryCard(cat) {

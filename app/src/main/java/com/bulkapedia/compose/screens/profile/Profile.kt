@@ -137,14 +137,16 @@ fun ProfileScreen(user: User, viewModel: ProfileViewModel, visit: Boolean = fals
                 }
             }
             // 3) recycler
-            when (val sets = setsState.value) {
-                emptyList<UserSet>() -> CenteredBox {
-                    Text(text = "Список пуст...")
+            HorizontalPager(
+                pageCount = tabs.size,
+                state = pagerState
+            ) {
+                when (val sets = setsState.value) {
+                    emptyList<UserSet>() -> CenteredBox {
+                        Text(text = "Список пуст...", color = Teal200)
+                    }
+                    else -> SetsRecycler(sets, visit, it == 1)
                 }
-                else -> HorizontalPager(
-                    pageCount = tabs.size,
-                    state = pagerState
-                ) { SetsRecycler(sets, visit, it == 1) }
             }
         }
     }

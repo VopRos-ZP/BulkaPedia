@@ -1,16 +1,11 @@
 package com.bulkapedia.compose.screens.login
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -29,6 +24,7 @@ import com.bulkapedia.compose.navigation.ToSIGN_IN
 import com.bulkapedia.compose.navigation.ToSIGN_UP
 import com.bulkapedia.compose.navigation.ToVISIT
 import com.bulkapedia.compose.screens.titled.ScreenView
+import kotlinx.coroutines.launch
 
 @Composable
 fun LoginNav() {
@@ -44,6 +40,7 @@ fun Login(viewModel: LoginViewModel = hiltViewModel()) {
     val navController = LocalNavController.current
     val store = DataStore(LocalContext.current)
     val error by viewModel.errorFlow.collectAsState()
+    val scope = rememberCoroutineScope()
 
     ScreenView("Вход") {
         ScreenWithError { action ->
@@ -52,9 +49,11 @@ fun Login(viewModel: LoginViewModel = hiltViewModel()) {
                 onLoginClick = { email, password ->
                     viewModel.login(email, password) { u ->
                         navController.navigate("${Destinations.PROFILE}/${u.email}")
-                        store.saveEmail(u.email)
-                        store.saveSign(true)
-                        store.saveNickname(u.nickname)
+                        scope.launch {
+                            store.saveEmail(u.email)
+                            store.saveSign(true)
+                            store.saveNickname(u.nickname)
+                        }
                     }
                 },
                 onRegistrationClick = { navController.navigate(Destinations.SING_UP) },
@@ -89,7 +88,7 @@ fun LoginPage(
         }
         LoginBlock {
             OutlinedButton(text = "Войти") {
-                onLoginClick.invoke(email.value, password.value)
+                onLoginClick.invoke(email.value.trim(), password.value.trim())
             }
             OutlinedButton(
                 text = "Регистрация",

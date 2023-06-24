@@ -16,10 +16,8 @@ open class FirestoreRepository<T : Entity>(
         return addListener(onSuccess)
     }
 
-    override fun create(t: T, onSuccess: (T) -> Unit): Task<DocumentReference> {
-        return collection.add(t.toData()).addOnSuccessListener { r ->
-            r.get().result.let(transform)?.apply(onSuccess)
-        }
+    override fun create(t: T): Task<DocumentReference> {
+        return collection.add(t.toData())
     }
 
     override fun update(t: T): Task<Void> {
@@ -32,11 +30,7 @@ open class FirestoreRepository<T : Entity>(
 
     private fun addListener(onSuccess: (List<T>) -> Unit): ListenerRegistration {
         return collection.addSnapshotListener { value, _ ->
-            if (value != null) {
-                val list = value.documents.mapNotNull(transform)
-                println("list count -> ${list.size}")
-                onSuccess(list)
-            }
+            value?.documents?.mapNotNull(transform)?.apply(onSuccess)
         }
     }
 

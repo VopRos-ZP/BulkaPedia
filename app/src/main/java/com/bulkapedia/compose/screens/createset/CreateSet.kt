@@ -1,6 +1,7 @@
 package com.bulkapedia.compose.screens.createset
 
 import android.content.Context
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -32,7 +33,6 @@ import com.bulkapedia.compose.util.HCenteredBox
 import com.bulkapedia.compose.util.clickable
 import com.bulkapedia.compose.data.repos.gears.Effect
 import com.bulkapedia.compose.data.repos.gears.Gear
-import com.bulkapedia.compose.data.repos.gears.Gear.Companion.toGear
 import com.bulkapedia.compose.data.repos.gears.GearSet
 import com.bulkapedia.compose.data.gears.PersonalGears
 import com.bulkapedia.compose.data.repos.heroes.Hero
@@ -45,8 +45,6 @@ import com.bulkapedia.compose.screens.titled.ScreenView
 import com.bulkapedia.compose.ui.theme.LocalNavController
 import com.bulkapedia.compose.util.stringToResource
 import com.bulkapedia.compose.util.toHeroStats
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
 import kotlin.math.roundToInt
 
 @Composable
@@ -73,7 +71,8 @@ fun CreateSetFragment(hero: Hero, set: UserSet, viewModel: CreateSetViewModel) {
     val context = LocalContext.current
     val navController = LocalNavController.current
     // states
-    val gearsEffectState = remember { mutableStateOf<Map<GearCell, Gear>>(emptyMap()) }
+    val gears by viewModel.gearsFlow.collectAsState()
+    val gearsEffectState = remember(gears) { mutableStateOf(gears) }
     val showEffects = remember { mutableStateOf(false) }
     val effectsTitle = remember { mutableStateOf("Показать характеристики") }
     val selectedGearCell = remember { mutableStateOf(GearCell.HEAD) }
@@ -137,30 +136,36 @@ fun CreateSetFragment(hero: Hero, set: UserSet, viewModel: CreateSetViewModel) {
                     )
                 }
                 // Show effects
-                OutlinedCard {
-                    HCenteredBox(modifier = Modifier.padding(10.dp)) {
-                        Text(
-                            text = effectsTitle.value,
-                            color = Teal200,
-                            fontSize = 16.sp,
-                            modifier = Modifier.clickable {
-                                effectsTitle.value = if (effectsTitle.value == "Показать характеристики") {
-                                    "Скрыть характеристики"
-                                } else {
-                                    "Показать характеристики"
-                                }
-                                showEffects.value = showEffects.value.not()
-                            }
-                        )
-                    }
-                    if (showEffects.value) {
-                        HCenteredBox {
+                OutlinedCard(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 20.dp)
+                ) {
+                    Column(modifier = Modifier.fillMaxWidth()) {
+                        HCenteredBox(modifier = Modifier.padding(10.dp)) {
                             Text(
-                                text = sumEffects(showEffects.value, context, hero, gearsEffectState.value),
-                                color = Color.Gray,
-                                fontSize = 14.sp,
-                                modifier = Modifier.padding(top = 10.dp)
+                                text = effectsTitle.value,
+                                color = Teal200,
+                                fontSize = 16.sp,
+                                modifier = Modifier.clickable {
+                                    effectsTitle.value = if (effectsTitle.value == "Показать характеристики") {
+                                        "Скрыть характеристики"
+                                    } else {
+                                        "Показать характеристики"
+                                    }
+                                    showEffects.value = showEffects.value.not()
+                                }
                             )
+                        }
+                        AnimatedVisibility(showEffects.value) {
+                            HCenteredBox {
+                                Text(
+                                    text = sumEffects(showEffects.value, context, hero, gearsEffectState.value),
+                                    color = Color.Gray,
+                                    fontSize = 14.sp,
+                                    modifier = Modifier.padding(top = 10.dp)
+                                )
+                            }
                         }
                     }
                 }
@@ -179,17 +184,8 @@ fun CreateSetFragment(hero: Hero, set: UserSet, viewModel: CreateSetViewModel) {
             }
         }
     }
-    // UI
-    DisposableEffect(null) {
-        val newMap = mutableMapOf<GearCell, Gear>()
-        val listener = Firebase.firestore.collection("gears").addSnapshotListener { value, _ ->
-            val gears = value?.documents?.mapNotNull { it.toGear() } ?: emptyList()
-            set.gears.forEach { (cell, icon) ->
-                newMap[cell] = gears.find { it.icon == icon }!!
-            }
-            gearsEffectState.value = newMap
-        }
-        onDispose { listener.remove() }
+    LaunchedEffect(null) {
+        viewModel.fetchGears(set)
     }
 }
 

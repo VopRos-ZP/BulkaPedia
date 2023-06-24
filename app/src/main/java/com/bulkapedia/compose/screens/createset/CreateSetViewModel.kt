@@ -2,6 +2,8 @@ package com.bulkapedia.compose.screens.createset
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.bulkapedia.compose.data.repos.gears.Gear
+import com.bulkapedia.compose.data.repos.gears.GearsRepository
 import com.bulkapedia.compose.data.repos.heroes.Hero
 import com.bulkapedia.compose.data.repos.heroes.HeroesRepository
 import com.bulkapedia.compose.data.repos.sets.GearCell
@@ -35,7 +37,8 @@ val emptyGears = mapOf(
 @HiltViewModel
 class CreateSetViewModel @Inject constructor(
     private val setsRepository: SetsRepository,
-    private val heroesRepository: HeroesRepository
+    private val heroesRepository: HeroesRepository,
+    private val gearsRepository: GearsRepository
 ) : ViewModel() {
 
     private val _heroFlow: MutableStateFlow<Hero?> = MutableStateFlow(null)
@@ -44,11 +47,14 @@ class CreateSetViewModel @Inject constructor(
     private val _setFlow: MutableStateFlow<UserSet> = MutableStateFlow(UserSet.EMPTY)
     val setFlow: StateFlow<UserSet> = _setFlow
 
+    val gearsFlow: MutableStateFlow<Map<GearCell, Gear>> = MutableStateFlow(emptyMap())
+
     private var heroListener: ListenerRegistration? = null
     private var setListener: ListenerRegistration? = null
+    private var gearsListener: ListenerRegistration? = null
 
     fun saveSet(set: UserSet) {
-        setsRepository.create(set) {}
+        viewModelScope.launch { setsRepository.create(set) }
     }
 
     fun fetchData(heroId: String, setId: String, author: String) {
@@ -60,8 +66,19 @@ class CreateSetViewModel @Inject constructor(
         }
     }
 
+    fun fetchGears(set: UserSet) {
+        gearsListener = gearsRepository.fetchAll { allGears ->
+            val map = mutableMapOf<GearCell, Gear>()
+            set.gears.forEach { (cell, icon) ->
+                map[cell] = allGears.find { it.icon == icon } ?: Gear.EMPTY(cell)
+            }
+            viewModelScope.launch { gearsFlow.emit(map) }
+        }
+    }
+
     fun removeListeners() {
         heroListener?.remove()
         setListener?.remove()
+        gearsListener?.remove()
     }
 }

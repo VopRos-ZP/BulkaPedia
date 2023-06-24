@@ -2,13 +2,12 @@ package com.bulkapedia.compose.data.repos.gears
 
 import com.bulkapedia.compose.data.Entity
 import com.bulkapedia.compose.data.labels.Ranks
+import com.bulkapedia.compose.data.repos.sets.GearCell
+import com.bulkapedia.compose.screens.createset.emptyGears
 import com.bulkapedia.compose.util.autoFillGearEffects
 import com.google.firebase.firestore.DocumentSnapshot
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
-import kotlinx.serialization.decodeFromString
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
 
 @Serializable
 data class Gear(
@@ -27,10 +26,20 @@ data class Gear(
         set(value) { gearId = value }
 
     override fun toData(): MutableMap<String, Any> {
-        return Json.decodeFromString(Json.encodeToString(this))
+        return mutableMapOf(
+            "gearSet" to gearSet,
+            "gearCell" to cell,
+            "icon" to icon,
+            "effects" to effects,
+            "ranks" to rankEffect,
+        )
     }
 
     companion object {
+
+        val EMPTY: (GearCell) -> Gear = { cell ->
+            Gear("", "", emptyGears[cell]!!, emptyList(), emptyMap(), "", cell.name)
+        }
 
         fun DocumentSnapshot.toGear(): Gear? {
             return try {
@@ -48,13 +57,11 @@ data class Gear(
 fun Map<String, Map<String, Any>>.toEffects(): List<Effect> {
     val res = mutableListOf<Effect>()
     forEach { (_, map) ->
-        res.add(
-            Effect(
+        res.add(Effect(
             longToInt(map["number"] as Long),
             map["percent"] as Boolean,
             map["description"] as String
-        )
-        )
+        ))
     }
     return res
 }

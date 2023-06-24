@@ -23,7 +23,7 @@ class MapViewModel @Inject constructor(
 
     fun fetchMap(mapImage: String) {
         listener = mapsRepository.fetchAll { allMaps ->
-            viewModelScope.launch { _mapFlow.emit(allMaps.find { it.image == mapImage }) }
+            viewModelScope.launch { _mapFlow.emit(allMaps.find { it.id == mapImage }) }
         }
     }
 

@@ -35,7 +35,7 @@ class HeroViewModel @Inject constructor(
         setsListener = setsRepository.fetchAll { allSets ->
             val heroSets = allSets.filter { it.hero == heroId }
                 .sortedByDescending(UserSet::likes)
-                .take(5)
+                .take(3)
             viewModelScope.launch { _setsFlow.emit(heroSets) }
         }
     }

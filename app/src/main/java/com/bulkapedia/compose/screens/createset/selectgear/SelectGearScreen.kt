@@ -25,7 +25,6 @@ import com.bulkapedia.compose.data.repos.gears.getRankEffect
 import com.bulkapedia.compose.data.repos.heroes.Hero
 import com.bulkapedia.compose.data.labels.Ranks
 import com.bulkapedia.compose.data.repos.sets.GearCell
-import com.bulkapedia.compose.screens.titled.ScreenView
 import com.bulkapedia.compose.ui.theme.*
 import com.bulkapedia.compose.util.stringToResource
 import kotlinx.coroutines.launch
@@ -59,51 +58,49 @@ fun SelectGearFragment(
     val scope = rememberCoroutineScope()
     val sheetGear = remember { mutableStateOf<Gear?>(null) }
 
-    ScreenView(title = "Выберите снаряжение") {
-        BottomSheetScaffold(sheetContent = {
-            if (sheetGear.value != null) {
-                if (emptyIcons.contains(sheetGear.value!!.icon)) {
-                    LaunchedEffect(null) {
-                        scaffoldState.bottomSheetState.collapse()
-                    }
+    BottomSheetScaffold(sheetContent = {
+        if (sheetGear.value != null) {
+            if (emptyIcons.contains(sheetGear.value!!.icon)) {
+                LaunchedEffect(null) {
+                    scaffoldState.bottomSheetState.collapse()
+                }
+                val newMap = gearsState.value.toMutableMap()
+                newMap[cell] = sheetGear.value!!
+                gearsState.value = newMap
+                showSelectGears.value = false
+            } else {
+                SelectRankGear(sheetGear.value!!, scaffoldState.bottomSheetState) { gear ->
                     val newMap = gearsState.value.toMutableMap()
-                    newMap[cell] = sheetGear.value!!
+                    newMap[cell] = gear
                     gearsState.value = newMap
                     showSelectGears.value = false
-                } else {
-                    SelectRankGear(sheetGear.value!!, scaffoldState.bottomSheetState) { gear ->
-                        val newMap = gearsState.value.toMutableMap()
-                        newMap[cell] = gear
-                        gearsState.value = newMap
-                        showSelectGears.value = false
-                    }
                 }
-            } else {
-                Text("", color = Color.Transparent)
             }
-        },
-            sheetBackgroundColor = Primary,
-            backgroundColor = Primary,
-            sheetPeekHeight = 0.dp,
-            sheetGesturesEnabled = false,
-            scaffoldState = scaffoldState
+        } else {
+            Text("", color = Color.Transparent)
+        }
+    },
+        sheetBackgroundColor = Primary,
+        backgroundColor = Primary,
+        sheetPeekHeight = 0.dp,
+        sheetGesturesEnabled = false,
+        scaffoldState = scaffoldState
+    ) {
+        LazyColumn (
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(20.dp)
+                .background(PrimaryDark, RoundedCornerShape(20.dp))
+                .border(2.dp, Teal200, RoundedCornerShape(20.dp))
+                .padding(horizontal = 10.dp),
+            verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
-            LazyColumn (
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(20.dp)
-                    .background(PrimaryDark, RoundedCornerShape(20.dp))
-                    .border(2.dp, Teal200, RoundedCornerShape(20.dp))
-                    .padding(horizontal = 10.dp),
-                verticalArrangement = Arrangement.spacedBy(10.dp)
-            ) {
-                items(gears) { gear ->
-                    SelectGearItem(gear) {
-                        scope.launch {
-                            sheetGear.value = gear
-                            if (scaffoldState.bottomSheetState.isExpanded) scaffoldState.bottomSheetState.collapse()
-                            else scaffoldState.bottomSheetState.expand()
-                        }
+            items(gears) { gear ->
+                SelectGearItem(gear) {
+                    scope.launch {
+                        sheetGear.value = gear
+                        if (scaffoldState.bottomSheetState.isExpanded) scaffoldState.bottomSheetState.collapse()
+                        else scaffoldState.bottomSheetState.expand()
                     }
                 }
             }

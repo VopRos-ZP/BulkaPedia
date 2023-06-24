@@ -23,7 +23,7 @@ class DevChatViewModel @Inject constructor(
     private var listener: ListenerRegistration? = null
 
     fun sendMessage(message: Message) {
-        messagesRepository.create(message) {}
+        viewModelScope.launch { messagesRepository.create(message) }
     }
 
     fun fetchMessages(author: String, receiver: String) {

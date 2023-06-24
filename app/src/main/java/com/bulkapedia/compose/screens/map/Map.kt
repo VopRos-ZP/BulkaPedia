@@ -46,25 +46,28 @@ fun SelectedMapScreen(mapImage: String, viewModel: MapViewModel = hiltViewModel(
                     modifier = Modifier.background(Primary)
                 ) {
                     OutlinedCard(
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier
+                            .fillMaxWidth()
                             .heightIn(min = 100.dp, max = 400.dp)
                             .padding(20.dp)
                     ) {
                         GlideImage(
                             model = mapIconState.value,
                             contentDescription = mapIconState.value,
-                            modifier = Modifier.fillMaxWidth().padding(20.dp),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(20.dp),
                             contentScale = ContentScale.FillWidth
                         )
                     }
                     OutlinedCard(
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier.fillMaxWidth()
+                            .padding(horizontal = 20.dp),
                         shape = RoundedCornerShape(15.dp)
                     ) {
                         HCenteredBox(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(horizontal = 20.dp)
                                 .padding(10.dp)
                         ) {
                             Text(

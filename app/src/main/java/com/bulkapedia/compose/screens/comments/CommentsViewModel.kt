@@ -12,6 +12,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 @HiltViewModel
@@ -42,7 +43,7 @@ class CommentsViewModel @Inject constructor(
     }
 
     fun sendComment(comment: Comment) {
-        commentsRepository.create(comment) {}
+        viewModelScope.launch { commentsRepository.create(comment).await() }
     }
 
     fun updateComment(comment: Comment) {

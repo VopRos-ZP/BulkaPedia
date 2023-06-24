@@ -1,6 +1,9 @@
 package com.bulkapedia.compose.screens.comments
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -11,13 +14,13 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.KeyboardDoubleArrowDown
 import androidx.compose.material.icons.filled.KeyboardDoubleArrowUp
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.clipToBounds
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
@@ -31,7 +34,6 @@ import com.bulkapedia.compose.elements.*
 import com.bulkapedia.compose.ui.theme.*
 import com.bulkapedia.compose.util.CenteredBox
 import com.bulkapedia.compose.util.clickable
-import com.bulkapedia.compose.data.repos.sets.UserSet
 import com.bulkapedia.compose.DataStore
 import com.bulkapedia.compose.data.nowTimeFormat
 import com.bulkapedia.compose.navigation.Destinations
@@ -46,6 +48,7 @@ fun CommentsScreen(setId: String, viewModel: CommentsViewModel = hiltViewModel()
     // DataStore
     val dataStore = DataStore(LocalContext.current)
     val nickname by dataStore.getNickname.collectAsState("")
+    val isSign by dataStore.getSign.collectAsState(false)
     // States
     val hideSetState = remember { mutableStateOf(false) }
     val txt = remember { mutableStateOf("") }
@@ -57,35 +60,66 @@ fun CommentsScreen(setId: String, viewModel: CommentsViewModel = hiltViewModel()
             null -> Loading()
             else -> {
                 ScreenWithDelete { delete ->
-                    BoxWithConstraints(
+                    Column(
                         modifier = Modifier
                             .fillMaxSize()
                             .background(Primary)
                             .animateContentSize()
                     ) {
-                        if (!hideSetState.value) {
+                        AnimatedVisibility(!hideSetState.value) {
                             SetTabCard(set, set.from != nickname, disableComments = true, disableSettings = false) { s ->
                                 delete.showDelete("Сет") { viewModel.deleteUserSet(s) }
                             }
                         }
-                        IconToggleButton(checked = hideSetState.value, onCheckedChange = { hideSetState.value = it }) {
-                            Icon(if (hideSetState.value) Icons.Filled.KeyboardDoubleArrowDown else Icons.Filled.KeyboardDoubleArrowUp, contentDescription = "show_user_set")
+                        IconToggleButton(
+                            modifier = Modifier.padding(start = 20.dp),
+                            checked = hideSetState.value,
+                            onCheckedChange = { hideSetState.value = it }
+                        ) {
+                            val rotate = animateFloatAsState(
+                                targetValue = if (hideSetState.value) 180f else 0f,
+                                label = "",
+                                animationSpec = tween(300)
+                            )
+                            Icon(
+                                Icons.Filled.KeyboardDoubleArrowUp,
+                                contentDescription = "show_user_set",
+                                tint = Teal200,
+                                modifier = Modifier.rotate(rotate.value)
+                            )
                         }
-                        ChatRecycler(comments,
-                            onSendLongClick = { comment, b ->
-                                if (b) {
-                                    delete.showDelete("комментарий") { viewModel.deleteComment(comment) }
+                        Box(modifier = Modifier.weight(1f)) {
+                            ChatRecycler(comments,
+                                onSendLongClick = { comment, b ->
+                                    if (b) {
+                                        delete.showDelete("комментарий") { viewModel.deleteComment(comment) }
+                                    } else {
+                                        editComment.value = comment
+                                        isEdit.value = true
+                                        txt.value = comment.text
+                                    }
+                                },
+                                onRecLongClick = { comment -> navController.navigate("${Destinations.VISIT_PROFILE}/${comment.from}") {
+                                    launchSingleTop = true
+                                }}
+                            )
+                        }
+                        SendForm(txt) {
+                            if (txt.value.isNotEmpty() && isSign == true) {
+                                if (!isEdit.value) {
+                                    viewModel.sendComment(
+                                        Comment(
+                                            set = set.id, from = nickname ?: "",
+                                            text = txt.value, date = nowTimeFormat()
+                                        )
+                                    )
                                 } else {
-                                    editComment.value = comment
-                                    isEdit.value = true
-                                    txt.value = comment.text
+                                    isEdit.value = false
+                                    viewModel.updateComment(editComment.value!!.copy(text = txt.value))
                                 }
-                            },
-                            onRecLongClick = { comment -> navController.navigate("${Destinations.VISIT_PROFILE}/${comment.from}") {
-                                launchSingleTop = true
-                            }}
-                        )
-                        SendForm(set, viewModel, txt, isEdit, editComment)
+                                txt.value = ""
+                            }
+                        }
                     }
                 }
             }
@@ -104,13 +138,16 @@ fun ChatRecycler(
     onRecLongClick: (Comment) -> Unit
 ) {
     val nickname by DataStore(LocalContext.current).getNickname.collectAsState("")
-    OutlinedCard {
+    OutlinedCard(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(horizontal = 20.dp)
+    ) {
         when (comments.isEmpty()) {
             true -> CenteredBox { Text(text = "Пока комментариев нет", color = Teal200) }
             else -> LazyColumn(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 20.dp)
                     .background(PrimaryDark, RoundedCornerShape(20.dp))
                     .clipToBounds()
                     .padding(horizontal = 10.dp)
@@ -150,15 +187,8 @@ fun ChatRecycler(
 }
 
 @Composable
-fun SendForm(
-    set: UserSet,
-    viewModel: CommentsViewModel,
-    txt: MutableState<String>,
-    isEdit: MutableState<Boolean>,
-    editComment: MutableState<Comment?>
-) {
-    val nickname by DataStore(LocalContext.current).getNickname.collectAsState(initial = "")
-    Row (
+fun SendForm(txt: MutableState<String>, onClick: () -> Unit) {
+    Row(
         modifier = Modifier
             .fillMaxWidth()
             .padding(20.dp)
@@ -172,27 +202,12 @@ fun SendForm(
             contentDescription = "send_image",
             colorFilter = ColorFilter.tint(Teal),
             modifier = Modifier
-                .size(40.dp)
+                .size(50.dp)
                 .background(PrimaryDark, CircleShape)
                 .border(2.dp, Teal200, CircleShape)
                 .clip(CircleShape)
                 .padding(10.dp)
-                .clickable {
-                    if (txt.value.isNotEmpty()) {
-                        if (!isEdit.value) {
-                            viewModel.sendComment(
-                                Comment(
-                                    set = set.id, from = nickname ?: "",
-                                    text = txt.value, date = nowTimeFormat()
-                                )
-                            )
-                        } else {
-                            isEdit.value = false
-                            viewModel.updateComment(editComment.value!!.copy(text = txt.value))
-                        }
-                        txt.value = ""
-                    }
-                }
+                .clickable { onClick() }
         )
     }
 }

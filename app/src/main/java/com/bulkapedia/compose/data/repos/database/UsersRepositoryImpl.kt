@@ -60,7 +60,7 @@ class UsersRepositoryImpl : UsersRepository {
 
     override fun login(email: String, password: String, onSuccess: (User) -> Unit, onError: (String?) -> Unit) {
         auth.signInWithEmailAndPassword(email, password).addOnSuccessListener {
-            findUserBy({ it.email == email && it.password == password }) { it?.apply(onSuccess) }
+            findByEmail(email) { it?.apply(onSuccess) }
         }.addOnFailureListener {
             onError(it.localizedMessage)
         }
