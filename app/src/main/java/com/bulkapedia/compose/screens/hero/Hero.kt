@@ -52,8 +52,8 @@ fun HeroSets(heroId: String, viewModel: HeroViewModel = hiltViewModel()) {
             val tabs = listOf(SetTabItem.Number1, SetTabItem.Number2, SetTabItem.Number3)
             val store = DataStore(LocalContext.current)
             val pagerState = rememberPagerState()
-            val nickname by store.getNickname.collectAsState(initial = "")
-            val sign by store.getSign.collectAsState(initial = false)
+            val nickname by store.getNickname.collectAsState("")
+            val sign by store.getSign.collectAsState(false)
             val scope = rememberCoroutineScope()
             TextSnackbar { snackbar ->
                 ScreenView(title = hero.name, showBack = true) {
@@ -123,12 +123,11 @@ fun HeroSets(heroId: String, viewModel: HeroViewModel = hiltViewModel()) {
                                         }
                                     }
                                 }
-                                // add set button
                                 item {
                                     HCenteredBox(
                                         Modifier
                                             .fillMaxWidth()
-                                            .padding(vertical = 20.dp)
+                                            .padding(horizontal = 20.dp)
                                     ) {
                                         AddSetButton {
                                             if (sign && nickname != "") {
@@ -141,13 +140,12 @@ fun HeroSets(heroId: String, viewModel: HeroViewModel = hiltViewModel()) {
                                         }
                                     }
                                 }
-                                // counterpick
                                 item {
                                     Column(
                                         modifier = Modifier
                                             .fillMaxWidth()
-                                            .background(Color.Transparent)
-                                            .padding(start = 5.dp, top = 20.dp, end = 5.dp),
+                                            .padding(vertical = 20.dp)
+                                            .background(Color.Transparent),
                                         horizontalAlignment = Alignment.CenterHorizontally
                                     ) {
                                         HCenteredBox {
@@ -155,7 +153,7 @@ fun HeroSets(heroId: String, viewModel: HeroViewModel = hiltViewModel()) {
                                                 text = stringResource(id = R.string.counterpick),
                                                 color = Teal200,
                                                 fontSize = 18.sp,
-                                                modifier = Modifier.padding(bottom = 15.dp)
+                                                modifier = Modifier.padding(bottom = 10.dp)
                                             )
                                         }
                                         Counterpicks(icons = hero.counterpicks)
@@ -180,7 +178,7 @@ fun TopHeroCard(icon: String, trailingContent: @Composable ColumnScope.() -> Uni
         modifier = Modifier
             .fillMaxWidth()
             .height((40 + 180).dp)
-            .padding(20.dp)
+            .padding(start = 20.dp, end = 20.dp, bottom = 20.dp)
             .background(PrimaryDark, RoundedCornerShape(20.dp))
             .border(2.dp, Teal200, RoundedCornerShape(20.dp))
     ) {
@@ -205,9 +203,7 @@ fun TopHeroCard(icon: String, trailingContent: @Composable ColumnScope.() -> Uni
 @Composable
 fun HeroDifficult(difficult: String) {
     val colors = getDifficultImages(difficult)
-    Row (
-        modifier = Modifier.background(Color.Transparent)
-    ) {
+    Row (modifier = Modifier.background(Color.Transparent)) {
         colors.map {
             Box(
                 modifier = Modifier
