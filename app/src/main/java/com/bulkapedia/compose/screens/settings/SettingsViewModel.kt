@@ -16,7 +16,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.Period
 import javax.inject.Inject
@@ -50,8 +49,10 @@ class SettingsViewModel @Inject constructor(
             user.email, { s, u -> u.apply { email = s } }) { old, it ->
             setsRepository.fetchAll { all ->
                 all.filter { s -> s.userLikeIds.contains(old) }.forEach { s ->
-                    s.userLikeIds.remove(it.email)
-                    s.userLikeIds.add(it.email)
+                    val ids = s.userLikeIds.toMutableList()
+                    ids.remove(it.email)
+                    ids.add(it.email)
+                    s.userLikeIds = ids.distinct()
                     setsRepository.update(s)
                 }
             }

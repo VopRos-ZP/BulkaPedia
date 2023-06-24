@@ -44,7 +44,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun HeroSets(heroId: String, viewModel: HeroViewModel = hiltViewModel()) {
     val heroState = viewModel.heroFlow.collectAsState()
-    val sets by viewModel.setsFlow.collectAsState()
+    val sets = viewModel.setsFlow
     val navController = LocalNavController.current
     when (val hero = heroState.value) {
         null -> Loading()
@@ -131,7 +131,7 @@ fun HeroSets(heroId: String, viewModel: HeroViewModel = hiltViewModel()) {
                                             .padding(vertical = 20.dp)
                                     ) {
                                         AddSetButton {
-                                            if (sign == true && nickname != "") {
+                                            if (sign && nickname != "") {
                                                 navController.navigate("${Destinations.CREATE_SET}/${hero.id}/${nickname}")
                                             } else {
                                                 scope.launch {

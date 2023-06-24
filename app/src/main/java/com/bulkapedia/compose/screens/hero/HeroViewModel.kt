@@ -1,5 +1,7 @@
 package com.bulkapedia.compose.screens.hero
 
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bulkapedia.compose.data.repos.heroes.Hero
@@ -22,8 +24,7 @@ class HeroViewModel @Inject constructor(
     private val _heroFlow: MutableStateFlow<Hero?> = MutableStateFlow(null)
     val heroFlow: StateFlow<Hero?> = _heroFlow
 
-    private val _setsFlow: MutableStateFlow<List<UserSet>> = MutableStateFlow(emptyList())
-    val setsFlow: StateFlow<List<UserSet>> = _setsFlow
+    val setsFlow: SnapshotStateList<UserSet> = mutableStateListOf()
 
     private var heroListener: ListenerRegistration? = null
     private var setsListener: ListenerRegistration? = null
@@ -34,9 +35,10 @@ class HeroViewModel @Inject constructor(
         }
         setsListener = setsRepository.fetchAll { allSets ->
             val heroSets = allSets.filter { it.hero == heroId }
-                .sortedByDescending(UserSet::likes)
+                .sortedByDescending { it.userLikeIds.size }
                 .take(3)
-            viewModelScope.launch { _setsFlow.emit(heroSets) }
+            setsFlow.clear()
+            setsFlow.addAll(heroSets)
         }
     }
 

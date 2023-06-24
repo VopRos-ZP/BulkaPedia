@@ -93,7 +93,7 @@ fun CreateSetFragment(hero: Hero, set: UserSet, viewModel: CreateSetViewModel) {
                             viewModel.saveSet(UserSet(
                                 set.id, set.from, hero.id,
                                 gearsEffectState.value.mapValues { it.value.icon },
-                                set.likes, set.userLikeIds
+                                set.userLikeIds
                             ))
                             navController.navigateUp()
                         }

@@ -43,7 +43,7 @@ import com.bulkapedia.compose.screens.titled.ScreenView
 @Composable
 fun CommentsScreen(setId: String, viewModel: CommentsViewModel = hiltViewModel()) {
     val navController = LocalNavController.current
-    val setState = viewModel.setFlow.collectAsState()
+    val set = viewModel.setFlow
     val comments by viewModel.commentsFlow.collectAsState()
     // DataStore
     val dataStore = DataStore(LocalContext.current)
@@ -56,69 +56,70 @@ fun CommentsScreen(setId: String, viewModel: CommentsViewModel = hiltViewModel()
     val editComment = remember { mutableStateOf<Comment?>(null) }
     // UI
     ScreenView(title = "Комментарии", showBack = true) {
-        when (val set = setState.value) {
-            null -> Loading()
-            else -> {
-                ScreenWithDelete { delete ->
-                    Column(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .background(Primary)
-                            .animateContentSize()
-                    ) {
-                        AnimatedVisibility(!hideSetState.value) {
-                            SetTabCard(set, set.from != nickname, disableComments = true, disableSettings = false) { s ->
-                                delete.showDelete("Сет") { viewModel.deleteSet(s) }
+        ScreenWithDelete { delete ->
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Primary)
+                    .animateContentSize()
+            ) {
+                when (set.size) {
+                    0 -> Loading()
+                    else -> AnimatedVisibility(!hideSetState.value) {
+                        SetTabCard(set[0], set[0].from != nickname, disableComments = true, disableSettings = false) { s ->
+                            delete.showDelete("Сет") { viewModel.deleteSet(s) }
+                        }
+                    }
+                }
+                IconToggleButton(
+                    modifier = Modifier.padding(start = 20.dp),
+                    checked = hideSetState.value,
+                    onCheckedChange = { hideSetState.value = it }
+                ) {
+                    val rotate = animateFloatAsState(
+                        targetValue = if (hideSetState.value) 180f else 0f,
+                        label = "",
+                        animationSpec = tween(300)
+                    )
+                    Icon(
+                        Icons.Filled.KeyboardDoubleArrowUp,
+                        contentDescription = "show_user_set",
+                        tint = Teal200,
+                        modifier = Modifier.rotate(rotate.value)
+                    )
+                }
+                Box(modifier = Modifier.weight(1f)) {
+                    ChatRecycler(comments,
+                        onSendLongClick = { comment, b ->
+                            if (b) {
+                                delete.showDelete("комментарий") { viewModel.deleteComment(comment) }
+                            } else {
+                                editComment.value = comment
+                                isEdit.value = true
+                                txt.value = comment.text
                             }
-                        }
-                        IconToggleButton(
-                            modifier = Modifier.padding(start = 20.dp),
-                            checked = hideSetState.value,
-                            onCheckedChange = { hideSetState.value = it }
-                        ) {
-                            val rotate = animateFloatAsState(
-                                targetValue = if (hideSetState.value) 180f else 0f,
-                                label = "",
-                                animationSpec = tween(300)
-                            )
-                            Icon(
-                                Icons.Filled.KeyboardDoubleArrowUp,
-                                contentDescription = "show_user_set",
-                                tint = Teal200,
-                                modifier = Modifier.rotate(rotate.value)
-                            )
-                        }
-                        Box(modifier = Modifier.weight(1f)) {
-                            ChatRecycler(comments,
-                                onSendLongClick = { comment, b ->
-                                    if (b) {
-                                        delete.showDelete("комментарий") { viewModel.deleteComment(comment) }
-                                    } else {
-                                        editComment.value = comment
-                                        isEdit.value = true
-                                        txt.value = comment.text
-                                    }
-                                },
-                                onRecLongClick = { comment -> navController.navigate("${Destinations.VISIT_PROFILE}/${comment.from}") {
-                                    launchSingleTop = true
-                                }}
-                            )
-                        }
-                        SendForm(txt) {
-                            if (txt.value.isNotEmpty() && isSign == true) {
-                                if (!isEdit.value) {
-                                    viewModel.sendComment(
-                                        Comment(
-                                            set = set.id, from = nickname ?: "",
-                                            text = txt.value, date = nowTimeFormat()
-                                        )
+                        },
+                        onRecLongClick = { comment -> navController.navigate("${Destinations.VISIT_PROFILE}/${comment.from}") {
+                            launchSingleTop = true
+                        }}
+                    )
+                }
+                when (set.size) {
+                    0 -> Loading()
+                    else -> SendForm(txt) {
+                        if (txt.value.isNotEmpty() && isSign) {
+                            if (!isEdit.value) {
+                                viewModel.sendComment(
+                                    Comment(
+                                        set = set[0].id, from = nickname,
+                                        text = txt.value, date = nowTimeFormat()
                                     )
-                                } else {
-                                    isEdit.value = false
-                                    viewModel.updateComment(editComment.value!!.copy(text = txt.value))
-                                }
-                                txt.value = ""
+                                )
+                            } else {
+                                isEdit.value = false
+                                viewModel.updateComment(editComment.value!!.copy(text = txt.value))
                             }
+                            txt.value = ""
                         }
                     }
                 }

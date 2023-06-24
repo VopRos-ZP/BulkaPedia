@@ -8,6 +8,8 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -17,7 +19,9 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.bulkapedia.R
+import com.bulkapedia.compose.DataStore
 import com.bulkapedia.compose.elements.CommentsButton
 import com.bulkapedia.compose.elements.ProfileButton
 import com.bulkapedia.compose.elements.SettingsButton
@@ -32,7 +36,6 @@ import com.bulkapedia.compose.data.repos.sets.UserSet
 import com.bulkapedia.compose.util.stringToResource
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
-import kotlinx.coroutines.launch
 
 @Composable
 fun SetInProfileCard(
@@ -42,33 +45,13 @@ fun SetInProfileCard(
     disableSettings: Boolean = false,
     onDelete: (UserSet) -> Unit = {}
 ) {
-    val expanded = remember { mutableStateOf(false) }
-    SetCard(set = set) {
-        // author
-        Box(
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            HCenteredBox {
-                Image(
-                    painter = painterResource(stringToResource(set.hero.plus("_icon"))),
-                    contentDescription = set.hero,
-                    modifier = Modifier.height((75 * 3 / 2).dp)
-                )
-            }
-        }
-        // likes
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(60.dp)
-        ) { CenteredBox { LikeRow(set) } }
-        // buttons
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(60.dp)
-        ) {
-            ButtonsRow(expanded, set, see, disableComments, disableSettings, onDelete)
+    SetCard(set, see, disableComments, disableSettings, onDelete) {
+        HCenteredBox {
+            Image(
+                painter = painterResource(stringToResource(set.hero.plus("_icon"))),
+                contentDescription = set.hero,
+                modifier = Modifier.height((75 * 3 / 2).dp)
+            )
         }
     }
 }
@@ -81,33 +64,9 @@ fun SetTabCard(
     disableSettings: Boolean = false,
     onDelete: (UserSet) -> Unit = {}
 ) {
-    val expanded = remember { mutableStateOf(false) }
-    SetCard(set) {
-        // author
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(75.dp)
-        ) {
-            CenteredBox {
-                Text(text = set.from, color = Teal200)
-            }
-        }
-        // likes
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(75.dp)
-        ) {
-            CenteredBox { LikeRow(set) }
-        }
-        // buttons
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(75.dp)
-        ) {
-            ButtonsRow(expanded, set, see, disableComments, disableSettings, onDelete)
+    SetCard(set, see, disableComments, disableSettings, onDelete) {
+        Box(modifier = Modifier.fillMaxWidth().height((75 * 3 / 2).dp)) {
+            CenteredBox { Text(text = set.from, color = Teal200) }
         }
     }
 }
@@ -115,8 +74,22 @@ fun SetTabCard(
 @Composable
 fun SetCard(
     set: UserSet,
-    column: @Composable ColumnScope.() -> Unit
+    see: Boolean = false,
+    disableComments: Boolean = false,
+    disableSettings: Boolean = false,
+    onDelete: (UserSet) -> Unit = {},
+    viewModel: SetTabViewModel = hiltViewModel(),
+    content: @Composable BoxScope.() -> Unit
 ) {
+    val context = LocalContext.current
+    val store = DataStore(context)
+    val isSign by store.getSign.collectAsState(false)
+    val email by store.getEmail.collectAsState("")
+    val nickname by store.getNickname.collectAsState("")
+
+    val liked = set.userLikeIds.contains(email)
+    val expanded = remember { mutableStateOf(false) }
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -127,11 +100,43 @@ fun SetCard(
     ) {
         Row {
             Set(gears = set.gears)
-            Column (
+            Column(
                 modifier = Modifier.padding(top = 20.dp, bottom = 20.dp, end = 20.dp),
-                verticalArrangement = Arrangement.Bottom,
-                content = column
-            )
+                verticalArrangement = Arrangement.SpaceBetween
+            ) {
+                Box(modifier = Modifier.fillMaxWidth(), content = content)
+                Box(modifier = Modifier
+                    .fillMaxWidth()
+                    .height(50.dp)) {
+                    CenteredBox {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.Center
+                        ) {
+                            IconButton(onClick = {
+                                viewModel.likeUserSet(isSign, nickname, email, set) {
+                                    Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
+                                }
+                            }) {
+                                Icon(
+                                    painter = painterResource(id = if (liked) R.drawable.liked else R.drawable.unliked),
+                                    contentDescription = "like",
+                                    tint = Color.Red
+                                )
+                            }
+                            VCenteredBox (Modifier.size(40.dp)) {
+                                Text(text = "${set.userLikeIds.size}", color = Teal200)
+                            }
+                        }
+                    }
+                }
+                Box(modifier = Modifier
+                    .fillMaxWidth()
+                    .height(50.dp)) {
+                    ButtonsRow(expanded, set, see, disableComments, disableSettings, onDelete)
+                }
+            }
         }
     }
 }
@@ -140,33 +145,20 @@ fun SetCard(
 fun Set(
     padding: PaddingValues = PaddingValues(start = 20.dp, top = 20.dp, bottom = 20.dp),
     gears: Map<GearCell, String>,
-    onHeadClick: () -> Unit = {},
-    onBodyClick: () -> Unit = {},
-    onArmClick: () -> Unit = {},
-    onLegClick: () -> Unit = {},
-    onDecorClick: () -> Unit = {},
-    onDeviceClick: () -> Unit = {},
+    onCellClick: (GearCell) -> Unit = {},
 ) {
-    Column(
-        modifier = Modifier.padding(padding),
-    ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically
-        ) { // head / body
-            GearImage(image = gears[GearCell.HEAD] ?: "", onHeadClick)
-            GearImage(image = gears[GearCell.BODY] ?: "", onBodyClick)
+    Column(modifier = Modifier.padding(padding)) {
+        Row(verticalAlignment = Alignment.CenterVertically) { // head / body
+            GearImage(image = gears[GearCell.HEAD] ?: "") { onCellClick(GearCell.HEAD) }
+            GearImage(image = gears[GearCell.BODY] ?: "") { onCellClick(GearCell.BODY) }
         }
-        Row(
-            verticalAlignment = Alignment.CenterVertically
-        ) { // arm / leg
-            GearImage(image = gears[GearCell.ARM] ?: "", onArmClick)
-            GearImage(image = gears[GearCell.LEG] ?: "", onLegClick)
+        Row(verticalAlignment = Alignment.CenterVertically) { // arm / leg
+            GearImage(image = gears[GearCell.ARM] ?: "") { onCellClick(GearCell.ARM) }
+            GearImage(image = gears[GearCell.LEG] ?: "") { onCellClick(GearCell.LEG) }
         }
-        Row(
-            verticalAlignment = Alignment.CenterVertically
-        ) { // decor / device
-            GearImage(image = gears[GearCell.DECOR] ?: "", onDecorClick)
-            GearImage(image = gears[GearCell.DEVICE] ?: "", onDeviceClick)
+        Row(verticalAlignment = Alignment.CenterVertically) { // decor / device
+            GearImage(image = gears[GearCell.DECOR] ?: "") { onCellClick(GearCell.DECOR) }
+            GearImage(image = gears[GearCell.DEVICE] ?: "") { onCellClick(GearCell.DEVICE) }
         }
     }
 }
@@ -185,49 +177,6 @@ fun GearImage(
             .padding(end = 10.dp)
             .clickable(onClick)
     )
-}
-
-@Composable
-fun LikeRow(set: UserSet) {
-    val context = LocalContext.current
-    val store = com.bulkapedia.compose.DataStore(context)
-    val signed = store.getSign.collectAsState(initial = false)
-    val emailState = store.getEmail.collectAsState(initial = "")
-    val nickname = store.getNickname.collectAsState(initial = "")
-    val liked = set.userLikeIds.contains(emailState.value)
-    Row (
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(75.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Center
-    ) {
-        Image(
-            painter = painterResource(id = if (liked) R.drawable.liked else R.drawable.unliked),
-            contentDescription = "like",
-            modifier = Modifier.size(40.dp)
-                .clickable {
-                    if (signed.value == true) {
-                        if (set.from != nickname.value) {
-                            if (liked) {
-                                set.likes--
-                                set.userLikeIds.remove(emailState.value)
-                            } else {
-                                set.likes++
-                                set.userLikeIds.add(emailState.value!!)
-                            }
-                            // update set in Firebase
-                        }
-                    } else {
-                        Toast.makeText(context, "Чтобы поставить лайк, надо зарегистрироватся!", Toast.LENGTH_SHORT).show()
-                    }
-                }
-                .padding(5.dp)
-        )
-        VCenteredBox (Modifier.size(40.dp)) {
-            Text(text = "${set.likes}", color = Teal200)
-        }
-    }
 }
 
 @Composable

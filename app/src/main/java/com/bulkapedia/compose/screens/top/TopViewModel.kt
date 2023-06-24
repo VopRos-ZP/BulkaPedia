@@ -30,7 +30,7 @@ class TopViewModel @Inject constructor(
         setsListener = setsRepository.fetchAll { allSets ->
             val filtered = allSets
                 .filter { it.hero == id }
-                .sortedByDescending { it.likes }
+                .sortedByDescending { it.userLikeIds.size }
                 .take(100)
             viewModelScope.launch { _setsFlow.emit(filtered) }
         }

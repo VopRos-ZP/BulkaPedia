@@ -1,5 +1,7 @@
 package com.bulkapedia.compose.screens.comments
 
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bulkapedia.compose.data.repos.comments.Comment
@@ -21,8 +23,7 @@ class CommentsViewModel @Inject constructor(
     private val commentsRepository: CommentsRepository
 ) : ViewModel() {
 
-    private val _setFlow: MutableStateFlow<UserSet?> = MutableStateFlow(null)
-    val setFlow: StateFlow<UserSet?> = _setFlow
+    val setFlow: SnapshotStateList<UserSet> = mutableStateListOf()
 
     private val _commentsFlow: MutableStateFlow<List<Comment>> = MutableStateFlow(emptyList())
     val commentsFlow: StateFlow<List<Comment>> = _commentsFlow
@@ -32,7 +33,8 @@ class CommentsViewModel @Inject constructor(
 
     fun addListener(setId: String) {
         setListener = setsRepository.fetchAll { allSets ->
-            viewModelScope.launch { _setFlow.emit(allSets.find { it.id == setId } ) }
+            setFlow.clear()
+            setFlow.add(allSets.find { it.id == setId } ?: UserSet.EMPTY)
         }
         commentsListener = commentsRepository.fetchAll { allComments ->
             val filtered = allComments

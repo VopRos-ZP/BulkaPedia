@@ -1,20 +1,17 @@
 package com.bulkapedia.compose.data.repos.sets
 
+import androidx.compose.runtime.Stable
 import com.bulkapedia.compose.data.Entity
-import com.bulkapedia.compose.data.repos.gears.longToInt
 import com.google.firebase.firestore.DocumentSnapshot
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.Transient
 
 @Serializable
 data class UserSet(
-    @Transient
     private var userSetId: String = "",
     var from: String,
     val hero: String,
     var gears: Map<GearCell, String>,
-    var likes: Int,
-    var userLikeIds: MutableList<String>
+    var userLikeIds: List<String>
 ): Entity() {
 
     override var id: String
@@ -25,7 +22,6 @@ data class UserSet(
         return mutableMapOf(
             "author" to from,
             "hero" to hero,
-            "likes" to likes,
             "head" to gears.getValue(GearCell.HEAD),
             "body" to gears.getValue(GearCell.BODY),
             "arm" to gears.getValue(GearCell.ARM),
@@ -42,7 +38,7 @@ data class UserSet(
                 GearCell.HEAD to "empty_head", GearCell.BODY to "empty_body",
                 GearCell.ARM to "empty_arm", GearCell.LEG to "empty_leg",
                 GearCell.DECOR to "empty_decor", GearCell.DEVICE to "empty_device",
-            ), 0, mutableListOf()
+            ), mutableListOf()
         )
 
         fun DocumentSnapshot.toUserSet(): UserSet? {
@@ -52,10 +48,8 @@ data class UserSet(
                     GearCell.ARM to getString("arm")!!, GearCell.LEG to getString("leg")!!,
                     GearCell.DECOR to getString("decor")!!, GearCell.DEVICE to getString("device")!!,
                 )
-                UserSet(id, getString("author")!!, getString("hero")!!,
-                    gears, longToInt(getLong("likes")!!),
-                    (get("user_like_ids") as MutableList<String>)
-                )
+                val ids = get("user_like_ids") as List<String>
+                UserSet(id, getString("author")!!, getString("hero")!!, gears, ids)
             } catch (_:Exception) { null }
         }
     }
