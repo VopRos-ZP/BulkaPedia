@@ -16,6 +16,7 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -127,7 +128,8 @@ fun CreateSetFragment(hero: Hero, set: UserSet, viewModel: CreateSetViewModel) {
                                 text = effectsTitle.value,
                                 color = Teal200,
                                 fontSize = 16.sp,
-                                modifier = Modifier.clickable {
+                                textAlign = TextAlign.Center,
+                                modifier = Modifier.fillMaxWidth().clickable {
                                     effectsTitle.value = if (effectsTitle.value == "Показать характеристики") {
                                         "Скрыть характеристики"
                                     } else {
@@ -138,12 +140,12 @@ fun CreateSetFragment(hero: Hero, set: UserSet, viewModel: CreateSetViewModel) {
                             )
                         }
                         AnimatedVisibility(showEffects.value) {
-                            HCenteredBox {
+                            HCenteredBox(modifier = Modifier.fillMaxWidth().padding(horizontal = 10.dp)) {
                                 Text(
                                     text = sumEffects(showEffects.value, context, hero, gearsEffectState.value),
                                     color = Color.Gray,
                                     fontSize = 14.sp,
-                                    modifier = Modifier.padding(top = 10.dp)
+                                    modifier = Modifier.fillMaxSize().padding(top = 10.dp)
                                 )
                             }
                         }
@@ -240,7 +242,7 @@ private fun sumEffects(
                         val2 = pEff.toDouble()
                     }
                     val numberDouble = sumValueEffects(eid, val1, val2, pEff != null).toDouble()
-                    number = (doubleToIntIfNotDouble(numberDouble) ?: numberDouble).toString()
+                    number = (doubleToIntIfNotDouble(numberDouble) ?: round(numberDouble)).toString()
 
                     append(" -> ")
                     append(number)
@@ -402,3 +404,6 @@ private fun doubleToIntIfNotDouble(db: Double): Int? {
     else round
 }
 
+private fun round(num: Double): Double {
+    return (num * 100.0).roundToInt() / 100.0
+}
