@@ -15,9 +15,8 @@ data class Gear(
     private var gearId: String = "",
     val gearSet : String,
     val icon : String,
-    var effects : List<Effect>,
+    val effects : List<Effect>,
     val rankEffect : Map<String, List<Int>>,
-    val name: String,
     val cell: String
 ): Entity() {
 
@@ -38,14 +37,17 @@ data class Gear(
     companion object {
 
         val EMPTY: (GearCell) -> Gear = { cell ->
-            Gear("", "", emptyGears[cell]!!, emptyList(), emptyMap(), "", cell.name)
+            Gear("", "", emptyGears[cell]!!, emptyList(), emptyMap(), cell.name)
         }
 
         fun DocumentSnapshot.toGear(): Gear? {
             return try {
-                val effects = (get("effects")!! as Map<String, Map<String, Any>>).toEffects()
-                Gear(id, getString("gearSet")!!, getString("icon")!!, effects,
-                    (get("ranks") as Map<String, List<Int>>), id, getString("gearCell")!!
+                Gear(id,
+                    get("gearSet") as String,
+                    get("icon") as String,
+                    (get("effects") as Map<String, Map<String, Any>>).toEffects(),
+                    get("ranks") as Map<String, List<Int>>,
+                    get("gearCell") as String
                 )
             } catch (_: Exception) { null }
         }

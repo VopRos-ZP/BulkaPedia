@@ -52,8 +52,9 @@ class SettingsViewModel @Inject constructor(
                     val ids = s.userLikeIds.toMutableList()
                     ids.remove(it.email)
                     ids.add(it.email)
-                    s.userLikeIds = ids.distinct()
-                    setsRepository.update(s)
+
+                    val newSet = s.copy(userLikeIds = ids.distinct())
+                    setsRepository.update(newSet)
                 }
             }
             viewModelScope.launch { onSuccess(it) }
@@ -67,8 +68,8 @@ class SettingsViewModel @Inject constructor(
             user.nickname, { s, u -> u.apply { nickname = s } }) { old, it ->
             setsRepository.fetchAll { all ->
                 all.filter { s -> s.from == old }.forEach { s ->
-                    s.from = it.nickname
-                    setsRepository.update(s)
+                    val newSet = s.copy(from = it.nickname)
+                    setsRepository.update(newSet)
                 }
             }
             viewModelScope.launch { onSuccess(it) }

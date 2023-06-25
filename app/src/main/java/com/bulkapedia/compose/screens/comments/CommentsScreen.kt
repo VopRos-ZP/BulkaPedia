@@ -43,7 +43,7 @@ import com.bulkapedia.compose.screens.titled.ScreenView
 @Composable
 fun CommentsScreen(setId: String, viewModel: CommentsViewModel = hiltViewModel()) {
     val navController = LocalNavController.current
-    val set = viewModel.setFlow
+    val set by viewModel.setFlow.collectAsState()
     val comments by viewModel.commentsFlow.collectAsState()
     // DataStore
     val dataStore = DataStore(LocalContext.current)
@@ -63,10 +63,10 @@ fun CommentsScreen(setId: String, viewModel: CommentsViewModel = hiltViewModel()
                     .background(Primary)
                     .animateContentSize()
             ) {
-                when (set.size) {
-                    0 -> Loading()
+                when (val s = set) {
+                    null -> Loading()
                     else -> AnimatedVisibility(!hideSetState.value) {
-                        SetTabCard(set[0], set[0].from != nickname, disableComments = true, disableSettings = false) { s ->
+                        SetTabCard(s, s.from != nickname, disableComments = true, disableSettings = false) { s ->
                             delete.showDelete("Сет") { viewModel.deleteSet(s) }
                         }
                     }
@@ -104,17 +104,15 @@ fun CommentsScreen(setId: String, viewModel: CommentsViewModel = hiltViewModel()
                         }}
                     )
                 }
-                when (set.size) {
-                    0 -> Loading()
+                when (val s = set) {
+                    null -> Loading()
                     else -> SendForm(txt) {
                         if (txt.value.isNotEmpty() && isSign) {
                             if (!isEdit.value) {
-                                viewModel.sendComment(
-                                    Comment(
-                                        set = set[0].id, from = nickname,
-                                        text = txt.value, date = nowTimeFormat()
-                                    )
-                                )
+                                viewModel.sendComment(Comment(
+                                    set = s.id, from = nickname,
+                                    text = txt.value, date = nowTimeFormat()
+                                ))
                             } else {
                                 isEdit.value = false
                                 viewModel.updateComment(editComment.value!!.copy(text = txt.value))

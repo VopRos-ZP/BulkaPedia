@@ -38,7 +38,7 @@ fun SelectGearScreen(
     gearsState: MutableState<Map<GearCell, Gear>>,
     viewModel: SelectGearViewModel
 ) {
-    val gears = viewModel._gears
+    val gears = viewModel.gears
     SelectGearFragment(gears, showSelectGears, cellState.value, gearsState)
     DisposableEffect(cellState) {
         viewModel.fetchGears(cellState.value, hero)
@@ -154,8 +154,8 @@ fun SelectRankGear(
         val list = gear.getRankEffect().toList()
         items(list) {
             SelectRankGearItem(it.first, it.second, state) { newEff ->
-                gear.effects = newEff
-                onClick.invoke(gear)
+                val newGear = gear.copy(effects = newEff)
+                onClick(newGear)
             }
         }
     }

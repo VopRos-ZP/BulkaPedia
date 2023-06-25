@@ -1,7 +1,5 @@
 package com.bulkapedia.compose.screens.comments
 
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bulkapedia.compose.data.repos.comments.Comment
@@ -12,7 +10,7 @@ import com.bulkapedia.compose.data.toDateTime
 import com.google.firebase.firestore.ListenerRegistration
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
@@ -23,18 +21,18 @@ class CommentsViewModel @Inject constructor(
     private val commentsRepository: CommentsRepository
 ) : ViewModel() {
 
-    val setFlow: SnapshotStateList<UserSet> = mutableStateListOf()
+    private val _setFlow = MutableStateFlow<UserSet?>(null)
+    val setFlow = _setFlow.asStateFlow()
 
-    private val _commentsFlow: MutableStateFlow<List<Comment>> = MutableStateFlow(emptyList())
-    val commentsFlow: StateFlow<List<Comment>> = _commentsFlow
+    private val _commentsFlow = MutableStateFlow<List<Comment>>(emptyList())
+    val commentsFlow = _commentsFlow.asStateFlow()
 
     private var setListener: ListenerRegistration? = null
     private var commentsListener: ListenerRegistration? = null
 
     fun addListener(setId: String) {
         setListener = setsRepository.fetchAll { allSets ->
-            setFlow.clear()
-            setFlow.add(allSets.find { it.id == setId } ?: UserSet.EMPTY)
+            viewModelScope.launch { _setFlow.emit(allSets.find { it.id == setId }) }
         }
         commentsListener = commentsRepository.fetchAll { allComments ->
             val filtered = allComments
@@ -49,15 +47,15 @@ class CommentsViewModel @Inject constructor(
     }
 
     fun updateComment(comment: Comment) {
-        commentsRepository.update(comment)
+        viewModelScope.launch { commentsRepository.update(comment).await() }
     }
 
     fun deleteSet(set: UserSet) {
-        setsRepository.delete(set)
+        viewModelScope.launch { setsRepository.delete(set).await() }
     }
 
     fun deleteComment(comment: Comment) {
-        commentsRepository.delete(comment)
+        viewModelScope.launch { commentsRepository.delete(comment).await() }
     }
 
     fun dispose() {

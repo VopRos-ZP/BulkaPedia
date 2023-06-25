@@ -3,10 +3,14 @@ package com.bulkapedia.compose.screens.top
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.bulkapedia.compose.data.repos.sets.SetsRepository
 import com.bulkapedia.compose.data.repos.sets.UserSet
 import com.google.firebase.firestore.ListenerRegistration
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -15,7 +19,9 @@ class TopViewModel @Inject constructor(
 ) : ViewModel() {
 
     val sets: SnapshotStateList<UserSet> = mutableStateListOf()
-    val set: SnapshotStateList<UserSet?> = mutableStateListOf(null)
+
+    private val _setFlow = MutableStateFlow<UserSet?>(null)
+    val setFlow = _setFlow.asStateFlow()
 
     private var setsListener: ListenerRegistration? = null
     private var listener: ListenerRegistration? = null
@@ -33,14 +39,12 @@ class TopViewModel @Inject constructor(
     }
 
     fun closeSet() {
-        set.clear()
-        set.add(null)
+        viewModelScope.launch { _setFlow.emit(null) }
     }
 
     fun listenSet(setId: String) {
         listener = setsRepository.fetchAll { allSets ->
-            set.clear()
-            set.add(allSets.find { it.id == setId } ?: UserSet.EMPTY)
+            viewModelScope.launch { _setFlow.emit(allSets.find { it.id == setId }) }
         }
     }
 

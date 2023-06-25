@@ -60,7 +60,7 @@ fun CreateSetScreen(
     val set by viewModel.setFlow.collectAsState()
     when (val hero = heroState.value) {
         null -> Loading()
-        else -> CreateSetFragment(hero, set.apply { from = nickname }, viewModel)
+        else -> CreateSetFragment(hero, set.copy(from = nickname), viewModel)
     }
     DisposableEffect(null) {
         viewModel.fetchData(heroId, setId)

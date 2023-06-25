@@ -32,8 +32,8 @@ class SetTabViewModel @Inject constructor(
                     true -> ids.remove(email)
                     else -> ids.add(email)
                 }
-                set.userLikeIds = ids.distinct()
-                updateSet(set)
+                val newSet = set.copy(userLikeIds = ids.distinct())
+                updateSet(newSet)
             }
         } else {
             onError("Чтобы поставить лайк, надо зарегистрироватся!")

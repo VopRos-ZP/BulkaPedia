@@ -1,6 +1,5 @@
 package com.bulkapedia.compose.data.repos.sets
 
-import androidx.compose.runtime.Stable
 import com.bulkapedia.compose.data.Entity
 import com.google.firebase.firestore.DocumentSnapshot
 import kotlinx.serialization.Serializable
@@ -8,10 +7,10 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class UserSet(
     private var userSetId: String = "",
-    var from: String,
+    val from: String,
     val hero: String,
-    var gears: Map<GearCell, String>,
-    var userLikeIds: List<String>
+    val gears: Map<GearCell, String>,
+    val userLikeIds: List<String>
 ): Entity() {
 
     override var id: String
@@ -48,8 +47,11 @@ data class UserSet(
                     GearCell.ARM to getString("arm")!!, GearCell.LEG to getString("leg")!!,
                     GearCell.DECOR to getString("decor")!!, GearCell.DEVICE to getString("device")!!,
                 )
-                val ids = get("user_like_ids") as List<String>
-                UserSet(id, getString("author")!!, getString("hero")!!, gears, ids)
+                UserSet(id,
+                    get("author") as String,
+                    get("hero") as String, gears,
+                    (get("user_like_ids") as List<String>).distinct()
+                )
             } catch (_:Exception) { null }
         }
     }

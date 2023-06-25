@@ -38,7 +38,7 @@ fun TopScreen(hero: String, viewModel: TopViewModel = hiltViewModel()) {
     val store = DataStore(LocalContext.current)
     val nickname by store.getNickname.collectAsState("")
     val sets = viewModel.sets
-    val currentSet = viewModel.set[0]
+    val currentSet by viewModel.setFlow.collectAsState()
 
     ScreenView(title = "Топ 100", showBack = true) {
         TopModalSheet(currentSet, nickname, viewModel::closeSet) { CenteredBox {
@@ -142,9 +142,6 @@ fun TopModalSheet(
         sheetElevation = 10.dp
     ) {
         content()
-        LaunchedEffect(set) {
-            println("changed -> $set")
-            if (set != null) { sheetState.show() }
-        }
+        LaunchedEffect(set) { if (set != null) { sheetState.show() } }
     }
 }

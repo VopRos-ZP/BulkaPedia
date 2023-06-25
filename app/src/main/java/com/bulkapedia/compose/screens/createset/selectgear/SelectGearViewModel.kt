@@ -18,7 +18,7 @@ class SelectGearViewModel @Inject constructor(
     private val gearsRepository: GearsRepository
 ) : ViewModel() {
 
-    val _gears: SnapshotStateList<Gear> = mutableStateListOf()
+    val gears: SnapshotStateList<Gear> = mutableStateListOf()
 
     private var listener: ListenerRegistration? = null
 
@@ -30,16 +30,16 @@ class SelectGearViewModel @Inject constructor(
                 .filter { it.gearSet == fetchGearTypeByHeroType(hero.type) }
             val personal = allGS
                 .filter { it.gearSet == GearSet.PERSONAL.name }
-                .filter { hero.personalGears[cell.name.lowercase()]!! == it.name }
-            val gears = (defaultGears + setsGears + personal)
+                .filter { hero.personalGears[cell.name.lowercase()]!! == it.id }
+            val heroGears = (defaultGears + setsGears + personal)
                 .toMutableList().apply {
-                    val index = indexOfFirst { it.name.contains("empty") }
+                    val index = indexOfFirst { it.id.contains("empty") }
                     val g = this[index]
                     removeAt(index)
                     add(0, g)
                 }
-            _gears.clear()
-            _gears.addAll(gears)
+            gears.clear()
+            gears.addAll(heroGears)
         }
     }
 
