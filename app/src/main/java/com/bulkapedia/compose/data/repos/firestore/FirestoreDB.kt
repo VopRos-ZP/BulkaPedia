@@ -11,7 +11,7 @@ class FirestoreDB {
         val sets = getCollection("sets")
         val comments = getCollection("comments")
         val categories = getCollection("categories")
-        val messages = getCollection("messages") // chat
+        val messages = getCollection("chat") // chat
         val gears = getCollection("gears")
         val heroInfo = getCollection("heroInfo")
         val mechanics = getCollection("mechanics")
