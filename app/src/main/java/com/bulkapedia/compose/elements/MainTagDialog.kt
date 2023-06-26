@@ -1,4 +1,3 @@
-@file:Suppress("FunctionName")
 package com.bulkapedia.compose.elements
 
 import androidx.compose.foundation.BorderStroke
@@ -22,7 +21,7 @@ import androidx.compose.ui.window.Dialog
 import com.bulkapedia.compose.ui.theme.PrimaryDark
 import com.bulkapedia.compose.ui.theme.Teal200
 import com.bulkapedia.compose.util.HCenteredBox
-import com.bulkapedia.compose.data.labels.Stats
+import com.bulkapedia.compose.data.repos.stats.Stats
 
 @Composable
 fun MainTagDialog(
@@ -86,10 +85,10 @@ fun MainTagDialog(
                 }
                 InRowOutlinedButton(text = "Сохранить", color = Color.Green) {
                     action.show.value = false
-                    onSave.invoke( hero.value,
+                    onSave.invoke(hero.value,
                         Stats(
                             kills = kills.value.toInt(),
-                            winrate = winrate.value.toInt(),
+                            winrate = winrate.value.toDouble(),
                             revives = revives.value.toInt()
                         )
                     )

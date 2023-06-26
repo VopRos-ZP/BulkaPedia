@@ -34,6 +34,7 @@ import com.bulkapedia.compose.util.VCenteredBox
 import com.bulkapedia.compose.util.clickable
 import com.bulkapedia.compose.data.repos.sets.GearCell
 import com.bulkapedia.compose.data.repos.sets.UserSet
+import com.bulkapedia.compose.elements.anims.AnimatedNumber
 import com.bulkapedia.compose.util.stringToResource
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
@@ -68,7 +69,9 @@ fun SetTabCard(
 ) {
     val dp = 75.dp
     SetCard(set, see, disableComments, disableSettings, onDelete, dp, dp) {
-        Box(modifier = Modifier.fillMaxWidth().height(dp)) {
+        Box(modifier = Modifier
+            .fillMaxWidth()
+            .height(dp)) {
             CenteredBox { Text(text = set.from, color = Teal200) }
         }
     }
@@ -130,8 +133,8 @@ fun SetCard(
                                     tint = Color.Red
                                 )
                             }
-                            VCenteredBox (Modifier.size(40.dp)) {
-                                Text(text = "${set.userLikeIds.size}", color = Teal200)
+                            VCenteredBox(Modifier.size(40.dp)) {
+                                AnimatedNumber(targetState = set.userLikeIds.size)
                             }
                         }
                     }

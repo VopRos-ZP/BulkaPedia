@@ -2,6 +2,7 @@ package com.bulkapedia.compose.screens.dashboard.tabs
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -18,9 +19,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.bulkapedia.compose.DataStore
 import com.bulkapedia.compose.data.repos.database.User
 import com.bulkapedia.compose.data.repos.sets.UserSet
 import com.bulkapedia.compose.elements.ITabRow
@@ -42,16 +45,20 @@ fun UsersSetsScreen(viewModel: UsersSetsViewModel = hiltViewModel()) {
     val pagerState = rememberPagerState()
     val users by viewModel.usersFlow.collectAsState()
     val sets by viewModel.setsFlow.collectAsState()
-    // Search
+    val mains by viewModel.mainsFlow.collectAsState()
+
+    val email by DataStore(LocalContext.current).getEmail.collectAsState("")
+
     val searchText = remember { mutableStateOf("") }
     ScreenView(title = "Пользователи и сеты", showBack = true) {
         ScreenWithDelete { action ->
-            ScreenWithTagDialog { tagAction ->
-                Column (
+            ScreenWithTagDialog({ hero, stats -> viewModel.addMain("$email $hero", stats) }) { tagAction ->
+                Column(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(vertical = 20.dp)
-                        .background(Primary)
+                        .padding(top = 20.dp)
+                        .background(Primary),
+                    verticalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
                     SearchView(searchText)
                     ITabRow(pagerState = pagerState) {
@@ -79,9 +86,9 @@ fun UsersSetsScreen(viewModel: UsersSetsViewModel = hiltViewModel()) {
                     ) { page ->
                         when (page) {
                             0 -> UsersRecycler(
-                                filterUsersList(searchText, users), tagAction
-                            ) { hero, user -> action.showDelete("мейн героя") {
-                                viewModel.removeMainsHero(user, hero)
+                                filterUsersList(searchText, users), mains, tagAction
+                            ) { stats -> action.showDelete("мейн героя") {
+                                viewModel.removeMainsHero(stats)
                             } }
                             1 -> SetsRecycler(filterSetsList(searchText, sets)) { s ->
                                 action.showDelete("сет") { viewModel.removeUserSet(s) }

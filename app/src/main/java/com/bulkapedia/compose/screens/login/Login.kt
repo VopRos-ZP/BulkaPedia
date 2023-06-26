@@ -18,6 +18,7 @@ import com.bulkapedia.compose.util.clickable
 import com.bulkapedia.compose.DataStore
 import com.bulkapedia.compose.elements.*
 import com.bulkapedia.compose.navigation.ToFORGOT_PASSWORD
+import com.bulkapedia.compose.navigation.ToHEROES
 import com.bulkapedia.compose.navigation.ToPROFILE
 import com.bulkapedia.compose.navigation.ToSETTINGS
 import com.bulkapedia.compose.navigation.ToSIGN_IN
@@ -31,7 +32,8 @@ fun LoginNav() {
     Navigation(startDestination = Destinations.SING_IN, screens = listOf(
         ToSETTINGS, ToFORGOT_PASSWORD,
         ToSIGN_IN, ToSIGN_UP,
-        ToPROFILE, ToVISIT
+        ToPROFILE, ToVISIT,
+        ToHEROES
     ))
 }
 
@@ -48,7 +50,7 @@ fun Login(viewModel: LoginViewModel = hiltViewModel()) {
             LoginPage(
                 onLoginClick = { email, password ->
                     viewModel.login(email, password) { u ->
-                        navController.navigate("${Destinations.PROFILE}/${u.email}")
+                        navController.navigate(Destinations.HEROES)
                         scope.launch {
                             store.saveEmail(u.email)
                             store.saveSign(true)

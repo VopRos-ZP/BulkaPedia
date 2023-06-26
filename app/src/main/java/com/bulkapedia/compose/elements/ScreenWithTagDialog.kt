@@ -1,4 +1,3 @@
-@file:Suppress("FunctionName")
 package com.bulkapedia.compose.elements
 
 import androidx.compose.animation.AnimatedVisibility
@@ -6,10 +5,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import com.bulkapedia.compose.data.repos.database.User
+import com.bulkapedia.compose.data.repos.stats.Stats
 import com.bulkapedia.compose.util.CenteredBox
 
 @Composable
 fun ScreenWithTagDialog(
+    onSave: (String, Stats) -> Unit = { _, _ -> },
     content: @Composable (ScreenAction.AddTagAction) -> Unit
 ) {
     // if change main data
@@ -24,9 +25,7 @@ fun ScreenWithTagDialog(
     CenteredBox {
         content.invoke(action)
         AnimatedVisibility(show.value) {
-            MainTagDialog(action) { h, s ->
-
-            }
+            MainTagDialog(action, onSave)
         }
     }
 }

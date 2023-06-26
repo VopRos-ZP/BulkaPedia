@@ -20,6 +20,8 @@ import com.bulkapedia.compose.data.repos.messages.MessagesRepository
 import com.bulkapedia.compose.data.repos.messages.MessagesRepositoryImpl
 import com.bulkapedia.compose.data.repos.sets.SetsRepository
 import com.bulkapedia.compose.data.repos.sets.SetsRepositoryImpl
+import com.bulkapedia.compose.data.repos.stats.StatsRepository
+import com.bulkapedia.compose.data.repos.stats.StatsRepositoryImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -40,6 +42,10 @@ class RepositoryModule {
     /**
      * Firebase Firestore
      * **/
+    @Provides
+    @Singleton
+    fun provideStatsRepository(): StatsRepository = StatsRepositoryImpl()
+
     @Provides
     @Singleton
     fun provideHeroesRepository(): HeroesRepository = HeroesRepositoryImpl()

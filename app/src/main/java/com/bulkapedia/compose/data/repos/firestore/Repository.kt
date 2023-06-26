@@ -7,7 +7,7 @@ import com.google.firebase.firestore.ListenerRegistration
 
 interface Repository<T : Entity> {
     fun fetchAll(onSuccess: (List<T>) -> Unit): ListenerRegistration
-    fun create(t: T): Task<DocumentReference>
+    fun create(t: T, id: String? = null): Task<Void>
     fun update(t: T): Task<Void>
     fun delete(t: T): Task<Void>
 }

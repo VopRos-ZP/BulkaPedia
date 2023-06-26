@@ -16,8 +16,12 @@ open class FirestoreRepository<T : Entity>(
         return addListener(onSuccess)
     }
 
-    override fun create(t: T): Task<DocumentReference> {
-        return collection.add(t.toData())
+    override fun create(t: T, id: String?): Task<Void> {
+        var doc = collection.document()
+        if (id != null) {
+            doc = collection.document(id)
+        }
+        return doc.set(t.toData())
     }
 
     override fun update(t: T): Task<Void> {

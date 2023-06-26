@@ -1,8 +1,6 @@
-@file:Suppress("FunctionName")
 package com.bulkapedia.compose.elements
 
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -30,7 +28,6 @@ fun SearchView(state: MutableState<String>) {
         },
         modifier = Modifier
             .fillMaxWidth()
-            .height(50.dp)
             .padding(horizontal = 20.dp),
         leadingIcon = {
             Icon(

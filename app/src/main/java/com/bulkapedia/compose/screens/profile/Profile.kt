@@ -1,17 +1,19 @@
 package com.bulkapedia.compose.screens.profile
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.snapshots.SnapshotStateList
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.SpanStyle
@@ -20,7 +22,6 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavType
@@ -32,9 +33,11 @@ import com.bulkapedia.compose.ui.theme.*
 import com.bulkapedia.compose.util.CenteredBox
 import com.bulkapedia.compose.util.VCenteredBox
 import com.bulkapedia.compose.util.clickable
-import com.bulkapedia.compose.data.labels.Stats
+import com.bulkapedia.compose.data.repos.stats.Stats
 import com.bulkapedia.compose.data.repos.sets.UserSet
 import com.bulkapedia.compose.data.repos.database.User
+import com.bulkapedia.compose.elements.mains.MainsRecycler
+import com.bulkapedia.compose.elements.sheets.ClosableModalBottomSheet
 import com.bulkapedia.compose.navigation.ToCATEGORY_MANAGE
 import com.bulkapedia.compose.navigation.ToCOMMENTS
 import com.bulkapedia.compose.navigation.ToCREATE_SET
@@ -55,7 +58,7 @@ fun ProfileListNav(startDestination: String, dEmail: String) {
     Navigation(startDestination, screens = listOf(
         NavigationScreen(startDestination,
             listOf(navArg("email", NavType.StringType, dEmail))) { args ->
-            Profile(args?.getString("email")!!, hiltViewModel()) }, ToSETTINGS,
+            Profile(args?.getString("email")!!) }, ToSETTINGS,
             ToSIGN_IN, ToDASHBOARD, ToCOMMENTS,
             ToVISIT, ToCREATE_SET, ToDEV_CHAT,
             ToCATEGORY_MANAGE, ToUSERS_SETS, ToMANAGE_HEROES_INFO,
@@ -64,38 +67,53 @@ fun ProfileListNav(startDestination: String, dEmail: String) {
 }
 
 @Composable
-fun Profile(email: String, viewModel: ProfileViewModel = hiltViewModel()) {
-    val userState = viewModel.userFlow.collectAsState()
-    when (val user = userState.value) {
-        null -> Loading()
-        else -> ProfileScreen(user, viewModel)
-    }
-    DisposableEffect(null) {
-        viewModel.fetchUser { it.email == email }
-        onDispose { viewModel.removeListener() }
-    }
-}
+fun Profile(email: String) { ProfileSheet { it.email == email } }
 
 @Composable
-fun VisitProfileScreen(nickname: String, viewModel: ProfileViewModel) {
+fun VisitProfileScreen(nickname: String) { ProfileSheet(true) { it.nickname == nickname } }
+
+@Composable
+fun ProfileSheet(
+    visit: Boolean = false,
+    viewModel: ProfileViewModel = hiltViewModel(),
+    by: (User) -> Boolean
+) {
     val userState = viewModel.userFlow.collectAsState()
-    when (val user = userState.value) {
-        null -> Loading()
-        else -> ProfileScreen(user, viewModel, true)
+    val mainStat = remember { mutableStateOf<Stats?>(null) }
+
+    ClosableModalBottomSheet(
+        sheetContent = { when (val stat = mainStat.value) {
+            null -> CenteredBox { Text(text = "") }
+            else -> ShowMainSheet(stat)
+        } },
+        key = mainStat.value,
+        onClose = { mainStat.value = null }
+    ) {
+        when (val user = userState.value) {
+            null -> Loading()
+            else -> ProfileScreen(user, viewModel, visit, mainStat) {  }
+        }
     }
     DisposableEffect(null) {
-        viewModel.fetchUser { it.nickname == nickname }
+        viewModel.fetchUser(by)
         onDispose { viewModel.removeListener() }
     }
 }
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun ProfileScreen(user: User, viewModel: ProfileViewModel, visit: Boolean = false) {
-    val setsState = viewModel.userSetsFlow.collectAsState()
+fun ProfileScreen(
+    user: User,
+    viewModel: ProfileViewModel = hiltViewModel(),
+    visit: Boolean = false,
+    selected: MutableState<Stats?>,
+    onItemClick: (Stats) -> Unit
+) {
+    val sets = viewModel.userSets
+    val mains = viewModel.userMains
     val scope = rememberCoroutineScope()
     val pagerState = rememberPagerState()
-    val showMainStat = remember { mutableStateOf<Stats?>(null) }
+
     val tabs = if (visit) {
         listOf(ProfileTab(title = "Cеты") { set -> set.from == user.nickname })
     } else {
@@ -106,17 +124,16 @@ fun ProfileScreen(user: User, viewModel: ProfileViewModel, visit: Boolean = fals
     }
 
     ScreenView(title = user.nickname, showBack = visit) {
-        Column(modifier = Modifier.fillMaxSize()) {
+        Column(
+            modifier = Modifier.fillMaxSize().padding(top = 20.dp),
+            verticalArrangement = Arrangement.spacedBy(10.dp)
+        ) {
             // 1) mains
-            if (user.mains != null && user.mains?.isNotEmpty() == true) {
-                MainsRecycler(mains = user.mains!!, showMainStat.value != null) { stats ->
-                    if (showMainStat.value == stats)
-                        showMainStat.value = null
-                    else showMainStat.value = stats
-                }
+            AnimatedVisibility(mains.isNotEmpty()) {
+                MainsRecycler(mains, selected, onItemClick)
             }
             // Tabs
-            ITabRow(pagerState, marginTop = 10.dp) {
+            ITabRow(pagerState) {
                 tabs.mapIndexed { i, tabItem ->
                     Tab(
                         modifier = Modifier.zIndex(2f),
@@ -140,45 +157,11 @@ fun ProfileScreen(user: User, viewModel: ProfileViewModel, visit: Boolean = fals
             HorizontalPager(
                 pageCount = tabs.size,
                 state = pagerState
-            ) {
-                when (val sets = setsState.value) {
-                    emptyList<UserSet>() -> CenteredBox {
-                        Text(text = "Список пуст...", color = Teal200)
-                    }
-                    else -> SetsRecycler(sets, visit, it == 1, viewModel)
+            ) { page ->
+                when {
+                    sets.isEmpty() -> CenteredBox { Text(text = "Список пуст...", color = Teal200) }
+                    else -> SetsRecycler(sets, visit, page == 1, viewModel)
                 }
-            }
-        }
-    }
-    val isShowMainStat = remember { mutableStateOf(false) }
-
-    if (isShowMainStat.value && showMainStat.value != null) {
-        CenteredBox {
-            Dialog(onDismissRequest = { isShowMainStat.value = false }) {
-                Text(
-                    text = buildAnnotatedString {
-                        val stat = showMainStat.value!!
-                        append("Килы: ")
-                        withStyle(SpanStyle(color = Color.White, fontStyle = FontStyle.Italic)) {
-                            append("${stat.kills}\n")
-                        }
-                        append("Процент побед: ")
-                        withStyle(SpanStyle(color = Color.White, fontStyle = FontStyle.Italic)) {
-                            append("${stat.winrate}\n")
-                        }
-                        append("Герой воскресил: ")
-                        withStyle(SpanStyle(color = Color.White, fontStyle = FontStyle.Italic)) {
-                            append("${stat.revives}")
-                        }
-                    },
-                    color = Teal200,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier
-                        .background(PrimaryDark, RoundedCornerShape(20.dp))
-                        .border(1.dp, Teal200, RoundedCornerShape(20.dp))
-                        .padding(20.dp)
-                        .clickable { isShowMainStat.value = false }
-                )
             }
         }
     }
@@ -191,31 +174,12 @@ fun ProfileScreen(user: User, viewModel: ProfileViewModel, visit: Boolean = fals
         viewModel.filterSets(tabs[0].onClick)
         onDispose { viewModel.removeListener() }
     }
-}
-
-@Composable
-fun MainsRecycler(mains: Map<String, Stats>, isSelected: Boolean, onItemClick: (Stats) -> Unit) {
-    LazyRow (
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(top = 10.dp)
-    ) {
-        mains.map { main ->
-            item {
-                MainsItem(
-                    Pair(main.key, main.value), isSelected,
-                    isStart = (mains.keys.first() == main.key),
-                    isEnd = (mains.keys.last() == main.key),
-                    onItemClick
-                )
-            }
-        }
-    }
+    LaunchedEffect(null) { viewModel.fetchMains(user.email) }
 }
 
 @Composable
 fun SetsRecycler(
-    sets: List<UserSet>,
+    sets: SnapshotStateList<UserSet>,
     visit: Boolean = false,
     isShowLiked: Boolean = true,
     viewModel: ProfileViewModel
@@ -223,19 +187,19 @@ fun SetsRecycler(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Primary)
+            .background(Primary),
+        contentAlignment = Alignment.TopCenter
     ) {
         ScreenWithDelete { delete ->
             LazyColumn (
                 modifier = Modifier
                     .fillMaxHeight()
                     .background(Color.Transparent),
+                verticalArrangement = Arrangement.spacedBy(0.dp)
             ) {
                 items(sets) { set ->
                     SetInProfileCard(set, visit || isShowLiked, disableSettings = visit) { s ->
-                        delete.showDelete("сет") {
-                            viewModel.deleteSet(s)
-                        }
+                        delete.showDelete("сет") { viewModel.deleteSet(s) }
                     }
                 }
             }
@@ -247,6 +211,33 @@ data class ProfileTab(
     val title: String,
     val onClick: (UserSet) -> Boolean
 )
+
+@Composable
+fun ShowMainSheet(stats: Stats) {
+    OutlinedCard(modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp),) {
+        Text(
+            text = buildAnnotatedString {
+                append("Килы: ")
+                withStyle(SpanStyle(color = Color.White, fontStyle = FontStyle.Italic)) {
+                    append("${stats.kills}\n")
+                }
+                append("Процент побед: ")
+                withStyle(SpanStyle(color = Color.White, fontStyle = FontStyle.Italic)) {
+                    append("${stats.winrate}%\n")
+                }
+                append("Герой воскресил: ")
+                withStyle(SpanStyle(color = Color.White, fontStyle = FontStyle.Italic)) {
+                    append("${stats.revives}")
+                }
+            },
+            color = Teal200,
+            textAlign = TextAlign.Center,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(20.dp)
+        )
+    }
+}
 
 @Composable
 fun MainsItem(

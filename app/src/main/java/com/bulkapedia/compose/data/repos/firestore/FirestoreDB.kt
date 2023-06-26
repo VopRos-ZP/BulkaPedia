@@ -11,10 +11,11 @@ class FirestoreDB {
         val sets = getCollection("sets")
         val comments = getCollection("comments")
         val categories = getCollection("categories")
-        val messages = getCollection("chat") // chat
+        val messages = getCollection("chat")
         val gears = getCollection("gears")
         val heroInfo = getCollection("heroInfo")
         val mechanics = getCollection("mechanics")
+        val mains = getCollection("mains")
 
         private fun getCollection(path: String) = Firebase.firestore.collection(path)
     }

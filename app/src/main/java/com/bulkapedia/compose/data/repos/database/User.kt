@@ -1,6 +1,5 @@
 package com.bulkapedia.compose.data.repos.database
 
-import com.bulkapedia.compose.data.labels.Stats
 import com.bulkapedia.compose.data.nowTimeFormat
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.Exclude
@@ -14,11 +13,10 @@ data class User(
     @PropertyName("password") var password: String,
     @PropertyName("nickname") var nickname: String,
     @PropertyName("updateEmail") var updateEmail: String = nowTimeFormat(),
-    @PropertyName("updateNickname") var updateNickname: String = nowTimeFormat(),
-    @PropertyName("mains") var mains: MutableMap<String, Stats>? = null
+    @PropertyName("updateNickname") var updateNickname: String = nowTimeFormat()
 ) {
 
-    constructor() : this("", "", "", "", "", "", null)
+    constructor() : this("", "", "", "", "", "")
 
     companion object {
 

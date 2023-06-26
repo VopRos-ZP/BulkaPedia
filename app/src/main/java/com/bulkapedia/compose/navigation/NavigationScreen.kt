@@ -100,12 +100,12 @@ val ToCOMMENTS = NavigationScreen("${Destinations.COMMENTS}/{set}",
 
 val ToVISIT = NavigationScreen("${Destinations.VISIT_PROFILE}/{nickname}",
     listOf(navArg("nickname", NavType.StringType))) { args ->
-    VisitProfileScreen(args?.getString("nickname")!!, hiltViewModel())
+    VisitProfileScreen(args?.getString("nickname")!!)
 }
 
 val ToPROFILE = NavigationScreen("${Destinations.PROFILE}/{email}",
     listOf(navArg("email", NavType.StringType))) { args ->
-    Profile(args?.getString("email")!!, hiltViewModel())
+    Profile(args?.getString("email")!!)
 }
 
 val ToCREATE_SET = NavigationScreen("${Destinations.CREATE_SET}/{hero}/{nickname}?setId={setId}",

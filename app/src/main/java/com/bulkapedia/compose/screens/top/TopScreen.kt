@@ -6,10 +6,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.ModalBottomSheetLayout
-import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.Text
-import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.runtime.*
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
@@ -28,9 +25,8 @@ import com.bulkapedia.compose.util.HCenteredBox
 import com.bulkapedia.compose.data.repos.sets.UserSet
 import com.bulkapedia.compose.DataStore
 import com.bulkapedia.compose.elements.OutlinedCard
+import com.bulkapedia.compose.elements.sheets.ClosableModalBottomSheet
 import com.bulkapedia.compose.screens.titled.ScreenView
-import com.bulkapedia.compose.ui.theme.PrimaryDark
-import kotlinx.coroutines.launch
 
 @Composable
 fun TopScreen(hero: String, viewModel: TopViewModel = hiltViewModel()) {
@@ -41,9 +37,18 @@ fun TopScreen(hero: String, viewModel: TopViewModel = hiltViewModel()) {
     val currentSet by viewModel.setFlow.collectAsState()
 
     ScreenView(title = "Топ 100", showBack = true) {
-        TopModalSheet(currentSet, nickname, viewModel::closeSet) { CenteredBox {
-            TopSets(sets) { viewModel.listenSet(it.id) }
-        } }
+        ClosableModalBottomSheet(
+            sheetContent = {
+                when (val set = currentSet) {
+                    null -> HCenteredBox { Text(text = "") }
+                    else -> SetTabCard(set, set.from != nickname) {}
+                }
+            }, currentSet, viewModel::closeSet
+        ) {
+            CenteredBox {
+                TopSets(sets) { viewModel.listenSet(it.id) }
+            }
+        }
     }
     DisposableEffect(null) {
         viewModel.fetchSets(hero)
@@ -90,58 +95,5 @@ fun TopItem(i: Int, set: UserSet, onClick: () -> Unit) {
             modifier = Modifier.padding(end = 20.dp)
         )
         DarkButton(id = R.drawable.book, Modifier.padding(start = 10.dp), onClick)
-    }
-}
-
-@Composable
-fun ShowTopSet(set: UserSet, nickname: String, onClose: () -> Unit) {
-    HCenteredBox {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(10.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            com.bulkapedia.compose.elements.OutlinedButton(
-                text = "Закрыть", color = Color.Red, onClick = onClose
-            )
-            SetTabCard(set, set.from != nickname) {}
-        }
-    }
-}
-
-@OptIn(ExperimentalMaterialApi::class)
-@Composable
-fun TopModalSheet(
-    set: UserSet?,
-    nickname: String,
-    onClose: () -> Unit,
-    content: @Composable () -> Unit
-) {
-    val sheetState = rememberModalBottomSheetState(
-        initialValue = ModalBottomSheetValue.Hidden,
-        skipHalfExpanded = true,
-        confirmValueChange = {
-            if (it == ModalBottomSheetValue.Hidden) { onClose() }
-            true
-        }
-    )
-    val scope = rememberCoroutineScope()
-
-    ModalBottomSheetLayout(
-        sheetContent = { when (set) {
-            null -> HCenteredBox { Text(text = "") }
-            else -> ShowTopSet(set, nickname) {
-                scope.launch { sheetState.hide() }
-                onClose()
-            }
-        } },
-        sheetState = sheetState,
-        sheetShape = RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp),
-        sheetBackgroundColor = PrimaryDark,
-        sheetElevation = 10.dp
-    ) {
-        content()
-        LaunchedEffect(set) { if (set != null) { sheetState.show() } }
     }
 }

@@ -15,7 +15,7 @@ import com.bulkapedia.compose.ui.theme.PrimaryDark
 import com.bulkapedia.compose.ui.theme.Teal200
 import com.bulkapedia.compose.data.repos.sets.UserSet
 import com.bulkapedia.R
-import com.bulkapedia.compose.data.labels.Stats
+import com.bulkapedia.compose.data.repos.stats.Stats
 
 @Composable
 fun SetSettingsMenu(
