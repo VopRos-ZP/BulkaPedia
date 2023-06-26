@@ -15,8 +15,8 @@ android {
         applicationId = "com.bulkapedia"
         minSdk = 26
         targetSdk = 33
-        versionCode = 35
-        versionName = "0.3.5"
+        versionCode = 36
+        versionName = "0.3.6"
         vectorDrawables {
             useSupportLibrary = true
         }
