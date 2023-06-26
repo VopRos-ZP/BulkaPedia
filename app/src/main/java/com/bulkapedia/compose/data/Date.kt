@@ -1,5 +1,6 @@
 package com.bulkapedia.compose.data
 
+import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -14,8 +15,8 @@ fun nowTimeFormat(): String = now().format(timeFormat)
 
 fun nowYearFormat(): String = now().format(yearFormat)
 
-fun String.toYearDate(): LocalDateTime {
-    return LocalDateTime.parse(this, yearFormat)
+fun String.toYearDate(): LocalDate {
+    return LocalDate.parse(this, yearFormat)
 }
 
 fun String.toDateTime(): LocalDateTime {

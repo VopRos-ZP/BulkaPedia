@@ -45,8 +45,9 @@ fun SettingsScreen(viewModel: SettingsViewModel = hiltViewModel()) {
     // store
     val context = LocalContext.current
     val store = DataStore(context)
-    val nickname = store.getNickname.collectAsState("")
-    val signStore = store.getSign.collectAsState(false)
+    val nickname by store.getNickname.collectAsState("")
+    val email by store.getEmail.collectAsState("")
+    val signStore by store.getSign.collectAsState(false)
     val scope = rememberCoroutineScope()
     // Change value dialog arguments
     val showChange = remember { mutableStateOf(false) }
@@ -60,7 +61,7 @@ fun SettingsScreen(viewModel: SettingsViewModel = hiltViewModel()) {
         changeValue.value, changeOnSave
     )) }
 
-    val user by viewModel.userFlow.collectAsState()
+    val user = viewModel.user[0]
     ScreenView(title = "Настройки", showBack = true) {
         // перейти потом на LazyColumn!!! Когда блоков будет много
         TextSnackbar { action ->
@@ -71,13 +72,13 @@ fun SettingsScreen(viewModel: SettingsViewModel = hiltViewModel()) {
                         .background(Primary)
                 ) {
                     SettingBlock(title = stringResource(id = R.string.account)) {
-                        if (nickname.value == ADMIN_NICKNAME && signStore.value) {
+                        if (nickname == ADMIN_NICKNAME && signStore) {
                             OutlinedButton(
                                 text = "Доска управления",
                                 marginStart = 40.dp,
                                 marginEnd = 40.dp,
                                 marginBottom = 0.dp,
-                                enabled = nickname.value == ADMIN_NICKNAME,
+                                enabled = true,
                                 color = Color.Yellow
                             ) { navController.navigate(Destinations.DASHBOARD) }
                         }
@@ -88,8 +89,8 @@ fun SettingsScreen(viewModel: SettingsViewModel = hiltViewModel()) {
                             marginBottom = 0.dp,
                             color = Color.Yellow
                         ) {
-                            if (signStore.value && user != null) {
-                                change.value = viewModel.changeEmail(user!!, change.value) {
+                            if (signStore && user != null) {
+                                change.value = viewModel.changeEmail(user, change.value) {
                                     store.saveEmail(it.email)
                                 }
                                 showChange.value = true
@@ -106,8 +107,8 @@ fun SettingsScreen(viewModel: SettingsViewModel = hiltViewModel()) {
                             marginBottom = 0.dp,
                             color = Color.Yellow
                         ) {
-                            if (signStore.value && user != null) {
-                                change.value = viewModel.changeNickname(user!!, change.value) {
+                            if (signStore && user != null) {
+                                change.value = viewModel.changeNickname(user, change.value) {
                                     store.saveNickname(it.nickname)
                                 }
                                 showChange.value = true
@@ -120,7 +121,7 @@ fun SettingsScreen(viewModel: SettingsViewModel = hiltViewModel()) {
                         }
                         OutlinedButton(
                             text = "Выход",
-                            enabled = signStore.value,
+                            enabled = signStore,
                             marginStart = 40.dp,
                             marginEnd = 40.dp,
                             color = Color.Red
@@ -146,14 +147,14 @@ fun SettingsScreen(viewModel: SettingsViewModel = hiltViewModel()) {
                                     .clip(CircleShape)
                                     .padding(10.dp)
                                     .clickable {
-                                        if (!signStore.value) {
+                                        if (!signStore) {
                                             scope.launch {
                                                 action.showSnackbar("Вы должны войти в аккаунт!")
                                             }
                                             return@clickable
                                         }
-                                        if (nickname.value != ADMIN_NICKNAME && nickname.value != "") {
-                                            navController.navigate("${Destinations.DEV_CHAT}/${nickname.value}/$ADMIN_NICKNAME")
+                                        if (nickname != ADMIN_NICKNAME && nickname.isNotEmpty()) {
+                                            navController.navigate("${Destinations.DEV_CHAT}/$nickname/$ADMIN_NICKNAME")
                                         }
                                     }
                             )
@@ -168,8 +169,8 @@ fun SettingsScreen(viewModel: SettingsViewModel = hiltViewModel()) {
             }
         }
     }
-    DisposableEffect(null) {
-        viewModel.fetchUser(nickname.value ?: "")
+    DisposableEffect(email) {
+        viewModel.fetchUser(email)
         onDispose { viewModel.dispose() }
     }
 }

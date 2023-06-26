@@ -28,7 +28,7 @@ class UsersRepositoryImpl : UsersRepository {
             override fun onDataChange(snapshot: DataSnapshot) {
                 for (ch in snapshot.children) {
                     val u = ch.toUser()
-                    if (u?.email == user.email && u.nickname == user.nickname) {
+                    if (u?.password == user.password) {
                         ref.child(ch.key!!).setValue(user)
                         onSuccess(user)
                         break

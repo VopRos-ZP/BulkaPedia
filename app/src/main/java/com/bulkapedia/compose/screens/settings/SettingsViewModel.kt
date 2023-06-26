@@ -1,11 +1,13 @@
 package com.bulkapedia.compose.screens.settings
 
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bulkapedia.compose.data.classes.ChangeValue
 import com.bulkapedia.compose.data.classes.Value
 import com.bulkapedia.compose.data.now
+import com.bulkapedia.compose.data.nowYearFormat
 import com.bulkapedia.compose.data.repos.database.User
 import com.bulkapedia.compose.data.repos.database.UsersRepository
 import com.bulkapedia.compose.data.repos.sets.SetsRepository
@@ -13,9 +15,8 @@ import com.bulkapedia.compose.data.toYearDate
 import com.bulkapedia.compose.data.yearFormat
 import com.google.firebase.database.ValueEventListener
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 import java.time.LocalDateTime
 import java.time.Period
 import javax.inject.Inject
@@ -26,14 +27,14 @@ class SettingsViewModel @Inject constructor(
     private val setsRepository: SetsRepository
 ) : ViewModel() {
 
-    private val _userFlow: MutableStateFlow<User?> = MutableStateFlow(null)
-    val userFlow: StateFlow<User?> = _userFlow
+    val user = mutableStateListOf<User?>(null)
 
     private var listener: ValueEventListener? = null
 
-    fun fetchUser(nickname: String) {
+    fun fetchUser(email: String) {
         listener = usersRepository.fetchAll { all ->
-            viewModelScope.launch { _userFlow.emit(all.find { it.nickname == nickname }) }
+            user.clear()
+            user.add(all.find { it.email == email })
         }
     }
 
@@ -45,8 +46,8 @@ class SettingsViewModel @Inject constructor(
     fun changeEmail(user: User, changeValue: ChangeValue, onSuccess: suspend (User) -> Unit): ChangeValue {
         return change(user, changeValue,
             listOf("почты", "почту", "Почта"),
-            user.updateEmail.toYearDate(),
-            user.email, { s, u -> u.apply { email = s } }) { old, it ->
+            user.updateEmail.toYearDate().atTime(0, 0),
+            user.email, { s, u -> u.apply { email = s; updateEmail = nowYearFormat() } }) { old, it ->
             setsRepository.fetchAll { all ->
                 all.filter { s -> s.userLikeIds.contains(old) }.forEach { s ->
                     val ids = s.userLikeIds.toMutableList()
@@ -64,12 +65,12 @@ class SettingsViewModel @Inject constructor(
     fun changeNickname(user: User, changeValue: ChangeValue, onSuccess: suspend (User) -> Unit): ChangeValue {
         return change(user, changeValue,
             listOf("ника", "ник", "Ник"),
-            user.updateNickname.toYearDate(),
-            user.nickname, { s, u -> u.apply { nickname = s } }) { old, it ->
+            user.updateNickname.toYearDate().atTime(0, 0),
+            user.nickname, { s, u -> u.apply { nickname = s; updateNickname = nowYearFormat() } }) { old, it ->
             setsRepository.fetchAll { all ->
                 all.filter { s -> s.from == old }.forEach { s ->
                     val newSet = s.copy(from = it.nickname)
-                    setsRepository.update(newSet)
+                    viewModelScope.launch { setsRepository.update(newSet).await() }
                 }
             }
             viewModelScope.launch { onSuccess(it) }

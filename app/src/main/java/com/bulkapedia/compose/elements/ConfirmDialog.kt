@@ -1,7 +1,6 @@
-@file:Suppress("FunctionName")
-
 package com.bulkapedia.compose.elements
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
@@ -67,7 +66,8 @@ fun ChangesValueDialog(changeValue: ChangeValues) {
             HCenteredBox { Text(text = changeValue.title.value, color = Teal200, fontSize = 18.sp) }
             changeValue.values.value.mapIndexed { i, value ->
                 OutlinedTextField(
-                    (value as Value.TextValue).v, changeValue.fieldLabels.value[i],
+                    (value as Value.TextValue).v,
+                    changeValue.fieldLabels.value[i],
                     shape = RoundedCornerShape(10.dp)
                 )
             }
@@ -130,7 +130,9 @@ fun ScreenWithChangeDialog(
 ) {
     CenteredBox {
         content.invoke()
-        if (changeValue.show.value) { ChangeValueDialog(changeValue) }
+        AnimatedVisibility(changeValue.show.value) {
+            ChangeValueDialog(changeValue)
+        }
     }
 }
 
