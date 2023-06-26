@@ -30,7 +30,8 @@
         <activity
             android:name="com.bulkapedia.compose.MainActivity"
             android:exported="true"
-            android:theme="@style/Theme.Bulkapedia">
+            android:theme="@style/Theme.Bulkapedia"
+            android:configChanges="orientation|screenSize|keyboardHidden|smallestScreenSize|screenLayout">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />

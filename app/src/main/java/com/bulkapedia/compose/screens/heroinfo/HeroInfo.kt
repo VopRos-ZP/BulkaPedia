@@ -3,6 +3,7 @@ package com.bulkapedia.compose.screens.heroinfo
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
@@ -22,7 +23,7 @@ import com.bulkapedia.compose.ui.theme.Teal200
 fun HeroInfoScreen(heroId: String, viewModel: HeroInfoViewModel = hiltViewModel()) {
 
     val parser = Parser()
-    val fullScreen = remember { mutableStateOf(false) }
+    val fullScreen = rememberSaveable { mutableStateOf(false) }
     val heroInfoState = viewModel.heroInfoFlow.collectAsState()
     val count by viewModel.heroesInfoCount.collectAsState()
 

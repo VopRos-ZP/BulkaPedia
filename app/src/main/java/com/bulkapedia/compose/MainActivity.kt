@@ -1,8 +1,7 @@
 package com.bulkapedia.compose
 
 import android.app.Activity
-import android.content.Context
-import android.content.ContextWrapper
+import android.content.pm.ActivityInfo
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
@@ -11,7 +10,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
@@ -102,24 +100,17 @@ class MainActivity : AppCompatActivity() {
 @Composable
 fun SplashScreen() {
     val nc = LocalNavController.current
-    LaunchedEffect(key1 = Unit, block = { nc.navigate(route = "home") })
+    LaunchedEffect(Unit) { nc.navigate(route = "home") }
 }
 
 @Composable
-fun LockScreenOrientation(orientation: Int) {
-    val context = LocalContext.current
-    DisposableEffect(Unit) {
-        val activity = context.findActivity() ?: return@DisposableEffect onDispose {}
-        val originalOrientation = activity.requestedOrientation
-        activity.requestedOrientation = orientation
-        onDispose {
-            activity.requestedOrientation = originalOrientation
-        }
-    }
-}
+fun LockPortrait() { LockScreenOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT) }
 
-fun Context.findActivity(): Activity? = when (this) {
-    is Activity -> this
-    is ContextWrapper -> baseContext.findActivity()
-    else -> null
+@Composable
+fun LockLandscape() { LockScreenOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) }
+
+@Composable
+fun LockScreenOrientation(orientation: Int) {
+    val activity = LocalContext.current as Activity
+    activity.requestedOrientation = orientation
 }
