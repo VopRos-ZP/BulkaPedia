@@ -32,7 +32,7 @@ fun AnimatedNumber(targetState: Int, append: String = "") {
                 slideInVertically { height -> -height } + fadeIn() with
                         slideOutVertically { height -> height } + fadeOut()
             }.using(SizeTransform(clip = false))
-        }, label = ""
+        }
     ) {
         Text(
             text = if (append.isEmpty()) "$targetState" else "$append $targetState",

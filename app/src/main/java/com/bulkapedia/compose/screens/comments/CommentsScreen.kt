@@ -78,7 +78,6 @@ fun CommentsScreen(setId: String, viewModel: CommentsViewModel = hiltViewModel()
                 ) {
                     val rotate = animateFloatAsState(
                         targetValue = if (hideSetState.value) 180f else 0f,
-                        label = "",
                         animationSpec = tween(300)
                     )
                     Icon(
