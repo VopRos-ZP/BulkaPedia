@@ -1,11 +1,12 @@
+@Suppress("DSL_SCOPE_VIOLATION") // TODO: Remove once KTIJ-19369 is fixed
 plugins {
-    id("com.android.application")
-    kotlin("android")
-    id("com.google.gms.google-services")
-    kotlin("plugin.serialization") version "1.8.20"
-    id("com.google.dagger.hilt.android") version "2.46.1"
-    id("androidx.navigation.safeargs.kotlin")
-    kotlin("kapt")
+    alias(libs.plugins.androidApplication)
+    alias(libs.plugins.kotlinAndroid)
+    alias(libs.plugins.googleServices)
+    alias(libs.plugins.hiltAndroid)
+    alias(libs.plugins.kotlinSerialization)
+    alias(libs.plugins.kotlinSafeArgs)
+    alias(libs.plugins.kotlinKapt)
 }
 
 android {
@@ -49,6 +50,7 @@ android {
 
 dependencies {
     // compose
+    implementation(platform(libs.compose.bom))
     implementation(libs.androidx.foundation)
     implementation(libs.androidx.runtime)
     implementation(libs.androidx.ui)
@@ -57,7 +59,6 @@ dependencies {
     implementation(libs.androidx.material.icons.extended)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.androidx.navigation.compose)
-    implementation(libs.androidx.compiler)
     implementation(libs.androidx.constraintlayout.compose)
     debugImplementation(libs.androidx.ui.tooling)
     // Coroutines
@@ -68,12 +69,10 @@ dependencies {
     // AndroidX
     implementation(libs.core.ktx)
     implementation(libs.appcompat)
-    implementation(libs.constraintlayout)
     implementation(libs.navigation.runtime.ktx)
     implementation(libs.lifecycle.runtime.ktx)
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)
-    implementation(libs.androidx.fragment.ktx)
     implementation(libs.androidx.datastore.preferences)
     // firebase
     implementation(platform(libs.firebase.bom))
