@@ -18,7 +18,7 @@ fun MechanicsScreen(viewModel: MechanicsViewModel = hiltViewModel()) {
     ScreenView(title = "Механики игры", showBack = true) {
         LazyColumn {
             items(mechanics) { MechanicsItem(it) {
-                navController.navigate("${Destinations.MECHANICS}/${it.id}")
+                navController.navigate("${Destinations.MECHANICS}/${it.mechanicId}")
             } }
         }
     }

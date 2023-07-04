@@ -1,9 +1,10 @@
 package com.bulkapedia.compose.screens.maps
 
 import androidx.lifecycle.*
+import com.bulkapedia.data.CallBack
 import kotlinx.coroutines.launch
-import com.bulkapedia.compose.data.repos.maps.Map
-import com.bulkapedia.compose.data.repos.firestore.Repository
+import com.bulkapedia.data.maps.Map
+import com.bulkapedia.data.Repository
 import com.google.firebase.firestore.ListenerRegistration
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -21,9 +22,9 @@ class MapsViewModel @Inject constructor(
     private var listener: ListenerRegistration? = null
 
     fun fetchMaps() {
-        listener = mapsRepository.fetchAll {
+        listener = mapsRepository.fetchAll(CallBack({
             viewModelScope.launch { _mapsFlow.emit(it) }
-        }
+        }) {})
     }
 
     fun dispose() = listener?.remove()

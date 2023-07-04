@@ -13,14 +13,11 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.bulkapedia.compose.ADMIN_NICKNAME
 import com.bulkapedia.compose.elements.MainTagSettingsMenu
 import com.bulkapedia.compose.screens.sets.DarkButton
@@ -28,8 +25,8 @@ import com.bulkapedia.compose.ui.theme.PrimaryDark
 import com.bulkapedia.compose.ui.theme.Teal200
 import com.bulkapedia.compose.util.VCenteredBox
 import com.bulkapedia.compose.util.clickable
-import com.bulkapedia.compose.data.repos.stats.Stats
-import com.bulkapedia.compose.data.repos.database.User
+import com.bulkapedia.data.mains.Main
+import com.bulkapedia.data.users.User
 import com.bulkapedia.R
 import com.bulkapedia.compose.elements.OutlinedCard
 import com.bulkapedia.compose.elements.ScreenAction
@@ -39,9 +36,9 @@ import com.bulkapedia.compose.ui.theme.LocalNavController
 @Composable
 fun UsersRecycler(
     users: List<User>,
-    mains: Map<String, List<Stats>>,
+    mains: Map<String, List<Main>>,
     action: ScreenAction.AddTagAction,
-    onDelete: (Stats) -> Unit
+    onDelete: (Main) -> Unit
 ) {
     LazyColumn(
         modifier = Modifier.fillMaxWidth(),
@@ -54,9 +51,9 @@ fun UsersRecycler(
 @Composable
 fun UserRecyclerItem(
     user: User,
-    mains: List<Stats>,
+    mains: List<Main>,
     action: ScreenAction.AddTagAction,
-    onDelete: (Stats) -> Unit
+    onDelete: (Main) -> Unit
 ) {
     val nav = LocalNavController.current
     OutlinedCard(
@@ -124,11 +121,11 @@ fun AddTagView(
 fun MainTagView(
     user: User,
     action: ScreenAction.AddTagAction,
-    stats: Stats,
-    onDelete: (Stats) -> Unit
+    stats: Main,
+    onDelete: (Main) -> Unit
 ) {
     val expanded = remember { mutableStateOf(false) }
-    val hero = stats.id.split(" ", limit = 2).last()
+    val hero = stats.mainId.split(" ", limit = 2).last()
     VCenteredBox {
         TagView (onClick = {
             expanded.value = !expanded.value

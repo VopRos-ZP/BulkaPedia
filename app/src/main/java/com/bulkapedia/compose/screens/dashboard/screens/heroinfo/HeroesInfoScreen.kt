@@ -12,7 +12,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.bulkapedia.compose.data.repos.hero_info.HeroInfo
+import com.bulkapedia.data.hero_info.HeroInfo
 import com.bulkapedia.compose.data.classes.ChangeValues
 import com.bulkapedia.compose.data.classes.Value
 import com.bulkapedia.compose.elements.OutlinedButton

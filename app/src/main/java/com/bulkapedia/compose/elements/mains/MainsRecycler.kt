@@ -12,16 +12,16 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.bulkapedia.compose.data.repos.stats.Stats
 import com.bulkapedia.compose.elements.OutlinedCard
 import com.bulkapedia.compose.ui.theme.PrimaryDark
 import com.bulkapedia.compose.ui.theme.Teal200
+import com.bulkapedia.data.mains.Main
 
 @Composable
 fun MainsRecycler(
-    mains: SnapshotStateList<Stats>,
-    selected: MutableState<Stats?>,
-    onItemClick: (Stats) -> Unit
+    mains: SnapshotStateList<Main>,
+    selected: MutableState<Main?>,
+    onItemClick: (Main) -> Unit
 ) {
     LazyRow (
         modifier = Modifier.fillMaxWidth(),
@@ -38,14 +38,14 @@ fun MainsRecycler(
 }
 
 @Composable
-fun StatsItem(stats: Stats, selected: Boolean, onClick: () -> Unit) {
+fun StatsItem(stats: Main, selected: Boolean, onClick: () -> Unit) {
     OutlinedCard(
         backgroundColor = if (selected) Teal200 else PrimaryDark,
         onClick = onClick,
     ) {
         Text(
             modifier = Modifier.padding(horizontal = 15.dp, vertical = 10.dp),
-            text = stats.id.split(" ", limit = 2).last(),
+            text = stats.mainId.split(" ", limit = 2).last(),
             color = if (selected) PrimaryDark else Teal200
         )
     }

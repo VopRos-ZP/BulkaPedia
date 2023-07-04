@@ -2,8 +2,8 @@ package com.bulkapedia.compose.screens.registration
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.bulkapedia.compose.data.repos.database.User
-import com.bulkapedia.compose.data.repos.database.UsersRepository
+import com.bulkapedia.data.users.User
+import com.bulkapedia.data.users.UsersRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

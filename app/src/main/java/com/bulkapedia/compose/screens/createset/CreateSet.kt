@@ -33,13 +33,13 @@ import com.bulkapedia.compose.ui.theme.Teal200
 import com.bulkapedia.compose.util.CenteredBox
 import com.bulkapedia.compose.util.HCenteredBox
 import com.bulkapedia.compose.util.clickable
-import com.bulkapedia.compose.data.repos.gears.Effect
-import com.bulkapedia.compose.data.repos.gears.Gear
-import com.bulkapedia.compose.data.repos.gears.GearSet
+import com.bulkapedia.data.gears.Effect
+import com.bulkapedia.data.gears.Gear
+import com.bulkapedia.data.gears.GearSet
 import com.bulkapedia.compose.data.gears.PersonalGears
-import com.bulkapedia.compose.data.repos.heroes.Hero
-import com.bulkapedia.compose.data.repos.sets.GearCell
-import com.bulkapedia.compose.data.repos.sets.UserSet
+import com.bulkapedia.data.heroes.Hero
+import com.bulkapedia.data.sets.GearCell
+import com.bulkapedia.data.sets.UserSet
 import com.bulkapedia.compose.elements.InRowOutlinedButton
 import com.bulkapedia.compose.elements.OutlinedCard
 import com.bulkapedia.compose.screens.Loading
@@ -47,6 +47,7 @@ import com.bulkapedia.compose.screens.titled.ScreenView
 import com.bulkapedia.compose.ui.theme.LocalNavController
 import com.bulkapedia.compose.util.stringToResource
 import com.bulkapedia.compose.util.toHeroStats
+import com.bulkapedia.data.gears.Gear.Companion.emptyIcons
 import kotlin.math.roundToInt
 
 @Composable
@@ -60,7 +61,7 @@ fun CreateSetScreen(
     val set by viewModel.setFlow.collectAsState()
     when (val hero = heroState.value) {
         null -> Loading()
-        else -> CreateSetFragment(hero, set.copy(from = nickname), viewModel)
+        else -> CreateSetFragment(hero, set.copy(author = nickname), viewModel)
     }
     DisposableEffect(null) {
         viewModel.fetchData(heroId, setId)
@@ -94,7 +95,7 @@ fun CreateSetFragment(hero: Hero, set: UserSet, viewModel: CreateSetViewModel) {
                         CenteredBox {
                             InRowOutlinedButton(text = "Сохранить") {
                                 viewModel.saveSet(UserSet(
-                                    set.id, set.from, hero.id,
+                                    set.userSetId, set.author, hero.heroId,
                                     gearsEffectState.value.mapValues { it.value.icon },
                                     set.userLikeIds
                                 ))

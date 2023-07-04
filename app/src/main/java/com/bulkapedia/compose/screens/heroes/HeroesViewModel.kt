@@ -2,8 +2,9 @@ package com.bulkapedia.compose.screens.heroes
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.bulkapedia.compose.data.repos.heroes.Hero
-import com.bulkapedia.compose.data.repos.firestore.Repository
+import com.bulkapedia.data.CallBack
+import com.bulkapedia.data.heroes.Hero
+import com.bulkapedia.domain.heroes.HeroRepository
 import com.google.firebase.firestore.ListenerRegistration
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -13,7 +14,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HeroesViewModel @Inject constructor(
-    private val heroesRepository: Repository<Hero>
+    private val heroesRepository: HeroRepository
 ) : ViewModel() {
 
     private val _heroesFlow: MutableStateFlow<List<Hero>> = MutableStateFlow(emptyList())
@@ -22,9 +23,9 @@ class HeroesViewModel @Inject constructor(
     private var listener: ListenerRegistration? = null
 
     fun fetchHeroes() {
-        listener = heroesRepository.fetchAll {
+        listener = heroesRepository.fetchAll(CallBack({
             viewModelScope.launch { _heroesFlow.emit(it) }
-        }
+        }) {})
     }
 
     fun dispose() = listener?.remove()

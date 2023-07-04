@@ -2,20 +2,19 @@ package com.bulkapedia.compose.screens.sets
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.bulkapedia.compose.data.repos.sets.SetsRepository
-import com.bulkapedia.compose.data.repos.sets.UserSet
+import com.bulkapedia.data.Repository
+import com.bulkapedia.data.sets.UserSet
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 @HiltViewModel
 class SetTabViewModel @Inject constructor(
-    private val setsRepository: SetsRepository
+    private val setsRepository: Repository<UserSet>
 ) : ViewModel() {
 
     private fun updateSet(set: UserSet) {
-        viewModelScope.launch { setsRepository.update(set).await() }
+        viewModelScope.launch { setsRepository.update(set) }
     }
 
     fun likeUserSet(
@@ -26,7 +25,7 @@ class SetTabViewModel @Inject constructor(
         onError: (String) -> Unit
     ) {
         if (isSign) {
-            if (set.from != nickname) {
+            if (set.author != nickname) {
                 val ids = set.userLikeIds.toMutableList()
                 when (set.userLikeIds.contains(email)) {
                     true -> ids.remove(email)

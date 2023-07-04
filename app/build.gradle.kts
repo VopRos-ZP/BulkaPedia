@@ -15,7 +15,6 @@ android {
     defaultConfig {
         applicationId = "com.bulkapedia"
         minSdk = 26
-        targetSdk = 33
         versionCode = 36
         versionName = "0.3.6"
         vectorDrawables {
@@ -49,7 +48,10 @@ android {
 }
 
 dependencies {
-    // compose
+    /** Project **/
+    implementation(project(":data"))
+    implementation(project(":domain"))
+    /** Compose **/
     implementation(platform(libs.compose.bom))
     implementation(libs.androidx.foundation)
     implementation(libs.androidx.runtime)
@@ -61,12 +63,12 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.constraintlayout.compose)
     debugImplementation(libs.androidx.ui.tooling)
-    // Coroutines
+    /** Coroutines **/
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.kotlinx.coroutines.android)
-    // Json
+    /** Json **/
     implementation(libs.kotlinx.serialization.json)
-    // AndroidX
+    /** AndroidX **/
     implementation(libs.core.ktx)
     implementation(libs.appcompat)
     implementation(libs.navigation.runtime.ktx)
@@ -74,7 +76,7 @@ dependencies {
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)
     implementation(libs.androidx.datastore.preferences)
-    // firebase
+    /** Firebase **/
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.database)
     implementation(libs.firebase.firestore)
@@ -82,15 +84,15 @@ dependencies {
     implementation(libs.firebase.auth) {
         exclude(module = "play-services-safetynet")
     }
-    // DI
+    /** DI **/
     implementation(libs.hilt.android)
     implementation(libs.androidx.hilt.navigation.compose)
     kapt(libs.hilt.compiler)// replace to ksp
-    // In-App-Update
+    /** In-App-Update **/
     implementation(libs.app.update.ktx)
-    // YouTube
+    /** YouTube **/
     implementation(libs.core)
-    // Glide
+    /** Glide **/
     implementation(libs.glide)
     implementation(libs.compose)
 }

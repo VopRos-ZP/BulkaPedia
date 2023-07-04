@@ -16,7 +16,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.bulkapedia.compose.data.repos.maps.Map
+import com.bulkapedia.data.maps.Map
 import com.bulkapedia.compose.elements.OutlinedCard
 import com.bulkapedia.compose.elements.mapsTags
 import com.bulkapedia.compose.navigation.Destinations
@@ -35,7 +35,7 @@ fun Maps(viewModel: MapsViewModel = hiltViewModel()) {
         TagsWithRecycler(mapsTags(), maps, { tag, map ->
             tag?.text == map.mode || tag == null
         }) { map -> MapCard(map) {
-            navController.navigate("${Destinations.MAPS}/${map.id}") { launchSingleTop = true }
+            navController.navigate("${Destinations.MAPS}/${map.mapId}") { launchSingleTop = true }
         } }
     }
     DisposableEffect(null) {

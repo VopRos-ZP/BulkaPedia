@@ -2,8 +2,9 @@ package com.bulkapedia.compose.screens.dashboard.screens.categorymanage
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.bulkapedia.compose.data.repos.categories.CategoriesRepository
-import com.bulkapedia.compose.data.repos.categories.Category
+import com.bulkapedia.data.CallBack
+import com.bulkapedia.data.Repository
+import com.bulkapedia.data.categories.Category
 import com.google.firebase.firestore.ListenerRegistration
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -13,7 +14,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CategoryManageViewModel @Inject constructor(
-    private val categoriesRepository: CategoriesRepository
+    private val categoriesRepository: Repository<Category>
 ) : ViewModel() {
 
     private val _categoriesFlow: MutableStateFlow<List<Category>> = MutableStateFlow(emptyList())
@@ -23,13 +24,13 @@ class CategoryManageViewModel @Inject constructor(
 
     /** Doesn't create a new categories **/
     fun updateCategory(category: Category) {
-        categoriesRepository.update(category)
+        viewModelScope.launch { categoriesRepository.update(category) }
     }
 
     fun listenCategories() {
-        listener = categoriesRepository.fetchAll {
+        listener = categoriesRepository.fetchAll(CallBack({
             viewModelScope.launch { _categoriesFlow.emit(it) }
-        }
+        }) {})
     }
 
     fun removeCategory() {

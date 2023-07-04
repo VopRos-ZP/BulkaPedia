@@ -1,6 +1,5 @@
 package com.bulkapedia.compose.screens.mechanics
 
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Text
@@ -9,7 +8,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.bulkapedia.compose.data.repos.mechanics.Mechanic
+import com.bulkapedia.data.mechanics.Mechanic
 import com.bulkapedia.compose.elements.OutlinedCard
 import com.bulkapedia.compose.ui.theme.Teal200
 import com.bulkapedia.compose.util.HCenteredBox

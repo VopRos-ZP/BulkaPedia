@@ -24,8 +24,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.bulkapedia.compose.DataStore
-import com.bulkapedia.compose.data.repos.database.User
-import com.bulkapedia.compose.data.repos.sets.UserSet
+import com.bulkapedia.data.users.User
+import com.bulkapedia.data.sets.UserSet
 import com.bulkapedia.compose.elements.ITabRow
 import com.bulkapedia.compose.elements.ScreenWithDelete
 import com.bulkapedia.compose.elements.ScreenWithTagDialog
@@ -120,7 +120,7 @@ private fun filterSetsList(searchState: MutableState<String>, list: List<UserSet
     return if (text.isEmpty()) list
     else {
         list.filter { set ->
-            set.from.contains(text) || set.hero.contains(text)
+            set.author.contains(text) || set.hero.contains(text)
         }
     }
 }

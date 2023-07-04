@@ -13,9 +13,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.bulkapedia.compose.ui.theme.PrimaryDark
 import com.bulkapedia.compose.ui.theme.Teal200
-import com.bulkapedia.compose.data.repos.sets.UserSet
+import com.bulkapedia.data.sets.UserSet
 import com.bulkapedia.R
-import com.bulkapedia.compose.data.repos.stats.Stats
+import com.bulkapedia.data.mains.Main
 
 @Composable
 fun SetSettingsMenu(
@@ -67,9 +67,9 @@ fun DropdownSetMenuItem(
 @Composable
 fun MainTagSettingsMenu(
     expanded: MutableState<Boolean>,
-    main: Pair<String, Stats>,
-    onEditClick: (Pair<String, Stats>) -> Unit,
-    onDeleteClick: (Pair<String, Stats>) -> Unit
+    main: Pair<String, Main>,
+    onEditClick: (Pair<String, Main>) -> Unit,
+    onDeleteClick: (Pair<String, Main>) -> Unit
 ) {
     MaterialTheme(
         shapes = MaterialTheme.shapes.copy(medium = RoundedCornerShape(20.dp))

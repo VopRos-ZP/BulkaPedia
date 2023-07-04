@@ -10,7 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.bulkapedia.compose.data.repos.heroes.Hero
+import com.bulkapedia.data.heroes.Hero
 import com.bulkapedia.compose.elements.OutlinedCard
 import com.bulkapedia.compose.elements.heroesTags
 import com.bulkapedia.compose.elements.OutlinedButton
@@ -80,10 +80,10 @@ fun HeroCard(hero: Hero) {
                 horizontalAlignment = CenterHorizontally
             ) {
                 OutlinedButton(text = "Сеты", marginStart = 10.dp, marginEnd = 10.dp) {
-                    navController.navigate("${Destinations.SETS}/${hero.id}") { launchSingleTop = true }
+                    navController.navigate("${Destinations.SETS}/${hero.heroId}") { launchSingleTop = true }
                 }
                 OutlinedButton(text = "Топ 100", marginStart = 10.dp, marginEnd = 10.dp) {
-                    navController.navigate("${Destinations.TOP}/${hero.id}") { launchSingleTop = true }
+                    navController.navigate("${Destinations.TOP}/${hero.heroId}") { launchSingleTop = true }
                 }
             }
         }

@@ -6,7 +6,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.bulkapedia.compose.screens.sets.SetTabCard
-import com.bulkapedia.compose.data.repos.sets.UserSet
+import com.bulkapedia.data.sets.UserSet
 
 @Composable
 fun SetsRecycler(sets: List<UserSet>, onDelete: (UserSet) -> Unit) {

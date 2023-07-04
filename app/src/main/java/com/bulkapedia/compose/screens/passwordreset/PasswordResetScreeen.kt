@@ -13,7 +13,6 @@ import com.bulkapedia.compose.DataStore
 import com.bulkapedia.compose.navigation.Destinations
 import com.bulkapedia.compose.screens.titled.ScreenView
 import com.bulkapedia.compose.ui.theme.LocalNavController
-import kotlinx.coroutines.launch
 
 @Composable
 fun PasswordResetScreen(viewModel: PasswordResetViewModel = hiltViewModel()) {
@@ -39,7 +38,6 @@ private fun PasswordResetForm(
     val navController = LocalNavController.current
     // store
     val store = DataStore(LocalContext.current)
-    val scope = rememberCoroutineScope()
     // state variables
     val email = remember { mutableStateOf(emailT) }
     val password = remember { mutableStateOf("") }

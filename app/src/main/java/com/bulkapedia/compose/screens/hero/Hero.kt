@@ -114,7 +114,7 @@ fun HeroSets(heroId: String, viewModel: HeroViewModel = hiltViewModel()) {
                                                 pageCount = sets.size
                                             ) { page ->
                                                 val set = sets[page]
-                                                SetTabCard(set, set.from != nickname) { s ->
+                                                SetTabCard(set, set.author != nickname) { s ->
                                                     delete.showDelete("сет") {
                                                         viewModel.deleteUserSet(s)
                                                     }
@@ -131,7 +131,7 @@ fun HeroSets(heroId: String, viewModel: HeroViewModel = hiltViewModel()) {
                                     ) {
                                         AddSetButton {
                                             if (sign && nickname != "") {
-                                                navController.navigate("${Destinations.CREATE_SET}/${hero.id}/${nickname}")
+                                                navController.navigate("${Destinations.CREATE_SET}/${hero.heroId}/$nickname")
                                             } else {
                                                 scope.launch {
                                                     snackbar.showSnackbar("Чтобы создать сет необходимо войти в аккаунт!")

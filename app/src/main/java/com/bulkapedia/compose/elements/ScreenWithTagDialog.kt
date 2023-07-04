@@ -4,13 +4,13 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import com.bulkapedia.compose.data.repos.database.User
-import com.bulkapedia.compose.data.repos.stats.Stats
+import com.bulkapedia.data.users.User
 import com.bulkapedia.compose.util.CenteredBox
+import com.bulkapedia.data.mains.Main
 
 @Composable
 fun ScreenWithTagDialog(
-    onSave: (String, Stats) -> Unit = { _, _ -> },
+    onSave: (String, Main) -> Unit = { _, _ -> },
     content: @Composable (ScreenAction.AddTagAction) -> Unit
 ) {
     // if change main data

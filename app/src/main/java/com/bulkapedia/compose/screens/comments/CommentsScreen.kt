@@ -29,7 +29,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.bulkapedia.compose.screens.sets.SetTabCard
 import com.bulkapedia.R
-import com.bulkapedia.compose.data.repos.comments.Comment
+import com.bulkapedia.data.comments.Comment
 import com.bulkapedia.compose.elements.*
 import com.bulkapedia.compose.ui.theme.*
 import com.bulkapedia.compose.util.CenteredBox
@@ -66,7 +66,7 @@ fun CommentsScreen(setId: String, viewModel: CommentsViewModel = hiltViewModel()
                 when (val s = set) {
                     null -> Loading()
                     else -> AnimatedVisibility(!hideSetState.value) {
-                        SetTabCard(s, s.from != nickname, disableComments = true, disableSettings = false) { s ->
+                        SetTabCard(s, s.author != nickname, disableComments = true, disableSettings = false) { s ->
                             delete.showDelete("Сет") { viewModel.deleteSet(s) }
                         }
                     }
@@ -108,8 +108,8 @@ fun CommentsScreen(setId: String, viewModel: CommentsViewModel = hiltViewModel()
                     else -> SendForm(txt) {
                         if (txt.value.isNotEmpty() && isSign) {
                             if (!isEdit.value) {
-                                viewModel.sendComment(Comment(
-                                    set = s.id, from = nickname,
+                                viewModel.sendComment(Comment("",
+                                    set = s.userSetId, from = nickname,
                                     text = txt.value, date = nowTimeFormat()
                                 ))
                             } else {

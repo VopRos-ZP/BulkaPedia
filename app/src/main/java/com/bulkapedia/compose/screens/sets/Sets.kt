@@ -32,8 +32,8 @@ import com.bulkapedia.compose.util.CenteredBox
 import com.bulkapedia.compose.util.HCenteredBox
 import com.bulkapedia.compose.util.VCenteredBox
 import com.bulkapedia.compose.util.clickable
-import com.bulkapedia.compose.data.repos.sets.GearCell
-import com.bulkapedia.compose.data.repos.sets.UserSet
+import com.bulkapedia.data.sets.GearCell
+import com.bulkapedia.data.sets.UserSet
 import com.bulkapedia.compose.elements.anims.AnimatedNumber
 import com.bulkapedia.compose.util.stringToResource
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
@@ -72,7 +72,7 @@ fun SetTabCard(
         Box(modifier = Modifier
             .fillMaxWidth()
             .height(dp)) {
-            CenteredBox { Text(text = set.from, color = Teal200) }
+            CenteredBox { Text(text = set.author, color = Teal200) }
         }
     }
 }

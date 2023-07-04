@@ -16,3 +16,5 @@ dependencyResolutionManagement {
 
 rootProject.name = "BulkaPedia"
 include(":app")
+include(":data")
+include(":domain")

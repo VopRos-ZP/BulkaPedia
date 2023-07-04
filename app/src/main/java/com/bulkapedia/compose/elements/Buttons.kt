@@ -19,7 +19,7 @@ import com.bulkapedia.compose.ui.theme.PrimaryDark
 import com.bulkapedia.compose.ui.theme.Teal200
 import com.bulkapedia.compose.util.VCenteredBox
 import com.bulkapedia.compose.util.clickable
-import com.bulkapedia.compose.data.repos.sets.UserSet
+import com.bulkapedia.data.sets.UserSet
 import com.bulkapedia.compose.ui.theme.LocalNavController
 import com.bulkapedia.compose.util.stringToResource
 
@@ -31,7 +31,7 @@ fun CommentsButton(
     val nc = LocalNavController.current
     SetButton(id = R.drawable.comment) {
         if (!isDisable) {
-            nc.navigate("${Destinations.COMMENTS}/${set.id}")
+            nc.navigate("${Destinations.COMMENTS}/${set.userSetId}")
         }
     }
 }
@@ -44,7 +44,7 @@ fun ProfileButton(
     val nc = LocalNavController.current
     SetButton(id = R.drawable.person) {
         if (!isDisable) {
-            nc.navigate("${Destinations.VISIT_PROFILE}/${set.from}")
+            nc.navigate("${Destinations.VISIT_PROFILE}/${set.author}")
         }
     }
 }
@@ -65,7 +65,7 @@ fun SettingsButton(
         }
         SetSettingsMenu(expanded = expanded, set = set,
             onEditClick = { set ->
-                nc.navigate("${Destinations.CREATE_SET}/${set.hero}/${set.from}?setId=${set.id}")
+                nc.navigate("${Destinations.CREATE_SET}/${set.hero}/${set.author}?setId=${set.userSetId}")
             },
             onDeleteClick = onDelete
         )

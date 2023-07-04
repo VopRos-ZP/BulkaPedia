@@ -33,9 +33,9 @@ import com.bulkapedia.compose.ui.theme.*
 import com.bulkapedia.compose.util.CenteredBox
 import com.bulkapedia.compose.util.VCenteredBox
 import com.bulkapedia.compose.util.clickable
-import com.bulkapedia.compose.data.repos.stats.Stats
-import com.bulkapedia.compose.data.repos.sets.UserSet
-import com.bulkapedia.compose.data.repos.database.User
+import com.bulkapedia.data.mains.Main
+import com.bulkapedia.data.sets.UserSet
+import com.bulkapedia.data.users.User
 import com.bulkapedia.compose.elements.mains.MainsRecycler
 import com.bulkapedia.compose.elements.sheets.ClosableModalBottomSheet
 import com.bulkapedia.compose.navigation.ToCATEGORY_MANAGE
@@ -79,7 +79,7 @@ fun ProfileSheet(
     by: (User) -> Boolean
 ) {
     val userState = viewModel.userFlow.collectAsState()
-    val mainStat = remember { mutableStateOf<Stats?>(null) }
+    val mainStat = remember { mutableStateOf<Main?>(null) }
 
     ClosableModalBottomSheet(
         sheetContent = { when (val stat = mainStat.value) {
@@ -106,8 +106,8 @@ fun ProfileScreen(
     user: User,
     viewModel: ProfileViewModel = hiltViewModel(),
     visit: Boolean = false,
-    selected: MutableState<Stats?>,
-    onItemClick: (Stats) -> Unit
+    selected: MutableState<Main?>,
+    onItemClick: (Main) -> Unit
 ) {
     val sets = viewModel.userSets
     val mains = viewModel.userMains
@@ -115,10 +115,10 @@ fun ProfileScreen(
     val pagerState = rememberPagerState()
 
     val tabs = if (visit) {
-        listOf(ProfileTab(title = "Cеты") { set -> set.from == user.nickname })
+        listOf(ProfileTab(title = "Cеты") { set -> set.author == user.nickname })
     } else {
         listOf(
-            ProfileTab(title = "Ваши сеты") { set -> set.from == user.nickname },
+            ProfileTab(title = "Ваши сеты") { set -> set.author == user.nickname },
             ProfileTab(title = "Любимое") { set -> set.userLikeIds.contains(user.email) }
         )
     }
@@ -213,7 +213,7 @@ data class ProfileTab(
 )
 
 @Composable
-fun ShowMainSheet(stats: Stats) {
+fun ShowMainSheet(stats: Main) {
     OutlinedCard(modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp),) {
         Text(
             text = buildAnnotatedString {
@@ -241,10 +241,10 @@ fun ShowMainSheet(stats: Stats) {
 
 @Composable
 fun MainsItem(
-    main: Pair<String, Stats>,
+    main: Pair<String, Main>,
     isSelected: Boolean,
     isStart: Boolean, isEnd: Boolean,
-    onItemClick: (Stats) -> Unit
+    onItemClick: (Main) -> Unit
 ) {
     val padding = if (isStart) PaddingValues(start = 20.dp, end = 5.dp)
     else if (isEnd) PaddingValues(start = 5.dp, end = 20.dp)

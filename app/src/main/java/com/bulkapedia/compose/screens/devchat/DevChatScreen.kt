@@ -35,7 +35,7 @@ import androidx.compose.ui.unit.dp
 import com.bulkapedia.compose.ADMIN_NICKNAME
 import com.bulkapedia.R
 import com.bulkapedia.compose.data.nowTimeFormat
-import com.bulkapedia.compose.data.repos.messages.Message
+import com.bulkapedia.data.messages.Message
 import com.bulkapedia.compose.elements.OutlinedCard
 import com.bulkapedia.compose.elements.ReceiverTextMessage
 import com.bulkapedia.compose.elements.SendTextMessage

@@ -1,35 +1,12 @@
 package com.bulkapedia.compose.data.gears
 
 import com.bulkapedia.R
-import com.bulkapedia.compose.data.repos.gears.Effect
-import com.bulkapedia.compose.data.repos.gears.Gear
-import com.bulkapedia.compose.data.repos.gears.GearSet
-import com.bulkapedia.compose.data.repos.heroes.Hero
-import com.bulkapedia.compose.data.repos.sets.GearCell
 import com.bulkapedia.compose.util.resourceToString
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.firestore.ktx.toObject
-import com.google.firebase.ktx.Firebase
+import com.bulkapedia.data.gears.Effect
+import com.bulkapedia.data.gears.Gear
+import com.bulkapedia.data.gears.GearSet
 
 class GearsList {
-
-    fun getGears(func: (List<Gear>) -> Unit) {
-        getAllGears { all, _ -> func.invoke(all) }
-    }
-
-    fun getDefaultGears(func: (List<Gear>) -> Unit) {
-        getAllGears { _, def -> func.invoke(def) }
-    }
-
-    private fun getAllGears(function: (List<Gear>, List<Gear>) -> Unit) {
-        Firebase.firestore.collection("gears").addSnapshotListener { value, _ ->
-            if (value != null) {
-                val allGears = value.documents.map { doc -> doc.toObject<Gear>()!! }
-                val allDefaultGears = allGears.filter { it.gearSet == GearSet.NONE.name }
-                function.invoke(allGears, allDefaultGears)
-            }
-        }
-    }
 
     fun getEffectsFromSets(gears: List<Gear>): List<Effect> {
         val effects = mutableListOf<Effect>()
@@ -94,22 +71,6 @@ class GearsList {
             }
         }
         return effects
-    }
-
-    fun getSetsGears(hero: Hero) : Map<GearCell, Gear> {
-        val cells = listOf(
-            GearCell.HEAD, GearCell.BODY,
-            GearCell.ARM, GearCell.LEG,
-            GearCell.DECOR, GearCell.DEVICE,
-        )
-        return when (hero.type) {
-            "tanks" -> emptyMap()
-            "scouts" -> emptyMap()
-            "snipers" -> emptyMap()
-            "troopers" -> emptyMap()
-            "shortguns" -> emptyMap()
-            else -> emptyMap()
-        }
     }
 
 }

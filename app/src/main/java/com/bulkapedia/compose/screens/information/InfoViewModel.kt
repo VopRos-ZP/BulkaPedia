@@ -2,8 +2,9 @@ package com.bulkapedia.compose.screens.information
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.bulkapedia.compose.data.repos.categories.Category
-import com.bulkapedia.compose.data.repos.firestore.Repository
+import com.bulkapedia.data.CallBack
+import com.bulkapedia.data.Repository
+import com.bulkapedia.data.categories.Category
 import com.google.firebase.firestore.ListenerRegistration
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,9 +23,9 @@ class InfoViewModel @Inject constructor(
     private var categoryListener: ListenerRegistration? = null
 
     fun fetchCategories() {
-        categoryListener = categoryRepository.fetchAll {
+        categoryListener = categoryRepository.fetchAll(CallBack({
             viewModelScope.launch { _categoryFlow.emit(it) }
-        }
+        }) {})
     }
 
     fun dispose() = categoryListener?.remove()

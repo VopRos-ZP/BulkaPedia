@@ -17,17 +17,17 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.bulkapedia.compose.screens.createset.emptyIcons
 import com.bulkapedia.compose.screens.sets.GearImage
 import com.bulkapedia.compose.util.clickable
-import com.bulkapedia.compose.data.repos.gears.Effect
-import com.bulkapedia.compose.data.repos.gears.Gear
-import com.bulkapedia.compose.data.repos.gears.getRankEffect
-import com.bulkapedia.compose.data.repos.heroes.Hero
-import com.bulkapedia.compose.data.labels.Ranks
-import com.bulkapedia.compose.data.repos.sets.GearCell
+import com.bulkapedia.data.gears.Effect
+import com.bulkapedia.data.gears.Gear
+import com.bulkapedia.data.heroes.Hero
+import com.bulkapedia.data.gears.Ranks
+import com.bulkapedia.data.sets.GearCell
 import com.bulkapedia.compose.ui.theme.*
 import com.bulkapedia.compose.util.stringToResource
+import com.bulkapedia.data.gears.Gear.Companion.emptyIcons
+import com.bulkapedia.data.gears.Gear.Companion.getRankEffect
 import kotlinx.coroutines.launch
 
 @Composable

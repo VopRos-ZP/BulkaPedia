@@ -21,12 +21,12 @@ import androidx.compose.ui.window.Dialog
 import com.bulkapedia.compose.ui.theme.PrimaryDark
 import com.bulkapedia.compose.ui.theme.Teal200
 import com.bulkapedia.compose.util.HCenteredBox
-import com.bulkapedia.compose.data.repos.stats.Stats
+import com.bulkapedia.data.mains.Main
 
 @Composable
 fun MainTagDialog(
     action: ScreenAction.AddTagAction,
-    onSave: (String, Stats) -> Unit
+    onSave: (String, Main) -> Unit
 ) {
     val hero = remember { action.defHero }
     val showMenu = remember { mutableStateOf(false) }
@@ -86,7 +86,7 @@ fun MainTagDialog(
                 InRowOutlinedButton(text = "Сохранить", color = Color.Green) {
                     action.show.value = false
                     onSave.invoke(hero.value,
-                        Stats(
+                        Main("",
                             kills = kills.value.toInt(),
                             winrate = winrate.value.toDouble(),
                             revives = revives.value.toInt()

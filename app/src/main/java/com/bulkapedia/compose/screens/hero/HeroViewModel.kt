@@ -4,10 +4,10 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.bulkapedia.compose.data.repos.heroes.Hero
-import com.bulkapedia.compose.data.repos.heroes.HeroesRepository
-import com.bulkapedia.compose.data.repos.sets.SetsRepository
-import com.bulkapedia.compose.data.repos.sets.UserSet
+import com.bulkapedia.data.CallBack
+import com.bulkapedia.data.Repository
+import com.bulkapedia.data.heroes.Hero
+import com.bulkapedia.data.sets.UserSet
 import com.google.firebase.firestore.ListenerRegistration
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,8 +17,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HeroViewModel @Inject constructor(
-    private val heroesRepository: HeroesRepository,
-    private val setsRepository: SetsRepository
+    private val heroesRepository: Repository<Hero>,
+    private val setsRepository: Repository<UserSet>
 ): ViewModel() {
 
     private val _heroFlow: MutableStateFlow<Hero?> = MutableStateFlow(null)
@@ -30,20 +30,20 @@ class HeroViewModel @Inject constructor(
     private var setsListener: ListenerRegistration? = null
 
     fun fetchHero(heroId: String) {
-        heroListener = heroesRepository.fetchAll { heroes ->
-            viewModelScope.launch { _heroFlow.emit(heroes.find { it.id == heroId }) }
-        }
-        setsListener = setsRepository.fetchAll { allSets ->
+        heroListener = heroesRepository.fetchAll(CallBack({ heroes ->
+            viewModelScope.launch { _heroFlow.emit(heroes.find { it.heroId == heroId }) }
+        }) {})
+        setsListener = setsRepository.fetchAll(CallBack({ allSets ->
             val heroSets = allSets.filter { it.hero == heroId }
                 .sortedByDescending { it.userLikeIds.size }
                 .take(3)
             setsFlow.clear()
             setsFlow.addAll(heroSets)
-        }
+        }) {})
     }
 
     fun deleteUserSet(set: UserSet) {
-        setsRepository.delete(set)
+        viewModelScope.launch { setsRepository.delete(set) }
     }
 
     fun dispose() {

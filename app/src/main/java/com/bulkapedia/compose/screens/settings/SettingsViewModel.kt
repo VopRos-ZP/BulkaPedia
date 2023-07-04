@@ -8,15 +8,16 @@ import com.bulkapedia.compose.data.classes.ChangeValue
 import com.bulkapedia.compose.data.classes.Value
 import com.bulkapedia.compose.data.now
 import com.bulkapedia.compose.data.nowYearFormat
-import com.bulkapedia.compose.data.repos.database.User
-import com.bulkapedia.compose.data.repos.database.UsersRepository
-import com.bulkapedia.compose.data.repos.sets.SetsRepository
 import com.bulkapedia.compose.data.toYearDate
 import com.bulkapedia.compose.data.yearFormat
+import com.bulkapedia.data.CallBack
+import com.bulkapedia.data.Repository
+import com.bulkapedia.data.sets.UserSet
+import com.bulkapedia.data.users.User
+import com.bulkapedia.data.users.UsersRepository
 import com.google.firebase.database.ValueEventListener
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.tasks.await
 import java.time.LocalDateTime
 import java.time.Period
 import javax.inject.Inject
@@ -24,7 +25,7 @@ import javax.inject.Inject
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
     private val usersRepository: UsersRepository,
-    private val setsRepository: SetsRepository
+    private val setsRepository: Repository<UserSet>
 ) : ViewModel() {
 
     val user = mutableStateListOf<User?>(null)
@@ -48,16 +49,16 @@ class SettingsViewModel @Inject constructor(
             listOf("почты", "почту", "Почта"),
             user.updateEmail.toYearDate().atTime(0, 0),
             user.email, { s, u -> u.apply { email = s; updateEmail = nowYearFormat() } }) { old, it ->
-            setsRepository.fetchAll { all ->
+            setsRepository.fetchAll(CallBack({ all ->
                 all.filter { s -> s.userLikeIds.contains(old) }.forEach { s ->
                     val ids = s.userLikeIds.toMutableList()
                     ids.remove(it.email)
                     ids.add(it.email)
 
                     val newSet = s.copy(userLikeIds = ids.distinct())
-                    setsRepository.update(newSet)
+                    viewModelScope.launch { setsRepository.update(newSet) }
                 }
-            }
+            }) {})
             viewModelScope.launch { onSuccess(it) }
         }
     }
@@ -67,12 +68,12 @@ class SettingsViewModel @Inject constructor(
             listOf("ника", "ник", "Ник"),
             user.updateNickname.toYearDate().atTime(0, 0),
             user.nickname, { s, u -> u.apply { nickname = s; updateNickname = nowYearFormat() } }) { old, it ->
-            setsRepository.fetchAll { all ->
-                all.filter { s -> s.from == old }.forEach { s ->
-                    val newSet = s.copy(from = it.nickname)
-                    viewModelScope.launch { setsRepository.update(newSet).await() }
+            setsRepository.fetchAll(CallBack({ all ->
+                all.filter { s -> s.author == old }.forEach { s ->
+                    val newSet = s.copy(author = it.nickname)
+                    viewModelScope.launch { setsRepository.update(newSet) }
                 }
-            }
+            }) {})
             viewModelScope.launch { onSuccess(it) }
         }
     }

@@ -38,7 +38,7 @@ import com.bulkapedia.compose.navigation.ToMECHANIC
 import com.bulkapedia.compose.navigation.ToMECHANICS
 import com.bulkapedia.compose.navigation.ToSETTINGS
 import com.bulkapedia.compose.navigation.ToUSERS_SETS
-import com.bulkapedia.compose.data.repos.categories.Category
+import com.bulkapedia.data.categories.Category
 import com.bulkapedia.compose.data.snackbars.TextSnackbar
 import com.bulkapedia.compose.elements.OutlinedCard
 import com.bulkapedia.compose.navigation.Destinations

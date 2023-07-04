@@ -12,7 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.bulkapedia.compose.data.repos.hero_info.HeroInfo
+import com.bulkapedia.data.hero_info.HeroInfo
 import com.bulkapedia.compose.elements.OutlinedCard
 import com.bulkapedia.compose.navigation.Destinations
 import com.bulkapedia.compose.screens.titled.ScreenView
@@ -34,7 +34,7 @@ fun HeroesInfoScreen(viewModel: HeroesInfoViewModel = hiltViewModel()) {
                 .background(Primary)
                 .padding(horizontal = 20.dp)
         ) {
-            items(heroesInfo, key = { it.id }) { info ->
+            items(heroesInfo, key = { it.heroInfoId }) { info ->
                 HeroInfoCard(info) { id ->
                     navController.navigate("${Destinations.HERO_INFO}/$id")
                 }
@@ -55,7 +55,7 @@ fun HeroInfoCard(
 ) {
     OutlinedCard(
         modifier = Modifier.size(200.dp, 230.dp),
-        onClick = { onClick(heroInfo.id) }
+        onClick = { onClick(heroInfo.heroInfoId) }
     ) {
         Image(
             painter = painterResource(stringToResource(heroInfo.hero)),

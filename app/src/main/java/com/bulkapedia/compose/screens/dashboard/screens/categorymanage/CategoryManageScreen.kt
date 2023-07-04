@@ -12,7 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.bulkapedia.compose.data.repos.categories.Category
+import com.bulkapedia.data.categories.Category
 import com.bulkapedia.compose.elements.LoginBlock
 import com.bulkapedia.compose.screens.titled.ScreenView
 import com.bulkapedia.compose.ui.theme.Primary

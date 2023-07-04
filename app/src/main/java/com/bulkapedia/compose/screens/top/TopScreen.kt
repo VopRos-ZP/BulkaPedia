@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.snapshots.SnapshotStateList
@@ -22,7 +21,7 @@ import com.bulkapedia.compose.screens.sets.SetTabCard
 import com.bulkapedia.compose.ui.theme.Teal200
 import com.bulkapedia.compose.util.CenteredBox
 import com.bulkapedia.compose.util.HCenteredBox
-import com.bulkapedia.compose.data.repos.sets.UserSet
+import com.bulkapedia.data.sets.UserSet
 import com.bulkapedia.compose.DataStore
 import com.bulkapedia.compose.elements.OutlinedCard
 import com.bulkapedia.compose.elements.sheets.ClosableModalBottomSheet
@@ -41,12 +40,12 @@ fun TopScreen(hero: String, viewModel: TopViewModel = hiltViewModel()) {
             sheetContent = {
                 when (val set = currentSet) {
                     null -> HCenteredBox { Text(text = "") }
-                    else -> SetTabCard(set, set.from != nickname) {}
+                    else -> SetTabCard(set, set.author != nickname) {}
                 }
             }, currentSet, viewModel::closeSet
         ) {
             CenteredBox {
-                TopSets(sets) { viewModel.listenSet(it.id) }
+                TopSets(sets) { viewModel.listenSet(it.userSetId) }
             }
         }
     }
@@ -89,7 +88,7 @@ fun TopItem(i: Int, set: UserSet, onClick: () -> Unit) {
             modifier = Modifier.padding(end = 20.dp)
         )
         Text(
-            text = set.from,
+            text = set.author,
             color = Teal200,
             fontSize = 12.sp,
             modifier = Modifier.padding(end = 20.dp)

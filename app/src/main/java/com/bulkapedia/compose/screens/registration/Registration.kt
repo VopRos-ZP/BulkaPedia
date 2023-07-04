@@ -23,9 +23,9 @@ import com.bulkapedia.compose.ui.theme.*
 import com.bulkapedia.compose.util.HCenteredBox
 import com.bulkapedia.compose.util.clickable
 import com.bulkapedia.compose.DataStore
-import com.bulkapedia.compose.data.repos.database.User
 import com.bulkapedia.compose.elements.*
 import com.bulkapedia.compose.screens.titled.ScreenView
+import com.bulkapedia.data.users.User
 import kotlinx.coroutines.launch
 
 @Composable
