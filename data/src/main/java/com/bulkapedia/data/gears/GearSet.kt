@@ -1,4 +1,4 @@
-package com.bulkapedia.compose.data.repos.gears
+package com.bulkapedia.data.gears
 
 enum class GearSet {
     NONE,

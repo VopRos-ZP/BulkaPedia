@@ -1,4 +1,4 @@
-package com.bulkapedia.compose.data.repos.database
+package com.bulkapedia.data.users
 
 import com.google.firebase.database.ValueEventListener
 

@@ -1,6 +1,6 @@
-package com.bulkapedia.compose.data.repos.database
+package com.bulkapedia.data.users
 
-import com.bulkapedia.compose.data.repos.database.User.Companion.toUser
+import com.bulkapedia.data.users.User.Companion.toUser
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError

@@ -1,4 +1,4 @@
-package com.bulkapedia.compose.data.repos.sets
+package com.bulkapedia.data.sets
 
 enum class GearCell {
     HEAD,

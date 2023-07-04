@@ -1,4 +1,4 @@
-package com.bulkapedia.compose.data.labels
+package com.bulkapedia.data.gears
 
 enum class Ranks {
     COMMON,
