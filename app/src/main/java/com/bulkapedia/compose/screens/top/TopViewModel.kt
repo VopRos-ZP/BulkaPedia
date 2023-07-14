@@ -4,9 +4,9 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.bulkapedia.data.CallBack
-import com.bulkapedia.data.sets.UserSet
-import com.bulkapedia.data.Repository
+import bulkapedia.Callback
+import bulkapedia.StoreRepository
+import bulkapedia.sets.UserSet
 import com.google.firebase.firestore.ListenerRegistration
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,7 +16,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class TopViewModel @Inject constructor(
-    private val setsRepository: Repository<UserSet>
+    private val setsRepository: StoreRepository<UserSet>
 ) : ViewModel() {
 
     val sets: SnapshotStateList<UserSet> = mutableStateListOf()
@@ -29,14 +29,14 @@ class TopViewModel @Inject constructor(
 
     fun fetchSets(hero: String) {
         val id = hero.split("_")[0]
-        setsListener = setsRepository.fetchAll(CallBack({ allSets ->
+        setsListener = setsRepository.listenAll(Callback({ allSets ->
             val filtered = allSets
                 .filter { it.hero == id }
                 .sortedByDescending { it.userLikeIds.size }
                 .take(100)
             sets.clear()
             sets.addAll(filtered)
-        }) {})
+        }))
     }
 
     fun closeSet() {
@@ -44,9 +44,9 @@ class TopViewModel @Inject constructor(
     }
 
     fun listenSet(setId: String) {
-        listener = setsRepository.fetchAll(CallBack({ allSets ->
-            viewModelScope.launch { _setFlow.emit(allSets.find { it.userSetId == setId }) }
-        }) {})
+        listener = setsRepository.listenAll(Callback({ allSets ->
+            viewModelScope.launch { _setFlow.emit(allSets.find { it.setId == setId }) }
+        }))
     }
 
     fun removeListener() {

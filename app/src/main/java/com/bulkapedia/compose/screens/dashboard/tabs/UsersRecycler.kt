@@ -25,8 +25,8 @@ import com.bulkapedia.compose.ui.theme.PrimaryDark
 import com.bulkapedia.compose.ui.theme.Teal200
 import com.bulkapedia.compose.util.VCenteredBox
 import com.bulkapedia.compose.util.clickable
-import com.bulkapedia.data.mains.Main
-import com.bulkapedia.data.users.User
+import bulkapedia.mains.Main
+import bulkapedia.users.User
 import com.bulkapedia.R
 import com.bulkapedia.compose.elements.OutlinedCard
 import com.bulkapedia.compose.elements.ScreenAction

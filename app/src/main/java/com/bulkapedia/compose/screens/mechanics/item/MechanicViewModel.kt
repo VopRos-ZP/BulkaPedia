@@ -2,9 +2,9 @@ package com.bulkapedia.compose.screens.mechanics.item
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.bulkapedia.data.CallBack
-import com.bulkapedia.data.mechanics.Mechanic
-import com.bulkapedia.data.Repository
+import bulkapedia.Callback
+import bulkapedia.StoreRepository
+import bulkapedia.mechanics.Mechanic
 import com.google.firebase.firestore.ListenerRegistration
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -14,7 +14,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MechanicViewModel @Inject constructor(
-    private val mechanicsRepository: Repository<Mechanic>
+    private val mechanicsRepository: StoreRepository<Mechanic>
 ) : ViewModel() {
 
     private val _mechanicFlow: MutableStateFlow<Mechanic?> = MutableStateFlow(null)
@@ -23,9 +23,9 @@ class MechanicViewModel @Inject constructor(
     private var listener: ListenerRegistration? = null
 
     fun listenMechanic(id: String) {
-        listener = mechanicsRepository.fetchAll(CallBack({ mechanics ->
+        listener = mechanicsRepository.listenAll(Callback({ mechanics ->
             viewModelScope.launch {  _mechanicFlow.emit(mechanics.find { it.mechanicId == id }) }
-        }) {})
+        }))
     }
 
     fun removeListener() {

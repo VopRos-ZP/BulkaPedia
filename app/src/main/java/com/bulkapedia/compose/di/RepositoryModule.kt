@@ -1,38 +1,23 @@
 package com.bulkapedia.compose.di
 
-import com.bulkapedia.data.Repository
-import com.bulkapedia.data.categories.Category
-import com.bulkapedia.data.comments.Comment
-import com.bulkapedia.data.gears.Gear
-import com.bulkapedia.data.hero_info.HeroInfo
-import com.bulkapedia.data.heroes.Hero
-import com.bulkapedia.data.mains.Main
-import com.bulkapedia.data.maps.Map
-import com.bulkapedia.data.mechanics.Mechanic
-import com.bulkapedia.data.messages.Message
-import com.bulkapedia.data.sets.UserSet
-import com.bulkapedia.data.users.UsersRepository
-import com.bulkapedia.data.users.UsersRepositoryImpl
-import com.bulkapedia.domain.categories.CategoryRepository
-import com.bulkapedia.domain.categories.CategoryRepositoryImpl
-import com.bulkapedia.domain.comments.CommentRepository
-import com.bulkapedia.domain.comments.CommentRepositoryImpl
-import com.bulkapedia.domain.gears.GearRepository
-import com.bulkapedia.domain.gears.GearRepositoryImpl
-import com.bulkapedia.domain.hero_info.HeroInfoRepository
-import com.bulkapedia.domain.hero_info.HeroInfoRepositoryImpl
-import com.bulkapedia.domain.heroes.HeroRepository
-import com.bulkapedia.domain.heroes.HeroRepositoryImpl
-import com.bulkapedia.domain.mains.MainRepository
-import com.bulkapedia.domain.mains.MainRepositoryImpl
-import com.bulkapedia.domain.maps.MapRepository
-import com.bulkapedia.domain.maps.MapRepositoryImpl
-import com.bulkapedia.domain.mechanics.MechanicRepository
-import com.bulkapedia.domain.mechanics.MechanicRepositoryImpl
-import com.bulkapedia.domain.messages.MessageRepository
-import com.bulkapedia.domain.messages.MessageRepositoryImpl
-import com.bulkapedia.domain.sets.UserSetRepository
-import com.bulkapedia.domain.sets.UserSetRepositoryImpl
+import bulkapedia.StoreRepository
+import bulkapedia.categories.Category
+import bulkapedia.comments.Comment
+import bulkapedia.devchat.Message
+import bulkapedia.effects.PersonalEffect
+import bulkapedia.gears.Gear
+import bulkapedia.heroInfo.HeroInfo
+import bulkapedia.heroes.Hero
+import bulkapedia.instances.*
+import bulkapedia.mains.Main
+import bulkapedia.maps.GameMap
+import bulkapedia.mechanics.Mechanic
+import bulkapedia.sets.UserSet
+import bulkapedia.users.UserRepository
+import com.bulkapedia.compose.di.annotations.*
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.firestore.CollectionReference
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -48,49 +33,56 @@ class RepositoryModule {
      * **/
     @Provides
     @Singleton
-    fun provideUsersRepository(): UsersRepository = UsersRepositoryImpl()
+    fun provideUsersRepository(
+        ref: DatabaseReference,
+        auth: FirebaseAuth
+    ): UserRepository = UsersRepositoryImpl(ref, auth)
 
     /**
      * Firebase Firestore
      * **/
     @Provides
     @Singleton
-    fun provideMainRepository(): Repository<Main> = MainRepositoryImpl()
+    fun provideMainRepository(@MainsRef ref: CollectionReference): StoreRepository<Main> = MainsRepositoryImpl(ref)
 
     @Provides
     @Singleton
-    fun provideHeroRepository(): Repository<Hero> = HeroRepositoryImpl()
+    fun provideHeroRepository(@HeroRef ref: CollectionReference): StoreRepository<Hero> = HeroesRepositoryImpl(ref)
 
     @Provides
     @Singleton
-    fun provideSetRepository(): Repository<UserSet> = UserSetRepositoryImpl()
+    fun provideSetRepository(@SetsRef ref: CollectionReference): StoreRepository<UserSet> = SetsRepositoryImpl(ref)
 
     @Provides
     @Singleton
-    fun provideMapRepository(): Repository<Map> = MapRepositoryImpl()
+    fun provideMapRepository(@MapsRef ref: CollectionReference): StoreRepository<GameMap> = MapsRepositoryImpl(ref)
 
     @Provides
     @Singleton
-    fun provideCategoryRepository(): Repository<Category> = CategoryRepositoryImpl()
+    fun provideCategoryRepository(@CategoryRef ref: CollectionReference): StoreRepository<Category> = CategoryRepositoryImpl(ref)
 
     @Provides
     @Singleton
-    fun provideCommentRepository(): Repository<Comment> = CommentRepositoryImpl()
+    fun provideCommentRepository(@CommentRef ref: CollectionReference): StoreRepository<Comment> = CommentsRepositoryImpl(ref)
 
     @Provides
     @Singleton
-    fun provideGearRepository(): Repository<Gear> = GearRepositoryImpl()
+    fun provideGearRepository(@GearRef ref: CollectionReference): StoreRepository<Gear> = GearsRepositoryImpl(ref)
 
     @Provides
     @Singleton
-    fun provideHeroInfoRepository(): Repository<HeroInfo> = HeroInfoRepositoryImpl()
+    fun provideHeroInfoRepository(@HeroInfoRef ref: CollectionReference): StoreRepository<HeroInfo> = HeroInfoRepositoryImpl(ref)
 
     @Provides
     @Singleton
-    fun provideMechanicRepository(): Repository<Mechanic> = MechanicRepositoryImpl()
+    fun provideMechanicRepository(@MechanicRef ref: CollectionReference): StoreRepository<Mechanic> = MechanicsRepositoryImpl(ref)
 
     @Provides
     @Singleton
-    fun provideMessageRepository(): Repository<Message> = MessageRepositoryImpl()
+    fun provideMessageRepository(@MessageRef ref: CollectionReference): StoreRepository<Message> = ChatRepositoryImpl(ref)
+
+    @Provides
+    @Singleton
+    fun provideEffectsRepository(@EffectsRef ref: CollectionReference): StoreRepository<PersonalEffect> = EffectsRepositoryImpl(ref)
 
 }

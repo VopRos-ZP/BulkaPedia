@@ -21,6 +21,7 @@ android {
 dependencies {
     /** Project **/
     implementation(project(":users:data"))
+    implementation(project(":core:domain"))
     /** Firebase **/
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.firestore)

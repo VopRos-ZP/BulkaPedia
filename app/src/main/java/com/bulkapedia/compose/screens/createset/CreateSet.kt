@@ -33,21 +33,21 @@ import com.bulkapedia.compose.ui.theme.Teal200
 import com.bulkapedia.compose.util.CenteredBox
 import com.bulkapedia.compose.util.HCenteredBox
 import com.bulkapedia.compose.util.clickable
-import com.bulkapedia.data.gears.Effect
-import com.bulkapedia.data.gears.Gear
-import com.bulkapedia.data.gears.GearSet
+import bulkapedia.effects.Effect
+import bulkapedia.gears.Gear
+import bulkapedia.gears.GearSet
 import com.bulkapedia.compose.data.gears.PersonalGears
-import com.bulkapedia.data.heroes.Hero
-import com.bulkapedia.data.sets.GearCell
-import com.bulkapedia.data.sets.UserSet
+import bulkapedia.heroes.Hero
+import bulkapedia.gears.GearCell
+import bulkapedia.sets.UserSet
 import com.bulkapedia.compose.elements.InRowOutlinedButton
 import com.bulkapedia.compose.elements.OutlinedCard
 import com.bulkapedia.compose.screens.Loading
 import com.bulkapedia.compose.screens.titled.ScreenView
 import com.bulkapedia.compose.ui.theme.LocalNavController
 import com.bulkapedia.compose.util.stringToResource
-import com.bulkapedia.compose.util.toHeroStats
-import com.bulkapedia.data.gears.Gear.Companion.emptyIcons
+import bulkapedia.gears.Gear.Companion.emptyIcons
+import bulkapedia.heroes.toHeroStats
 import kotlin.math.roundToInt
 
 @Composable
@@ -95,9 +95,11 @@ fun CreateSetFragment(hero: Hero, set: UserSet, viewModel: CreateSetViewModel) {
                         CenteredBox {
                             InRowOutlinedButton(text = "Сохранить") {
                                 viewModel.saveSet(UserSet(
-                                    set.userSetId, set.author, hero.heroId,
-                                    gearsEffectState.value.mapValues { it.value.icon },
-                                    set.userLikeIds
+                                    setId = set.setId,
+                                    author = set.author,
+                                    hero = hero.heroId,
+                                    gears = gearsEffectState.value.mapValues { it.value.icon },
+                                    userLikeIds = set.userLikeIds
                                 ))
                                 navController.navigateUp()
                             }
@@ -202,7 +204,7 @@ private fun sumEffects(
                 effects.addAll(g.effects)
             }
         }
-        val pgCount = gears.filter { it.gearSet == GearSet.PERSONAL.name }.size
+        val pgCount = gears.filter { it.set == GearSet.PERSONAL }.size
         effects.addAll(
             GEARS_LIST.getEffectsFromSets(gears) +
             PersonalGears.getPersonalGears(hero, pgCount)

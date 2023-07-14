@@ -8,7 +8,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.bulkapedia.data.mechanics.Mechanic
+import bulkapedia.mechanics.Mechanic
 import com.bulkapedia.compose.elements.OutlinedCard
 import com.bulkapedia.compose.ui.theme.Teal200
 import com.bulkapedia.compose.util.HCenteredBox

@@ -1,16 +1,15 @@
 package com.bulkapedia.compose.screens.heroes
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.bulkapedia.data.heroes.Hero
+import bulkapedia.heroes.Hero
 import com.bulkapedia.compose.elements.OutlinedCard
 import com.bulkapedia.compose.elements.heroesTags
 import com.bulkapedia.compose.elements.OutlinedButton
@@ -31,7 +30,10 @@ import com.bulkapedia.compose.navigation.ToVISIT
 import com.bulkapedia.compose.screens.card_recycler.TagsWithRecycler
 import com.bulkapedia.compose.screens.titled.ScreenView
 import com.bulkapedia.compose.ui.theme.LocalNavController
-import com.bulkapedia.compose.util.stringToResource
+import com.bulkapedia.compose.ui.theme.Teal200
+import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
+import com.bumptech.glide.integration.compose.GlideImage
+import com.bumptech.glide.integration.compose.placeholder
 
 @Composable
 fun HeroesNavList() {
@@ -59,6 +61,7 @@ fun Heroes(viewModel: HeroesViewModel = hiltViewModel()) {
     }
 }
 
+@OptIn(ExperimentalGlideComposeApi::class)
 @Composable
 fun HeroCard(hero: Hero) {
     val navController = LocalNavController.current
@@ -70,9 +73,10 @@ fun HeroCard(hero: Hero) {
             modifier = Modifier.padding(20.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Image(
-                painter = painterResource(stringToResource(hero.icon)),
-                contentDescription = "heroIcon",
+            GlideImage(
+                model = hero.icon,
+                loading = placeholder { CircularProgressIndicator(color = Teal200) },
+                contentDescription = hero.name,
                 modifier = Modifier.size(width = 120.dp, height = 150.dp)
             )
             Column(

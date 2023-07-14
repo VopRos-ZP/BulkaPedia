@@ -5,7 +5,7 @@ import com.bulkapedia.data.docToObject
 import com.google.firebase.firestore.DocumentSnapshot
 
 data class UserSet(
-    val userSetId: String,
+    val setId: String,
     val author: String,
     val hero: String,
     val gears: Map<GearCell, String>,

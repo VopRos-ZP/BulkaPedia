@@ -1,9 +1,9 @@
 package com.bulkapedia.domain.mechanics
 
 import com.bulkapedia.data.Repository
-import com.bulkapedia.data.mechanics.Mechanic
-import com.bulkapedia.data.mechanics.Mechanic.Companion.toData
-import com.bulkapedia.data.mechanics.Mechanic.Companion.toMechanic
+import bulkapedia.mechanics.Mechanic
+import bulkapedia.mechanics.Mechanic.Companion.toData
+import bulkapedia.mechanics.Mechanic.Companion.toMechanic
 import com.bulkapedia.domain.core.Refs
 import com.bulkapedia.domain.core.RepositoryImpl
 

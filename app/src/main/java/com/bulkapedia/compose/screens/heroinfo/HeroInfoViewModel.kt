@@ -2,9 +2,9 @@ package com.bulkapedia.compose.screens.heroinfo
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.bulkapedia.data.CallBack
-import com.bulkapedia.data.Repository
-import com.bulkapedia.data.hero_info.HeroInfo
+import bulkapedia.Callback
+import bulkapedia.StoreRepository
+import bulkapedia.heroInfo.HeroInfo
 import com.google.firebase.firestore.ListenerRegistration
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -14,7 +14,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HeroInfoViewModel @Inject constructor(
-    private val heroInfoRepository: Repository<HeroInfo>
+    private val heroInfoRepository: StoreRepository<HeroInfo>
 ) : ViewModel() {
 
     private val _heroInfoFlow: MutableStateFlow<HeroInfo?> = MutableStateFlow(null)
@@ -26,12 +26,12 @@ class HeroInfoViewModel @Inject constructor(
     private var listener: ListenerRegistration? = null
 
     fun listenHeroInfo(id: String) {
-        listener = heroInfoRepository.fetchAll(CallBack({ heroInfos ->
+        listener = heroInfoRepository.listenAll(Callback({ heroInfos ->
             viewModelScope.launch {
                 _heroInfoFlow.emit(heroInfos.find { it.heroInfoId == id })
                 _heroesInfoCount.emit(heroInfos.size)
             }
-        }) {})
+        }))
     }
 
     fun removeListener() {

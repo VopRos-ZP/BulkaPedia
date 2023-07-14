@@ -3,14 +3,14 @@ package com.bulkapedia.compose.screens.profile
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.bulkapedia.data.CallBack
-import com.bulkapedia.data.Repository
-import com.bulkapedia.data.users.User
+import bulkapedia.Callback
+import bulkapedia.StoreRepository
+import bulkapedia.users.User
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
-import com.bulkapedia.data.sets.UserSet
-import com.bulkapedia.data.mains.Main
-import com.bulkapedia.data.users.UsersRepository
+import bulkapedia.sets.UserSet
+import bulkapedia.mains.Main
+import bulkapedia.users.UserRepository
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.firestore.ListenerRegistration
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,9 +19,9 @@ import kotlinx.coroutines.launch
 
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
-    private val usersRepository: UsersRepository,
-    private val setsRepository: Repository<UserSet>,
-    private val statsRepository: Repository<Main>
+    private val usersRepository: UserRepository,
+    private val setsRepository: StoreRepository<UserSet>,
+    private val statsRepository: StoreRepository<Main>
 ): ViewModel() {
 
     private val _userFlow = MutableStateFlow<User?>(null)
@@ -35,16 +35,16 @@ class ProfileViewModel @Inject constructor(
     private var mainsListener: ListenerRegistration? = null
 
     fun fetchUser(by: (User) -> Boolean) {
-        listener = usersRepository.fetchAll { all ->
+        listener = usersRepository.listenAll(Callback({ all ->
             viewModelScope.launch { _userFlow.emit(all.find(by)) }
-        }
+        }))
     }
 
     fun fetchMains(email: String) {
-        mainsListener = statsRepository.fetchAll(CallBack({ stats ->
+        mainsListener = statsRepository.listenAll(Callback({ stats ->
             userMains.clear()
             userMains.addAll(stats.filter { it.mainId.startsWith(email) })
-        }) {})
+        }))
     }
 
     fun deleteSet(set: UserSet) {
@@ -52,14 +52,14 @@ class ProfileViewModel @Inject constructor(
     }
 
     fun filterSets(filter: (UserSet) -> Boolean) {
-        setListener = setsRepository.fetchAll(CallBack({ all ->
+        setListener = setsRepository.listenAll(Callback({ all ->
             userSets.clear()
             userSets.addAll(all.filter(filter))
-        }) {})
+        }))
     }
 
     fun removeListener() {
-        listener?.let(usersRepository::remove)
+        listener?.let(usersRepository::removeListener)
         setListener?.remove()
         mainsListener?.remove()
     }

@@ -2,14 +2,12 @@ package com.bulkapedia.compose.screens.createset
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.bulkapedia.data.CallBack
-import com.bulkapedia.data.gears.Gear
-import com.bulkapedia.data.heroes.Hero
-import com.bulkapedia.data.sets.GearCell
-import com.bulkapedia.data.sets.UserSet
-import com.bulkapedia.domain.gears.GearRepository
-import com.bulkapedia.domain.heroes.HeroRepository
-import com.bulkapedia.domain.sets.UserSetRepository
+import bulkapedia.Callback
+import bulkapedia.StoreRepository
+import bulkapedia.gears.Gear
+import bulkapedia.heroes.Hero
+import bulkapedia.gears.GearCell
+import bulkapedia.sets.UserSet
 import com.google.firebase.firestore.ListenerRegistration
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,9 +17,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CreateSetViewModel @Inject constructor(
-    private val setsRepository: UserSetRepository,
-    private val heroesRepository: HeroRepository,
-    private val gearsRepository: GearRepository
+    private val setsRepository: StoreRepository<UserSet>,
+    private val heroesRepository: StoreRepository<Hero>,
+    private val gearsRepository: StoreRepository<Gear>
 ) : ViewModel() {
 
     private val _heroFlow: MutableStateFlow<Hero?> = MutableStateFlow(null)
@@ -46,26 +44,26 @@ class CreateSetViewModel @Inject constructor(
     }
 
     fun fetchData(heroId: String, setId: String) {
-        heroListener = heroesRepository.fetchAll(CallBack({ heroes ->
+        heroListener = heroesRepository.listenAll(Callback({ heroes ->
             viewModelScope.launch { _heroFlow.emit(heroes.find { it.heroId == heroId }) }
-        }) {})
-        setListener = setsRepository.fetchAll(CallBack({ sets ->
+        }))
+        setListener = setsRepository.listenAll(Callback({ sets ->
             viewModelScope.launch {
-                val set = sets.find { it.userSetId == setId } ?: UserSet.EMPTY
+                val set = sets.find { it.setId == setId } ?: UserSet.EMPTY
                 isEdit = set != UserSet.EMPTY
                 _setFlow.emit(set)
             }
-        }) {})
+        }))
     }
 
     fun fetchGears(set: UserSet) {
-        gearsListener = gearsRepository.fetchAll(CallBack({ allGears ->
+        gearsListener = gearsRepository.listenAll(Callback({ allGears ->
             val map = mutableMapOf<GearCell, Gear>()
             set.gears.forEach { (cell, icon) ->
                 map[cell] = allGears.find { it.icon == icon } ?: Gear.EMPTY(cell)
             }
             viewModelScope.launch { gearsFlow.emit(map) }
-        }) {})
+        }))
     }
 
     fun removeListeners() {

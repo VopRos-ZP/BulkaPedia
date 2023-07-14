@@ -19,15 +19,14 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.bulkapedia.compose.screens.sets.GearImage
 import com.bulkapedia.compose.util.clickable
-import com.bulkapedia.data.gears.Effect
-import com.bulkapedia.data.gears.Gear
-import com.bulkapedia.data.heroes.Hero
-import com.bulkapedia.data.gears.Ranks
-import com.bulkapedia.data.sets.GearCell
+import bulkapedia.effects.Effect
+import bulkapedia.gears.Gear
+import bulkapedia.heroes.Hero
+import bulkapedia.gears.Rank
+import bulkapedia.gears.GearCell
 import com.bulkapedia.compose.ui.theme.*
 import com.bulkapedia.compose.util.stringToResource
-import com.bulkapedia.data.gears.Gear.Companion.emptyIcons
-import com.bulkapedia.data.gears.Gear.Companion.getRankEffect
+import bulkapedia.gears.Gear.Companion.emptyIcons
 import kotlinx.coroutines.launch
 
 @Composable
@@ -151,7 +150,7 @@ fun SelectRankGear(
             .background(PrimaryDark, RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp)),
         verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
-        val list = gear.getRankEffect().toList()
+        val list = gear.ranks.toList()
         items(list) {
             SelectRankGearItem(it.first, it.second, state) { newEff ->
                 val newGear = gear.copy(effects = newEff)
@@ -164,7 +163,7 @@ fun SelectRankGear(
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun SelectRankGearItem(
-    rank: Ranks, effs: List<Effect>,
+    rank: Rank, effs: List<Effect>,
     state: BottomSheetState,
     onClick: (List<Effect>) -> Unit
 ) {
@@ -191,17 +190,17 @@ fun SelectRankGearItem(
     }
 }
 
-private fun getColorByRank(rank: Ranks): Color {
+private fun getColorByRank(rank: Rank): Color {
     return when (rank) {
-        Ranks.COMMON -> Color.Gray
-        Ranks.RARE -> Color.Green
-        Ranks.EPIC -> Color(8, 159, 252)
-        Ranks.LEGENDARY -> Color.Yellow
-        Ranks.MYTHIC -> Color(252, 126, 8)
-        Ranks.SUPREME -> Color.Red
-        Ranks.ULTIMATE -> Color.Magenta
-        Ranks.CELESTIAL -> Color(2, 59, 184)
-        Ranks.STELLAR -> Purple500
+        Rank.COMMON -> Color.Gray
+        Rank.RARE -> Color.Green
+        Rank.EPIC -> Color(8, 159, 252)
+        Rank.LEGENDARY -> Color.Yellow
+        Rank.MYTHIC -> Color(252, 126, 8)
+        Rank.SUPREME -> Color.Red
+        Rank.ULTIMATE -> Color.Magenta
+        Rank.CELESTIAL -> Color(2, 59, 184)
+        Rank.STELLAR -> Purple500
     }
 }
 

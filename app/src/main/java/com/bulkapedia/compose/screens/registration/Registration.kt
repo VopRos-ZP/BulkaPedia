@@ -25,7 +25,7 @@ import com.bulkapedia.compose.util.clickable
 import com.bulkapedia.compose.DataStore
 import com.bulkapedia.compose.elements.*
 import com.bulkapedia.compose.screens.titled.ScreenView
-import com.bulkapedia.data.users.User
+import bulkapedia.users.User
 import kotlinx.coroutines.launch
 
 @Composable

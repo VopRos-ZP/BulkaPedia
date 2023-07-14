@@ -6,6 +6,7 @@ enum class GearSet {
     PARTS,
     DARK_IMPLANT,
     HEAVY_PORT,
+    BIO_NODE,
     PERSONAL;
 
     override fun toString(): String {

@@ -4,9 +4,9 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import com.bulkapedia.data.users.User
+import bulkapedia.users.User
 import com.bulkapedia.compose.util.CenteredBox
-import com.bulkapedia.data.mains.Main
+import bulkapedia.mains.Main
 
 @Composable
 fun ScreenWithTagDialog(

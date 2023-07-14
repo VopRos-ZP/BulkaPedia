@@ -8,4 +8,10 @@ data class UserSet(
     val hero: String,
     val gears: Map<GearCell, String>,
     val userLikeIds: List<String>
-)
+) {
+
+    companion object {
+        val EMPTY = UserSet("", "", "", emptyMap(), emptyList())
+    }
+
+}

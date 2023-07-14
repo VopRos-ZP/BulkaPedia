@@ -8,8 +8,8 @@ import androidx.compose.ui.composed
 import com.bulkapedia.compose.ICON_LIST
 import com.bulkapedia.R
 import com.bulkapedia.compose.MainActivity
-import com.bulkapedia.data.gears.Effect
-import com.bulkapedia.data.gears.Ranks
+import bulkapedia.effects.Effect
+import bulkapedia.gears.Rank
 
 lateinit var CTX: MainActivity
 
@@ -143,9 +143,9 @@ var GEARS_RES = mapOf(
     "aimingTime" to R.string.aiming_time,
 )
 
-fun autoFillGearEffects(effects: List<Effect>, ints: Map<Int, List<Int>>): Map<Ranks, List<Effect>> {
-    val m = mutableMapOf<Ranks, List<Effect>>()
-    Ranks.values().forEachIndexed { i, r ->
+fun autoFillGearEffects(effects: List<Effect>, ints: Map<Int, List<Int>>): Map<Rank, List<Effect>> {
+    val m = mutableMapOf<Rank, List<Effect>>()
+    Rank.values().forEachIndexed { i, r ->
         m += r to effects.mapIndexed { ei, it ->
             Effect(ints[ei]!![i], it.percent, it.description)
         }

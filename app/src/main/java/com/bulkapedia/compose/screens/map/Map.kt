@@ -74,7 +74,7 @@ fun SelectedMapScreen(mapImage: String, viewModel: MapViewModel = hiltViewModel(
                                 color = Teal200,
                                 fontSize = 16.sp,
                                 modifier = Modifier.clickable {
-                                    mapIconState.value = if (mapIconState.value == map.image) map.imageSpawns
+                                    mapIconState.value = if (mapIconState.value == map.image) map.spawns
                                     else map.image
                                     toggleTextState.value = if (toggleTextState.value == showSpawnsText) hideSpawnsText
                                     else showSpawnsText

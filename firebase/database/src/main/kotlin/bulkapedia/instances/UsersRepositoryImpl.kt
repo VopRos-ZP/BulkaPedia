@@ -1,8 +1,10 @@
 package bulkapedia.instances
 
+import bulkapedia.Callback
 import bulkapedia.users.User
 import bulkapedia.users.UserDTO
 import bulkapedia.users.UserRepository
+import bulkapedia.users.toPOJO
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -15,28 +17,30 @@ class UsersRepositoryImpl(
     private val auth: FirebaseAuth
 ) : UserRepository {
 
-    override fun listenAll(): ValueEventListener {
+    private fun transform(s: DataSnapshot): User? {
+        return s.getValue(UserDTO::class.java)?.let { dto ->
+            User(s.key ?: "",
+                dto.email, dto.password,
+                dto.nickname, dto.updateEmail,
+                dto.updateNickname
+            )
+        }
+    }
+
+    override fun listenAll(callback: Callback<List<User>>): ValueEventListener {
         return ref.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                TODO("Not yet implemented")
+                snapshot.children.mapNotNull { transform(it) }.apply(callback.onSuccess)
             }
 
             override fun onCancelled(error: DatabaseError) {
-                TODO("Not yet implemented")
+                callback.onError?.invoke(error.message)
             }
         })
     }
 
     override suspend fun fetchAll(): List<User> {
-        return ref.get().await().children.mapNotNull {
-            it.getValue(UserDTO::class.java)?.let { dto ->
-                User(it.key ?: "",
-                    dto.email, dto.password,
-                    dto.nickname, dto.updateEmail,
-                    dto.updateNickname
-                )
-            }
-        }
+        return ref.get().await().children.mapNotNull { transform(it) }
     }
 
     override suspend fun fetchById(id: String): User? {

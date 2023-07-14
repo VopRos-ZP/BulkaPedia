@@ -1,9 +1,9 @@
 package com.bulkapedia.domain.heroes
 
 import com.bulkapedia.data.Repository
-import com.bulkapedia.data.heroes.Hero
-import com.bulkapedia.data.heroes.Hero.Companion.toHero
-import com.bulkapedia.data.heroes.Hero.Companion.toData
+import bulkapedia.heroes.Hero
+import bulkapedia.heroes.Hero.Companion.toHero
+import bulkapedia.heroes.Hero.Companion.toData
 import com.bulkapedia.domain.core.Refs
 import com.bulkapedia.domain.core.RepositoryImpl
 

@@ -2,15 +2,15 @@ package com.bulkapedia.compose.data.gears
 
 import com.bulkapedia.R
 import com.bulkapedia.compose.util.resourceToString
-import com.bulkapedia.data.gears.Effect
-import com.bulkapedia.data.gears.Gear
-import com.bulkapedia.data.gears.GearSet
+import bulkapedia.effects.Effect
+import bulkapedia.gears.Gear
+import bulkapedia.gears.GearSet
 
 class GearsList {
 
     fun getEffectsFromSets(gears: List<Gear>): List<Effect> {
         val effects = mutableListOf<Effect>()
-        when (gears.filter { it.gearSet == GearSet.BIO_NODE.name }.size) {
+        when (gears.filter { it.set == GearSet.BIO_NODE }.size) {
             2, 3 -> effects.add(Effect(2, false, resourceToString(R.string.piercing_effect)))
             4, 5 -> {
                 effects.add(Effect(2, false, resourceToString(R.string.piercing_effect)))
@@ -22,7 +22,7 @@ class GearsList {
                 effects.add(Effect(-11, true, resourceToString(R.string.running_volume_effect)))
             }
         }
-        when (gears.filter { it.gearSet == GearSet.DARK_IMPLANT.name }.size) {
+        when (gears.filter { it.set == GearSet.DARK_IMPLANT }.size) {
             2, 3 -> effects.add(Effect(5, true, resourceToString(R.string.health_damage_effect)))
             4, 5 -> {
                 effects.add(Effect(5, true, resourceToString(R.string.health_damage_effect)))
@@ -34,7 +34,7 @@ class GearsList {
                 effects.add(Effect(-10, true, resourceToString(R.string.reloading_time_effect)))
             }
         }
-        when (gears.filter { it.gearSet == GearSet.WHITE_INDEX.name }.size) {
+        when (gears.filter { it.set == GearSet.WHITE_INDEX }.size) {
             2, 3 -> effects.add(Effect(5, true, resourceToString(R.string.armor_damage_effect)))
             4, 5 -> {
                 effects.add(Effect(5, true, resourceToString(R.string.armor_damage_effect)))
@@ -46,7 +46,7 @@ class GearsList {
                 effects.add(Effect(10, false, resourceToString(R.string.add_health_effect)))
             }
         }
-        when (gears.filter { it.gearSet == GearSet.HEAVY_PORT.name }.size) {
+        when (gears.filter { it.set == GearSet.HEAVY_PORT }.size) {
             2, 3 -> effects.add(Effect(2, false, resourceToString(R.string.piercing_effect)))
             4, 5 -> {
                 effects.add(Effect(2, false, resourceToString(R.string.piercing_effect)))
@@ -58,7 +58,7 @@ class GearsList {
                 effects.add(Effect(5, true, resourceToString(R.string.armor_damage_effect)))
             }
         }
-        when (gears.filter { it.gearSet == GearSet.PARTS.name }.size) {
+        when (gears.filter { it.set == GearSet.PARTS }.size) {
             2, 3 -> effects.add(Effect(5, true, resourceToString(R.string.fire_rate_effect)))
             4, 5 -> {
                 effects.add(Effect(5, true, resourceToString(R.string.fire_rate_effect)))

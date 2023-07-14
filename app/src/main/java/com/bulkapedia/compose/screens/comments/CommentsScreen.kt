@@ -29,7 +29,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.bulkapedia.compose.screens.sets.SetTabCard
 import com.bulkapedia.R
-import com.bulkapedia.data.comments.Comment
+import bulkapedia.comments.Comment
 import com.bulkapedia.compose.elements.*
 import com.bulkapedia.compose.ui.theme.*
 import com.bulkapedia.compose.util.CenteredBox
@@ -98,7 +98,7 @@ fun CommentsScreen(setId: String, viewModel: CommentsViewModel = hiltViewModel()
                                 txt.value = comment.text
                             }
                         },
-                        onRecLongClick = { comment -> navController.navigate("${Destinations.VISIT_PROFILE}/${comment.from}") {
+                        onRecLongClick = { comment -> navController.navigate("${Destinations.VISIT_PROFILE}/${comment.author}") {
                             launchSingleTop = true
                         }}
                     )
@@ -108,9 +108,12 @@ fun CommentsScreen(setId: String, viewModel: CommentsViewModel = hiltViewModel()
                     else -> SendForm(txt) {
                         if (txt.value.isNotEmpty() && isSign) {
                             if (!isEdit.value) {
-                                viewModel.sendComment(Comment("",
-                                    set = s.userSetId, from = nickname,
-                                    text = txt.value, date = nowTimeFormat()
+                                viewModel.sendComment(Comment(
+                                    commentId = "",
+                                    setId = s.setId,
+                                    author = nickname,
+                                    text = txt.value,
+                                    date = nowTimeFormat()
                                 ))
                             } else {
                                 isEdit.value = false
@@ -152,7 +155,7 @@ fun ChatRecycler(
             ) {
                 items(comments) { comment ->
                     val expanded = remember { mutableStateOf(false) }
-                    if (comment.from == nickname) {
+                    if (comment.author == nickname) {
                         Box {
                             SendTextMessage(
                                 text = comment.text,
@@ -170,7 +173,7 @@ fun ChatRecycler(
                             ReceiverTextMessage(
                                 text = comment.text,
                                 date = comment.date,
-                                author = comment.from) {
+                                author = comment.author) {
                                 expanded.value = !expanded.value
                             }
                             ReceiveCommentsDropdownMenu(expanded) {

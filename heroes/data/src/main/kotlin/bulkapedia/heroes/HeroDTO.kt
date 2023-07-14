@@ -8,7 +8,7 @@ data class HeroDTO(
     var type: String = "",
     var icon: String = "",
     var difficult: String = "",
-    var stats: Map<String, Number> = emptyMap(),
+    var stats: Map<String, Double> = emptyMap(),
     var counterpicks: List<String> = emptyList(),
     var personalGears: Map<String, String> = emptyMap()
 )

@@ -1,4 +1,3 @@
-@Suppress("DSL_SCOPE_VIOLATION") // TODO: Remove once KTIJ-19369 is fixed
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.kotlinAndroid)
@@ -49,8 +48,60 @@ android {
 
 dependencies {
     /** Project **/
-    implementation(project(":data"))
-    implementation(project(":domain"))
+    /** Categories **/
+    implementation(project(":categories:data"))
+    implementation(project(":categories:domain"))
+    //implementation(project(":categories:ui"))
+    /** Chat **/
+    implementation(project(":chat:data"))
+    implementation(project(":chat:domain"))
+    //implementation(project(":chat:ui"))
+    /** Comments **/
+    implementation(project(":comments:data"))
+    implementation(project(":comments:domain"))
+    //implementation(project(":comments:ui"))
+    /** Effects **/
+    implementation(project(":effects:data"))
+    implementation(project(":effects:domain"))
+    //implementation(project(":effects:ui"))
+    /** Gears **/
+    implementation(project(":gears:data"))
+    implementation(project(":gears:domain"))
+    //implementation(project(":gears:ui"))
+    /** Heroes **/
+    implementation(project(":heroes:data"))
+    implementation(project(":heroes:domain"))
+    //implementation(project(":heroes:ui"))
+    /** HeroInfo **/
+    implementation(project(":heroInfo:data"))
+    implementation(project(":heroInfo:domain"))
+    //implementation(project(":heroInfo:ui"))
+    /** Mains **/
+    implementation(project(":mains:data"))
+    implementation(project(":mains:domain"))
+    //implementation(project(":mains:ui"))
+    /** Maps **/
+    implementation(project(":maps:data"))
+    implementation(project(":maps:domain"))
+    //implementation(project(":maps:ui"))
+    /** Mechanics **/
+    implementation(project(":mechanics:data"))
+    implementation(project(":mechanics:domain"))
+    //implementation(project(":mechanics:ui"))
+    /** Sets **/
+    implementation(project(":sets:data"))
+    implementation(project(":sets:domain"))
+    //implementation(project(":sets:ui"))
+    /** Users **/
+    implementation(project(":users:data"))
+    implementation(project(":users:domain"))
+    //implementation(project(":users:ui"))
+    /** Core **/
+    implementation(project(":core:domain"))
+    /** Firebase (project) **/
+    implementation(project(":firebase:firestore"))
+    implementation(project(":firebase:database"))
+
     /** Compose **/
     implementation(platform(libs.compose.bom))
     implementation(libs.androidx.foundation)

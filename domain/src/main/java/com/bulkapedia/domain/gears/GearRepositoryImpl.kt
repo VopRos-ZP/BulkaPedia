@@ -1,9 +1,9 @@
 package com.bulkapedia.domain.gears
 
 import com.bulkapedia.data.Repository
-import com.bulkapedia.data.gears.Gear
-import com.bulkapedia.data.gears.Gear.Companion.toData
-import com.bulkapedia.data.gears.Gear.Companion.toGear
+import bulkapedia.gears.Gear
+import bulkapedia.gears.Gear.Companion.toData
+import bulkapedia.gears.Gear.Companion.toGear
 import com.bulkapedia.domain.core.Refs
 import com.bulkapedia.domain.core.RepositoryImpl
 

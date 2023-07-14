@@ -21,6 +21,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import bulkapedia.sets.UserSet
 import com.bulkapedia.R
 import com.bulkapedia.compose.DataStore
 import com.bulkapedia.compose.elements.CommentsButton
@@ -32,8 +33,7 @@ import com.bulkapedia.compose.util.CenteredBox
 import com.bulkapedia.compose.util.HCenteredBox
 import com.bulkapedia.compose.util.VCenteredBox
 import com.bulkapedia.compose.util.clickable
-import com.bulkapedia.data.sets.GearCell
-import com.bulkapedia.data.sets.UserSet
+import bulkapedia.gears.GearCell
 import com.bulkapedia.compose.elements.anims.AnimatedNumber
 import com.bulkapedia.compose.util.stringToResource
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
@@ -155,18 +155,18 @@ fun Set(
     gears: Map<GearCell, String>,
     onCellClick: (GearCell) -> Unit = {},
 ) {
+    val createPair = { cell: GearCell -> Pair(gears[cell] ?: "") { onCellClick(cell) } }
+    val rows = listOf(
+        Pair(createPair(GearCell.HEAD), createPair(GearCell.BODY)),
+        Pair(createPair(GearCell.ARM), createPair(GearCell.LEG)),
+        Pair(createPair(GearCell.DECOR), createPair(GearCell.DEVICE))
+    )
     Column(modifier = Modifier.padding(padding)) {
-        Row(verticalAlignment = Alignment.CenterVertically) { // head / body
-            GearImage(image = gears[GearCell.HEAD] ?: "") { onCellClick(GearCell.HEAD) }
-            GearImage(image = gears[GearCell.BODY] ?: "") { onCellClick(GearCell.BODY) }
-        }
-        Row(verticalAlignment = Alignment.CenterVertically) { // arm / leg
-            GearImage(image = gears[GearCell.ARM] ?: "") { onCellClick(GearCell.ARM) }
-            GearImage(image = gears[GearCell.LEG] ?: "") { onCellClick(GearCell.LEG) }
-        }
-        Row(verticalAlignment = Alignment.CenterVertically) { // decor / device
-            GearImage(image = gears[GearCell.DECOR] ?: "") { onCellClick(GearCell.DECOR) }
-            GearImage(image = gears[GearCell.DEVICE] ?: "") { onCellClick(GearCell.DEVICE) }
+        rows.map { (gearImg1, gearImg2) ->
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                gearImg1.let { (img, onClick) -> GearImage(img, onClick) }
+                gearImg2.let { (img, onClick) -> GearImage(img, onClick) }
+            }
         }
     }
 }

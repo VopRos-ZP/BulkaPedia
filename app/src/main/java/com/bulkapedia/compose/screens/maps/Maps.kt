@@ -16,7 +16,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.bulkapedia.data.maps.Map
+import bulkapedia.maps.GameMap
 import com.bulkapedia.compose.elements.OutlinedCard
 import com.bulkapedia.compose.elements.mapsTags
 import com.bulkapedia.compose.navigation.Destinations
@@ -33,7 +33,7 @@ fun Maps(viewModel: MapsViewModel = hiltViewModel()) {
     val navController = LocalNavController.current
     ScreenView(title = "Выберите карту", showBack = true) {
         TagsWithRecycler(mapsTags(), maps, { tag, map ->
-            tag?.text == map.mode || tag == null
+            tag?.text == map.mode.toString() || tag == null
         }) { map -> MapCard(map) {
             navController.navigate("${Destinations.MAPS}/${map.mapId}") { launchSingleTop = true }
         } }
@@ -46,7 +46,7 @@ fun Maps(viewModel: MapsViewModel = hiltViewModel()) {
 
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
-fun MapCard(map: Map, onClick: () -> Unit) {
+fun MapCard(map: GameMap, onClick: () -> Unit) {
     OutlinedCard(
         shape = RoundedCornerShape(25.dp),
         onClick = onClick

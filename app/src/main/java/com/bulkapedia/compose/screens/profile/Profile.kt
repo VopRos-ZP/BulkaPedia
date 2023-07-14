@@ -33,9 +33,9 @@ import com.bulkapedia.compose.ui.theme.*
 import com.bulkapedia.compose.util.CenteredBox
 import com.bulkapedia.compose.util.VCenteredBox
 import com.bulkapedia.compose.util.clickable
-import com.bulkapedia.data.mains.Main
-import com.bulkapedia.data.sets.UserSet
-import com.bulkapedia.data.users.User
+import bulkapedia.mains.Main
+import bulkapedia.sets.UserSet
+import bulkapedia.users.User
 import com.bulkapedia.compose.elements.mains.MainsRecycler
 import com.bulkapedia.compose.elements.sheets.ClosableModalBottomSheet
 import com.bulkapedia.compose.navigation.ToCATEGORY_MANAGE

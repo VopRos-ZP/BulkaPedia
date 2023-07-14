@@ -15,7 +15,7 @@ import androidx.compose.ui.unit.dp
 import com.bulkapedia.compose.elements.OutlinedCard
 import com.bulkapedia.compose.ui.theme.PrimaryDark
 import com.bulkapedia.compose.ui.theme.Teal200
-import com.bulkapedia.data.mains.Main
+import bulkapedia.mains.Main
 
 @Composable
 fun MainsRecycler(

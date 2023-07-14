@@ -1,10 +1,11 @@
 package bulkapedia.users
 
+import bulkapedia.Callback
 import com.google.firebase.database.ValueEventListener
 
 interface UserRepository {
     /* Database */
-    fun listenAll(): ValueEventListener
+    fun listenAll(callback: Callback<List<User>>): ValueEventListener
     suspend fun fetchAll(): List<User>
     suspend fun fetchById(id: String): User?
     suspend fun create(user: User)

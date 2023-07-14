@@ -1,6 +1,6 @@
 package com.bulkapedia.domain.core
 
-import com.bulkapedia.data.CallBack
+import bulkapedia.Callback
 import com.bulkapedia.data.Repository
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.DocumentSnapshot

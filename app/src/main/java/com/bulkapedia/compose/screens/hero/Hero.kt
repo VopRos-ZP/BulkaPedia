@@ -38,6 +38,9 @@ import com.bulkapedia.compose.DataStore
 import com.bulkapedia.compose.data.snackbars.TextSnackbar
 import com.bulkapedia.compose.screens.Loading
 import com.bulkapedia.compose.screens.titled.ScreenView
+import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
+import com.bumptech.glide.integration.compose.GlideImage
+import com.bumptech.glide.integration.compose.placeholder
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -172,6 +175,7 @@ fun HeroSets(heroId: String, viewModel: HeroViewModel = hiltViewModel()) {
     }
 }
 
+@OptIn(ExperimentalGlideComposeApi::class)
 @Composable
 fun TopHeroCard(icon: String, trailingContent: @Composable ColumnScope.() -> Unit) {
     HCenteredBox (
@@ -183,9 +187,10 @@ fun TopHeroCard(icon: String, trailingContent: @Composable ColumnScope.() -> Uni
             .border(2.dp, Teal200, RoundedCornerShape(20.dp))
     ) {
         Row {
-            Image(
-                painter = painterResource(id = stringToResource(icon)),
+            GlideImage(
+                model = icon,
                 contentDescription = icon,
+                loading = placeholder { CircularProgressIndicator(color = Teal200) },
                 modifier = Modifier
                     .size(width = 150.dp, height = 180.dp)
                     .padding(20.dp)

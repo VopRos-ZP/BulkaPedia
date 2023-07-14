@@ -6,7 +6,7 @@ data class Hero(
     val type: String,
     val icon: String,
     val difficult: String,
-    val stats: Map<String, Number>,
+    val stats: Map<String, Double>,
     val counterpicks: List<String>,
     val personalGears: Map<String, String>
 )

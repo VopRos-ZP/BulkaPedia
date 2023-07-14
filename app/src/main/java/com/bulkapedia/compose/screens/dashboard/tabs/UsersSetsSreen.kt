@@ -24,8 +24,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.bulkapedia.compose.DataStore
-import com.bulkapedia.data.users.User
-import com.bulkapedia.data.sets.UserSet
+import bulkapedia.users.User
+import bulkapedia.sets.UserSet
 import com.bulkapedia.compose.elements.ITabRow
 import com.bulkapedia.compose.elements.ScreenWithDelete
 import com.bulkapedia.compose.elements.ScreenWithTagDialog

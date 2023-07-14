@@ -2,8 +2,8 @@ package com.bulkapedia.compose.data.gears
 
 import com.bulkapedia.R
 import com.bulkapedia.compose.util.resourceToString
-import com.bulkapedia.data.gears.Effect
-import com.bulkapedia.data.heroes.Hero
+import bulkapedia.effects.Effect
+import bulkapedia.heroes.Hero
 
 class PersonalGears {
 

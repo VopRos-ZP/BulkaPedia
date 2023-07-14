@@ -1,27 +1,13 @@
 package com.bulkapedia.compose.screens.dashboard.screens.heroinfo
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.bulkapedia.data.hero_info.HeroInfo
 import com.bulkapedia.compose.data.classes.ChangeValues
 import com.bulkapedia.compose.data.classes.Value
-import com.bulkapedia.compose.elements.OutlinedButton
-import com.bulkapedia.compose.elements.ScreenWithChangesDialog
-import com.bulkapedia.compose.screens.heroinfo.HeroInfoCard
 import com.bulkapedia.compose.screens.titled.ScreenView
-import com.bulkapedia.compose.ui.theme.Primary
-import com.bulkapedia.compose.ui.theme.Teal200
-import com.bulkapedia.compose.util.CenteredBox
 
 @Composable
 fun HeroesInfoScreen(viewModel: HeroInfoViewModel = hiltViewModel()) {

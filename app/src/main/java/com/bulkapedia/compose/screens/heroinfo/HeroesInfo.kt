@@ -12,7 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.bulkapedia.data.hero_info.HeroInfo
+import bulkapedia.heroInfo.HeroInfo
 import com.bulkapedia.compose.elements.OutlinedCard
 import com.bulkapedia.compose.navigation.Destinations
 import com.bulkapedia.compose.screens.titled.ScreenView

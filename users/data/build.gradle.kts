@@ -19,6 +19,9 @@ android {
 }
 
 dependencies {
+    /** Project **/
+    implementation(project(mapOf("path" to ":core:domain")))
+    /** Firebase **/
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.database)
 }

@@ -1,6 +1,6 @@
 package com.bulkapedia.data.users
 
-import com.bulkapedia.data.users.User.Companion.toUser
+import bulkapedia.users.User.Companion.toUser
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError

@@ -2,8 +2,8 @@ package com.bulkapedia.compose.screens.login
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.bulkapedia.data.users.User
-import com.bulkapedia.data.users.UsersRepository
+import bulkapedia.users.User
+import bulkapedia.users.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -12,7 +12,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val usersRepository: UsersRepository
+    private val usersRepository: UserRepository
 ) : ViewModel() {
 
     private val _errorFlow: MutableStateFlow<String?> = MutableStateFlow(null)
@@ -20,8 +20,11 @@ class LoginViewModel @Inject constructor(
 
     fun login(email: String, password: String, onSuccess: (User) -> Unit) {
         if (email.isNotEmpty() && password.isNotEmpty()) {
-            usersRepository.login(email, password, onSuccess) {
-                viewModelScope.launch { _errorFlow.emit(it) }
+            viewModelScope.launch {
+                usersRepository.login(email, password)
+                usersRepository.fetchAll()
+                    .first { it.email == email && it.password == password }
+                    .apply(onSuccess)
             }
         } else {
             viewModelScope.launch {

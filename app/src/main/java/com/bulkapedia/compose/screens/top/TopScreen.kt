@@ -21,7 +21,7 @@ import com.bulkapedia.compose.screens.sets.SetTabCard
 import com.bulkapedia.compose.ui.theme.Teal200
 import com.bulkapedia.compose.util.CenteredBox
 import com.bulkapedia.compose.util.HCenteredBox
-import com.bulkapedia.data.sets.UserSet
+import bulkapedia.sets.UserSet
 import com.bulkapedia.compose.DataStore
 import com.bulkapedia.compose.elements.OutlinedCard
 import com.bulkapedia.compose.elements.sheets.ClosableModalBottomSheet
@@ -45,7 +45,7 @@ fun TopScreen(hero: String, viewModel: TopViewModel = hiltViewModel()) {
             }, currentSet, viewModel::closeSet
         ) {
             CenteredBox {
-                TopSets(sets) { viewModel.listenSet(it.userSetId) }
+                TopSets(sets) { viewModel.listenSet(it.setId) }
             }
         }
     }

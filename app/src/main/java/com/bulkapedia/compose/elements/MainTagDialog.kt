@@ -21,7 +21,7 @@ import androidx.compose.ui.window.Dialog
 import com.bulkapedia.compose.ui.theme.PrimaryDark
 import com.bulkapedia.compose.ui.theme.Teal200
 import com.bulkapedia.compose.util.HCenteredBox
-import com.bulkapedia.data.mains.Main
+import bulkapedia.mains.Main
 
 @Composable
 fun MainTagDialog(
@@ -87,6 +87,7 @@ fun MainTagDialog(
                     action.show.value = false
                     onSave.invoke(hero.value,
                         Main("",
+                            hero = hero.value,
                             kills = kills.value.toInt(),
                             winrate = winrate.value.toDouble(),
                             revives = revives.value.toInt()

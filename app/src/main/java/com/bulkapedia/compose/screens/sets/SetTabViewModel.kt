@@ -2,15 +2,15 @@ package com.bulkapedia.compose.screens.sets
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.bulkapedia.data.Repository
-import com.bulkapedia.data.sets.UserSet
+import bulkapedia.StoreRepository
+import bulkapedia.sets.UserSet
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class SetTabViewModel @Inject constructor(
-    private val setsRepository: Repository<UserSet>
+    private val setsRepository: StoreRepository<UserSet>
 ) : ViewModel() {
 
     private fun updateSet(set: UserSet) {

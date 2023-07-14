@@ -2,8 +2,8 @@ package com.bulkapedia.compose.screens.passwordreset
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.bulkapedia.data.users.User
-import com.bulkapedia.data.users.UsersRepository
+import bulkapedia.users.User
+import bulkapedia.users.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -12,7 +12,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class PasswordResetViewModel @Inject constructor(
-    private val usersRepository: UsersRepository
+    private val usersRepository: UserRepository
 ) : ViewModel() {
 
     private val _emailFlow: MutableStateFlow<String> = MutableStateFlow("")
@@ -25,8 +25,8 @@ class PasswordResetViewModel @Inject constructor(
     val errorFlow: StateFlow<String?> = _errorFlow
 
     fun checkPassword(email: String, password: String, save: suspend (User) -> Unit) {
-        usersRepository.findByEmail(email) { user ->
-            user?.let {
+        viewModelScope.launch {
+            usersRepository.fetchAll().find { it.email == email }?.let {
                 if (it.password == password) {
                     viewModelScope.launch {
                         _errorFlow.emit(null)
@@ -34,28 +34,27 @@ class PasswordResetViewModel @Inject constructor(
                         save(it)
                     }
                 } else {
-                    viewModelScope.launch { _errorFlow.emit("Пароли не совпадают, пожалуйста введите новый пароль") }
+                    _errorFlow.emit("Пароли не совпадают, пожалуйста введите новый пароль")
                 }
             }
         }
     }
 
     fun checkEmail(email: String) {
-        usersRepository.findByEmail(email) {
-            if (it != null) {
-                viewModelScope.launch {
+        viewModelScope.launch {
+            when (usersRepository.fetchAll().find { it.email == email }) {
+                null -> _errorFlow.emit("Неверный email")
+                else -> {
                     _emailCheckFlow.emit(true)
                     _emailFlow.emit(email)
                     _errorFlow.emit(null)
                 }
-            } else {
-                viewModelScope.launch { _errorFlow.emit("Неверный email") }
             }
         }
     }
 
-    fun updateUser(user: User) {
-        usersRepository.update(user) {}
+    private fun updateUser(user: User) {
+        viewModelScope.launch { usersRepository.update(user) }
     }
 
 }
