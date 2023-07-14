@@ -1,0 +1,1 @@
+com.vopros.bulkapedia.core.domain

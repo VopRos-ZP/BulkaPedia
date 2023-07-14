@@ -1,0 +1,8 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="com.vopros.bulkapedia.core.domain" >
+4
+5    <uses-sdk android:minSdkVersion="26" />
+5-->/Users/pavel/Desktop/projects/BulkaPedia/core/domain/build/intermediates/tmp/ProcessLibraryManifest/debug/tempAndroidManifest3487655199903615958.xml
+6
+7</manifest>
