@@ -117,15 +117,19 @@
     <string name="rain_of_arrows_damage_effect">to damage of the rain of arrows</string>
     <string name="ball_radius_effect">to the radius of the ball lightning</string>
     <string name="ball_incoming_damage_effect">to incoming damage while inside the ball lightning</string>
-    <!--   персонажи -->
+    <!--   Персонажи -->
     <string name="arnie">Arnie</string>
     <string name="cyclops">Cyclops</string>
     <string name="sparkle">Sparkle</string>
     <string name="hurricane">Hurricane</string>
+    <string name="shenji">Shenji</string>
+    <!--   ПП -->
     <string name="ghost">Ghost</string>
     <string name="freddie">Freddie</string>
     <string name="angel">Angel</string>
     <string name="raven">Raven</string>
+    <string name="alice">Alice</string>
+    <!--   Снайперы -->
     <string name="blot">Blot</string>
     <string name="firefly">Firefly</string>
     <string name="slayer">Slayer</string>

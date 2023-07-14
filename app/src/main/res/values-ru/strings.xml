@@ -118,24 +118,31 @@
     <string name="ball_radius_effect">к радиусу шаровой молнии</string>
     <string name="ball_incoming_damage_effect">к получаемому урону находясь в зоне действия шаровой молнии</string>
     <!--   персонажи -->
+    <!--   Дробовики -->
     <string name="arnie">Арни</string>
     <string name="cyclops">Циклоп</string>
     <string name="sparkle">Искра</string>
     <string name="hurricane">Ураган</string>
+    <string name="shenji">Шенджи</string>
+    <!--    ПП -->
     <string name="ghost">Призрак</string>
     <string name="freddie">Фредди</string>
     <string name="angel">Ангел</string>
     <string name="raven">Ворон</string>
+    <string name="alice">Алиса</string>
+    <!--    Снайперы -->
     <string name="blot">Блот</string>
     <string name="firefly">Огонёк</string>
     <string name="slayer">Губитель</string>
     <string name="mirage">Мираж</string>
     <string name="lynx">Линкс</string>
+    <!--   Танки -->
     <string name="smog">Смог</string>
     <string name="dragoon">Драгун</string>
     <string name="bastion">Бастион</string>
     <string name="bertha">Берта</string>
     <string name="leviathan">Левиафан</string>
+    <!--   Штурмовики -->
     <string name="stalker">Сталкер</string>
     <string name="doc">Док</string>
     <string name="tess">Тесс</string>
