@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "400674248995",
+    "project_id": "bulkapedia-3b45a",
+    "storage_bucket": "bulkapedia-3b45a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:400674248995:android:0d484d03bcd34b1f1d1496",
+        "android_client_info": {
+          "package_name": "com.vopros.bulkapedia"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "400674248995-ut420sjlrgqt861nfeagp8pfgkchova4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.vopros.bulkapedia",
+            "certificate_hash": "b2ffc2525bcb561a744a72e029ba8307e9b128cb"
+          }
+        },
+        {
+          "client_id": "400674248995-d4vam5pcqadlv82fqeq45k5s29gijl6r.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBnDoVnov0-sNFuQlHf0IUQCdSAlE3BxNQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "400674248995-atb7o90ld148p4vafvf3nn124djac1oe.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
