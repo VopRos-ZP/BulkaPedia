@@ -7,8 +7,6 @@ import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.ListenerRegistration
 import com.vopros.bulkapedia.core.Callback
 import com.vopros.bulkapedia.core.Entity
-import kotlinx.coroutines.job
-import kotlinx.coroutines.tasks.asDeferred
 import kotlinx.coroutines.tasks.await
 
 open class FirebaseImpl<T: Entity>(
@@ -18,18 +16,20 @@ open class FirebaseImpl<T: Entity>(
 
     override fun listenAll(callback: Callback<List<T>>): ListenerRegistration {
         return ref.addSnapshotListener { value, error ->
-            error?.localizedMessage?.let(callback.onError)
             value?.documents?.mapNotNull(transform)?.let(callback.onSuccess)
+            error?.localizedMessage?.let(callback.onError)
         }
     }
 
     override fun listenOne(id: String, callback: Callback<T>): ListenerRegistration {
-        return listenAll(Callback(callback.onError) {
-            when (val res = it.find { o -> o.id == id }) {
+        return ref.addSnapshotListener { value, error ->
+            error?.localizedMessage?.let(callback.onError)
+            val docs = value?.documents?.mapNotNull(transform)
+            when (val res = docs?.find { o -> o.id == id }) {
                 null -> callback.onError("Server error: object with id $id not found")
                 else -> callback.onSuccess(res)
             }
-        })
+        }
     }
 
     override suspend fun fetchAll(): List<T> = ref.get().await().documents.mapNotNull(transform)

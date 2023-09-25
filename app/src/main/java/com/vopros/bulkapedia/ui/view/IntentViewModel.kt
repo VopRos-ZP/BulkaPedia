@@ -10,12 +10,12 @@ open class IntentViewModel<I>: ViewModel() {
 
     protected open lateinit var reducer: Reducer<I>
 
-    private val _state = MutableStateFlow<ViewState>(ViewState.Loading)
-    val state = _state.asStateFlow()
+    protected val innerState = MutableStateFlow<ViewState>(ViewState.Loading)
+    val state = innerState.asStateFlow()
 
     fun startIntent(intent: I) {
         viewModelScope.launch {
-            _state.emit(reducer.reduce(intent, state.value))
+            reducer.execute(intent, state.value)
         }
     }
 

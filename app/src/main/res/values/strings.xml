@@ -254,5 +254,8 @@
     <string name="update_content">New version available</string>
     <string name="title_activity_main" translatable="false">MainActivity</string>
     <string name="no_effects">No effects</string>
+    <string name="one" translatable="false">№1</string>
+    <string name="two" translatable="false">№2</string>
+    <string name="three" translatable="false">№3</string>
 
 </resources>

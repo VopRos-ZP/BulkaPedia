@@ -18,8 +18,8 @@ class HeroesViewModel @Inject constructor(
         }
     }
 
-    private suspend fun fetchHeroes(): ViewState {
-        return ViewState.Success(heroRepository.fetchAll())
+    private suspend fun fetchHeroes() {
+        innerState.emit(ViewState.Success(heroRepository.fetchAll()))
     }
 
 }

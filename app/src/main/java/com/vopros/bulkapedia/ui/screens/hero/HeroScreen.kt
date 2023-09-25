@@ -25,21 +25,26 @@ import com.vopros.bulkapedia.R
 import com.vopros.bulkapedia.hero.Hero
 import com.vopros.bulkapedia.ui.components.Image
 import com.vopros.bulkapedia.ui.components.Text
+import com.vopros.bulkapedia.ui.components.tab.Tab
+import com.vopros.bulkapedia.ui.components.tab.TabRowWithPager
+import com.vopros.bulkapedia.ui.components.userSet.UserSetCard
 import com.vopros.bulkapedia.ui.screens.Screen
-import com.vopros.bulkapedia.userSet.UserSet
+import com.vopros.bulkapedia.userSet.UserSetWithUser
 import com.vopros.bulkapedia.utils.resourceManager
 
 @Composable
 fun HeroScreen(heroId: String) {
     var title by remember { mutableIntStateOf(R.string.select_hero) }
-    Screen<Pair<Hero, List<UserSet>>, HeroViewModel>(
+    Screen<Pair<Hero, List<UserSetWithUser>>, HeroViewModel>(
         title = title, showBack = true,
-        fetch = { startIntent(HeroViewIntent.Fetch(heroId)) }
+        fetch = { startIntent(HeroViewIntent.Fetch(heroId)) },
+        dispose = { startIntent(HeroViewIntent.Dispose) }
     ) { _, (hero, sets) ->
         title = resourceManager.toSource(hero.id)
         Column(
             modifier = Modifier.fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {
             HeroThumbnail(hero.image) {
                 Text(
@@ -49,7 +54,9 @@ fun HeroScreen(heroId: String) {
                 HeroDifficult(difficult = hero.difficult)
             }
             /** UserSets **/
-
+            TabRowWithPager(
+                listOf(Tab(R.string.one), Tab(R.string.two), Tab(R.string.three)), sets
+            ) { UserSetCard(it) }
         }
     }
 }

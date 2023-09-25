@@ -7,6 +7,8 @@ import com.vopros.bulkapedia.hero.Hero
 import com.vopros.bulkapedia.hero.HeroDTO
 import com.vopros.bulkapedia.map.GameMap
 import com.vopros.bulkapedia.map.GameMapDTO
+import com.vopros.bulkapedia.user.User
+import com.vopros.bulkapedia.user.UserDTO
 import com.vopros.bulkapedia.userSet.UserSet
 import com.vopros.bulkapedia.userSet.UserSetDTO
 
@@ -32,4 +34,8 @@ fun toGameMap(doc: DocumentSnapshot): GameMap? = toObject(GameMapDTO::class.java
 
 fun toUserSet(doc: DocumentSnapshot): UserSet? = toObject(UserSetDTO::class.java, doc) {
     UserSet(it.id, it.author, it.gears, it.hero, it.liked)
+}
+
+fun toUser(doc: DocumentSnapshot): User? = toObject(UserDTO::class.java, doc) {
+    User(it.id, it.admin, it.email, it.nickname, it.password, it.updateEmail, it.updateNickname)
 }

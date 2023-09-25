@@ -16,8 +16,8 @@ class CategoriesViewModel @Inject constructor(
         fetchCategories()
     }
 
-    private suspend fun fetchCategories(): ViewState {
-        return ViewState.Success(categoryRepository.fetchAll())
+    private suspend fun fetchCategories() {
+        innerState.emit(ViewState.Success(categoryRepository.fetchAll()))
     }
 
 }
