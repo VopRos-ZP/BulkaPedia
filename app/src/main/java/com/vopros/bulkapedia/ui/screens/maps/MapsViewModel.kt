@@ -3,7 +3,6 @@ package com.vopros.bulkapedia.ui.screens.maps
 import com.vopros.bulkapedia.map.MapRepository
 import com.vopros.bulkapedia.ui.view.IntentViewModel
 import com.vopros.bulkapedia.ui.view.Reducer
-import com.vopros.bulkapedia.ui.view.ViewState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
@@ -19,7 +18,7 @@ class MapsViewModel @Inject constructor(
     }
 
     private suspend fun fetchMaps() {
-        innerState.emit(ViewState.Success(mapRepository.fetchAll()))
+        success(mapRepository.fetchAll())
     }
 
 }

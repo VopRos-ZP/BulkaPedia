@@ -3,7 +3,6 @@ package com.vopros.bulkapedia.ui.screens.categories
 import com.vopros.bulkapedia.category.CategoryRepository
 import com.vopros.bulkapedia.ui.view.IntentViewModel
 import com.vopros.bulkapedia.ui.view.Reducer
-import com.vopros.bulkapedia.ui.view.ViewState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
@@ -17,7 +16,7 @@ class CategoriesViewModel @Inject constructor(
     }
 
     private suspend fun fetchCategories() {
-        innerState.emit(ViewState.Success(categoryRepository.fetchAll()))
+        success(categoryRepository.fetchAll())
     }
 
 }

@@ -7,7 +7,6 @@ import com.vopros.bulkapedia.hero.Hero
 import com.vopros.bulkapedia.hero.HeroRepository
 import com.vopros.bulkapedia.ui.view.IntentViewModel
 import com.vopros.bulkapedia.ui.view.Reducer
-import com.vopros.bulkapedia.ui.view.ViewState
 import com.vopros.bulkapedia.user.UserRepository
 import com.vopros.bulkapedia.userSet.SetRepository
 import com.vopros.bulkapedia.userSet.UserSet
@@ -39,7 +38,7 @@ class HeroViewModel @Inject constructor(
     }
 
     private suspend fun fetch(heroId: String) {
-        setsListener = setRepository.listenAll(Callback(this::onError) {
+        setsListener = setRepository.listenAll(Callback(this::error) {
             viewModelScope.launch {
                 val sets = it
                     .filter { s -> s.hero == heroId }
@@ -48,19 +47,19 @@ class HeroViewModel @Inject constructor(
                 _sets.emit(sets)
             }
         })
-        heroListener = heroRepository.listenOne(heroId, Callback(this::onError) {
+        heroListener = heroRepository.listenOne(heroId, Callback(this::error) {
             viewModelScope.launch { _hero.emit(it) }
         })
         _hero
             .combine(_sets) { hero, sets -> Pair(hero, sets) }
             .collect { (hero, sets) ->
                 if (hero != null) {
-                    innerState.emit(ViewState.Success(Pair(hero, sets.map {
+                    success(Pair(hero, sets.map {
                         UserSetUseCase(it,
                             userRepository.fetchOne(it.author),
                             heroRepository.fetchOne(it.hero)
                         )
-                    })))
+                    }))
                 }
             }
     }

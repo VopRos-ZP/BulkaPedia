@@ -3,7 +3,6 @@ package com.vopros.bulkapedia.ui.screens.profileController
 import com.vopros.bulkapedia.storage.DataStore
 import com.vopros.bulkapedia.ui.view.IntentViewModel
 import com.vopros.bulkapedia.ui.view.Reducer
-import com.vopros.bulkapedia.ui.view.ViewState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
@@ -19,7 +18,7 @@ class ProfileControllerViewModel @Inject constructor(
     }
 
     private suspend fun init() {
-        dataStore.config.collect { innerState.emit(ViewState.Success(it)) }
+        dataStore.config.collect { success(it) }
     }
 
 }

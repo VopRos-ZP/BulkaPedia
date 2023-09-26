@@ -6,7 +6,6 @@ import com.vopros.bulkapedia.core.Callback
 import com.vopros.bulkapedia.map.MapRepository
 import com.vopros.bulkapedia.ui.view.IntentViewModel
 import com.vopros.bulkapedia.ui.view.Reducer
-import com.vopros.bulkapedia.ui.view.ViewState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -25,9 +24,9 @@ class MapViewModel @Inject constructor(
         }
     }
 
-    private suspend fun fetch(mapId: String) {
-        listener = mapRepository.listenOne(mapId, Callback(this::onError) {
-            viewModelScope.launch { innerState.emit(ViewState.Success(it)) }
+    private fun fetch(mapId: String) {
+        listener = mapRepository.listenOne(mapId, Callback(this::error) {
+            viewModelScope.launch { success(it) }
         })
     }
 

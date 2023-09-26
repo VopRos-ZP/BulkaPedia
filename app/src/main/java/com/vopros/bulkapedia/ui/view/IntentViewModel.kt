@@ -10,17 +10,21 @@ open class IntentViewModel<I>: ViewModel() {
 
     protected open lateinit var reducer: Reducer<I>
 
-    protected val innerState = MutableStateFlow<ViewState>(ViewState.Loading)
+    private val innerState = MutableStateFlow<ViewState>(ViewState.Loading)
     val state = innerState.asStateFlow()
 
-    protected fun onError(msg: String) {
+    protected fun <T> success(data: T) {
+        viewModelScope.launch { innerState.emit(ViewState.Success(data)) }
+    }
+
+    protected fun error(msg: String) {
         viewModelScope.launch { innerState.emit(ViewState.Error(msg)) }
     }
 
     fun startIntent(intent: I) {
         viewModelScope.launch {
             try { reducer.execute(intent, state.value) }
-            catch (e: Exception) { e.localizedMessage?.let { onError(it) } }
+            catch (e: Exception) { e.localizedMessage?.let { error(it) } }
         }
     }
 

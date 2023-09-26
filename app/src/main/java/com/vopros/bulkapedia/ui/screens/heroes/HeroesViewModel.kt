@@ -3,7 +3,6 @@ package com.vopros.bulkapedia.ui.screens.heroes
 import com.vopros.bulkapedia.hero.HeroRepository
 import com.vopros.bulkapedia.ui.view.IntentViewModel
 import com.vopros.bulkapedia.ui.view.Reducer
-import com.vopros.bulkapedia.ui.view.ViewState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
@@ -19,7 +18,7 @@ class HeroesViewModel @Inject constructor(
     }
 
     private suspend fun fetchHeroes() {
-        innerState.emit(ViewState.Success(heroRepository.fetchAll()))
+        success(heroRepository.fetchAll())
     }
 
 }

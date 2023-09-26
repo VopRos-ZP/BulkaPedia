@@ -5,7 +5,6 @@ import com.vopros.bulkapedia.firebase.AuthRepository
 import com.vopros.bulkapedia.storage.DataStore
 import com.vopros.bulkapedia.ui.view.IntentViewModel
 import com.vopros.bulkapedia.ui.view.Reducer
-import com.vopros.bulkapedia.ui.view.ViewState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -24,11 +23,11 @@ class LoginViewModel @Inject constructor(
     }
 
     private suspend fun init() {
-        dataStore.config.collect { innerState.emit(ViewState.Success(it)) }
+        dataStore.config.collect { success(it) }
     }
 
     private suspend fun login(email: String, password: String) {
-        authRepository.login(email, password, this::onError) { user ->
+        authRepository.login(email, password, this::error) { user ->
             viewModelScope.launch {
                 dataStore.saveData(user.id, true)
                 init() /* call collect config from DataStore */
