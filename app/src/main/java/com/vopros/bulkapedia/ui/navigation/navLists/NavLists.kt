@@ -7,6 +7,7 @@ import com.vopros.bulkapedia.ui.navigation.ToCategories
 import com.vopros.bulkapedia.ui.navigation.ToHero
 import com.vopros.bulkapedia.ui.navigation.ToHeroes
 import com.vopros.bulkapedia.ui.navigation.ToLogin
+import com.vopros.bulkapedia.ui.navigation.ToMap
 import com.vopros.bulkapedia.ui.navigation.ToMaps
 import com.vopros.bulkapedia.ui.navigation.ToProfile
 import com.vopros.bulkapedia.ui.navigation.ToProfileController
@@ -19,7 +20,7 @@ fun CategoriesNavList() {
             /* Wiki Tab */
             ToCategories,
             ToHeroes, ToHero,
-            ToMaps,
+            ToMaps, ToMap,
             /* Profile */
             ToProfileController
         )

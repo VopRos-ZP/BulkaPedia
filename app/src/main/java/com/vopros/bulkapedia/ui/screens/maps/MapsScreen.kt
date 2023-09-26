@@ -11,7 +11,9 @@ import com.vopros.bulkapedia.ui.components.Image
 import com.vopros.bulkapedia.ui.components.TagsWithRecycler
 import com.vopros.bulkapedia.ui.components.Text
 import com.vopros.bulkapedia.ui.components.tags.mapsTags
+import com.vopros.bulkapedia.ui.navigation.Destinations
 import com.vopros.bulkapedia.ui.screens.Screen
+import com.vopros.bulkapedia.ui.theme.LocalNavController
 import com.vopros.bulkapedia.utils.resourceManager
 
 @Composable
@@ -29,8 +31,9 @@ fun MapsScreen() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MapCard(map: GameMap) {
+    val controller = LocalNavController.current
     Card(
-        onClick = { /*TODO*/ },
+        onClick = { controller.navigate("${Destinations.MAP}${map.id}") },
     ) {
         HCenterBox {
             Text(resourceManager.toSource(map.id), fontWeight = FontWeight.Bold)

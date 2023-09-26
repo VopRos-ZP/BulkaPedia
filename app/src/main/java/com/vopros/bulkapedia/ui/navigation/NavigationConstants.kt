@@ -5,6 +5,7 @@ import com.vopros.bulkapedia.ui.screens.categories.CategoriesScreen
 import com.vopros.bulkapedia.ui.screens.hero.HeroScreen
 import com.vopros.bulkapedia.ui.screens.heroes.HeroesScreen
 import com.vopros.bulkapedia.ui.screens.login.LoginScreen
+import com.vopros.bulkapedia.ui.screens.map.MapScreen
 import com.vopros.bulkapedia.ui.screens.maps.MapsScreen
 import com.vopros.bulkapedia.ui.screens.profile.ProfileScreen
 import com.vopros.bulkapedia.ui.screens.profileController.ProfileControllerScreen
@@ -14,6 +15,11 @@ val ToHeroes = NavigationScreen(Destinations.HEROES) { HeroesScreen() }
 val ToMaps = NavigationScreen(Destinations.MAPS) { MapsScreen() }
 val ToLogin = NavigationScreen(Destinations.LOGIN) { LoginScreen() }
 val ToProfileController = NavigationScreen(Destinations.PROFILE) { ProfileControllerScreen() }
+
+val ToMap = NavigationScreen(
+    "${Destinations.MAP}{mapId}",
+    listOf(navArg("mapId", NavType.StringType))
+) { it?.getString("mapId")?.let { id -> MapScreen(id) } }
 
 val ToProfile = NavigationScreen(
     "${Destinations.PROFILE}/{userId}",
