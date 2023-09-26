@@ -23,7 +23,6 @@ import com.vopros.bulkapedia.ui.components.userSet.UserSetCard
 import com.vopros.bulkapedia.ui.screens.Screen
 import com.vopros.bulkapedia.user.User
 import com.vopros.bulkapedia.userSet.UserSetUseCase
-import com.vopros.bulkapedia.userSet.UserSetWithUser
 
 @Composable
 fun ProfileScreen(userId: String) {
@@ -42,7 +41,7 @@ fun ProfileScreen(userId: String) {
                 .padding(horizontal = 20.dp)
         ) {
             when (sets) {
-                emptyList<UserSetWithUser>() -> CenterBox { Text(R.string.empty_sets) }
+                emptyList<UserSetUseCase>() -> CenterBox { Text(R.string.empty_sets) }
                 else -> {
                     LazyColumn(
                         verticalArrangement = Arrangement.spacedBy(5.dp)
