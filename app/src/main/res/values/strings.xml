@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name" translatable="false">Bulkapedia</string>
+    <string name="empty" translatable="false"> </string>
     <string name="language">en</string>
     <string name="select_hero">Select hero</string>
     <string name="select_map">Select map</string>
@@ -159,6 +160,8 @@
     <string name="villa">Villa</string>
     <string name="sawmill">Sawmill</string>
     <string name="fortress">Fortress</string>
+    <string name="neo_town">Neo Town</string>
+    <string name="space_prison">Space prison</string>
     <!--   Цг -->
     <string name="hospital">Hospital</string>
     <string name="psychiatric_hospital">Psychiatric hospital</string>
@@ -233,7 +236,7 @@
     <string name="armor_penetration">Armor penetration</string>
     <string name="aiming_time">Aiming time</string>
     <string name="send_reset_code">Send reset code</string>
-    <string name="ok">Ok</string>
+    <string name="ok">OK</string>
     <string name="favorites">Favorites</string>
     <string name="whats_new">What\'s new in the update:</string>
     <string name="dashboard">Dashboard</string>

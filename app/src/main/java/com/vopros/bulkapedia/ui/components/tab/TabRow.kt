@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.vopros.bulkapedia.R
 import com.vopros.bulkapedia.ui.components.HCenterBox
 import com.vopros.bulkapedia.ui.components.Text
 import kotlinx.coroutines.launch
@@ -20,7 +21,7 @@ import kotlinx.coroutines.launch
 fun <T> TabRowWithPager(
     pages: List<Tab>,
     content: List<T>,
-    pattern: @Composable (T) -> Unit
+    pattern: @Composable (T) -> Unit,
 ) {
     val scope = rememberCoroutineScope()
     val pager = rememberPagerState { pages.size }
@@ -40,8 +41,9 @@ fun <T> TabRowWithPager(
                 }
             }
         }
-        HorizontalPager(state = pager) {
-            HCenterBox { pattern(content[it]) }
+        when (content) {
+            emptyList<T>() -> HCenterBox { Text(resource = R.string.empty_sets) }
+            else -> HorizontalPager(state = pager) { pattern(content[it]) }
         }
     }
 }

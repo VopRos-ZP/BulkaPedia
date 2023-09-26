@@ -33,7 +33,7 @@ fun toGameMap(doc: DocumentSnapshot): GameMap? = toObject(GameMapDTO::class.java
 }
 
 fun toUserSet(doc: DocumentSnapshot): UserSet? = toObject(UserSetDTO::class.java, doc) {
-    UserSet(it.id, it.author, it.gears, it.hero, it.liked)
+    UserSet(it.documentId, it.author, it.gears, it.hero, it.liked)
 }
 
 fun toUser(doc: DocumentSnapshot): User? = toObject(UserDTO::class.java, doc) {

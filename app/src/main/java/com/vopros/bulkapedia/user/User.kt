@@ -9,6 +9,17 @@ data class User(
     val email: String,
     val nickname: String,
     val password: String,
-    val updateEmail: String, // Timestamp
-    val updateNickname: String // Timestamp
-): Entity(id)
+    val updateEmail: Timestamp,
+    val updateNickname: Timestamp
+): Entity(id) {
+
+    override fun toData(): Map<String, Any> = mapOf(
+        "admin" to admin,
+        "email" to email,
+        "nickname" to nickname,
+        "password" to password,
+        "updateEmail" to updateEmail,
+        "updateNickname" to updateNickname,
+    )
+
+}

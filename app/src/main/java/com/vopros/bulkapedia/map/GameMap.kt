@@ -7,4 +7,12 @@ data class GameMap(
     val image: String,
     val spawns: String,
     val mode: String
-): Entity(id)
+): Entity(id) {
+
+    override fun toData(): Map<String, Any> = mapOf(
+        "image" to image,
+        "spawns" to spawns,
+        "mode" to mode,
+    )
+
+}

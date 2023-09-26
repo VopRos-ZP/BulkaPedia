@@ -2,9 +2,5 @@ package com.vopros.bulkapedia.ui.screens.login
 
 sealed class LoginViewIntent {
     object Start: LoginViewIntent()
-    data class Login(
-        val email: String,
-        val password: String,
-        val onSuccess: suspend () -> Unit
-    ): LoginViewIntent()
+    data class Login(val email: String, val password: String): LoginViewIntent()
 }

@@ -1,7 +1,6 @@
 package com.vopros.bulkapedia.firebase
 
-import com.fasterxml.jackson.core.type.TypeReference
-import com.fasterxml.jackson.databind.ObjectMapper
+import android.util.Log
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.ListenerRegistration
@@ -44,8 +43,8 @@ open class FirebaseImpl<T: Entity>(
     }
 
     override suspend fun update(t: T) {
-        val toMap = { it: T -> with(ObjectMapper()) { convertValue(it, object : TypeReference<Map<String, Any>>() {}) } }
-        ref.document(t.id).set(toMap(t)).await()
+        Log.d("Update", "update: ${t.id}")
+        ref.document(t.id).set(t.toData()).await()
     }
 
     override suspend fun delete(t: T) {

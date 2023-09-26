@@ -13,13 +13,25 @@ class AuthRepositoryImpl @Inject constructor(
 
     private val auth = Firebase.auth
 
+    override suspend fun sendPasswordResetCode(email: String, onError: (String) -> Unit) {
+        auth.sendPasswordResetEmail(email)
+            .addOnFailureListener { it.message?.let(onError) }
+            .await()
+    }
+
     override suspend fun register(
         user: User,
         onError: (String) -> Unit,
         onSuccess: (User) -> Unit
     ) {
-
-        TODO("Not yet implemented")
+        val result = auth.createUserWithEmailAndPassword(user.email, user.password)
+            .addOnFailureListener { it.message?.let(onError) }
+            .await()
+        if (result.user != null) {
+            val token = result.user!!.uid
+            userRepository.update(user.copy(id = token))
+            onSuccess(userRepository.fetchOne(token))
+        }
     }
 
     override suspend fun login(
@@ -28,13 +40,12 @@ class AuthRepositoryImpl @Inject constructor(
         onError: (String) -> Unit,
         onSuccess: (User) -> Unit
     ) {
-        auth.signInWithEmailAndPassword(email, password)
+        val result = auth.signInWithEmailAndPassword(email, password)
             .addOnFailureListener { it.message?.let(onError) }
-            .addOnSuccessListener {
-                val uid = it.user!!.uid
-
-            }
             .await()
+        if (result.user != null) {
+            onSuccess(userRepository.fetchOne(result.user!!.uid))
+        }
     }
 
     override fun logout() {

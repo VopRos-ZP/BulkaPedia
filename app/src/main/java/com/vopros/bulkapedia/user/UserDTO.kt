@@ -9,6 +9,6 @@ data class UserDTO(
     var email: String = "",
     var nickname: String = "",
     var password: String = "",
-    var updateEmail: String = "", // : Timestamp = Timestamp.now(),
-    var updateNickname: String = "" // : Timestamp = Timestamp.now(),
+    var updateEmail: Timestamp = Timestamp.now(),
+    var updateNickname: Timestamp = Timestamp.now()
 )

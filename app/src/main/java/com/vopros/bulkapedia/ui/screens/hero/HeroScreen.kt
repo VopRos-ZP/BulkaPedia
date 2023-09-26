@@ -23,19 +23,20 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.unit.dp
 import com.vopros.bulkapedia.R
 import com.vopros.bulkapedia.hero.Hero
+import com.vopros.bulkapedia.ui.components.HCenterBox
 import com.vopros.bulkapedia.ui.components.Image
 import com.vopros.bulkapedia.ui.components.Text
 import com.vopros.bulkapedia.ui.components.tab.Tab
 import com.vopros.bulkapedia.ui.components.tab.TabRowWithPager
 import com.vopros.bulkapedia.ui.components.userSet.UserSetCard
 import com.vopros.bulkapedia.ui.screens.Screen
-import com.vopros.bulkapedia.userSet.UserSetWithUser
+import com.vopros.bulkapedia.userSet.UserSetUseCase
 import com.vopros.bulkapedia.utils.resourceManager
 
 @Composable
 fun HeroScreen(heroId: String) {
     var title by remember { mutableIntStateOf(R.string.select_hero) }
-    Screen<Pair<Hero, List<UserSetWithUser>>, HeroViewModel>(
+    Screen<Pair<Hero, List<UserSetUseCase>>, HeroViewModel>(
         title = title, showBack = true,
         fetch = { startIntent(HeroViewIntent.Fetch(heroId)) },
         dispose = { startIntent(HeroViewIntent.Dispose) }
@@ -56,7 +57,7 @@ fun HeroScreen(heroId: String) {
             /** UserSets **/
             TabRowWithPager(
                 listOf(Tab(R.string.one), Tab(R.string.two), Tab(R.string.three)), sets
-            ) { UserSetCard(it) }
+            ) { HCenterBox { UserSetCard(it) } }
         }
     }
 }

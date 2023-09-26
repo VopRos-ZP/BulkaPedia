@@ -13,9 +13,14 @@ open class IntentViewModel<I>: ViewModel() {
     protected val innerState = MutableStateFlow<ViewState>(ViewState.Loading)
     val state = innerState.asStateFlow()
 
+    protected fun onError(msg: String) {
+        viewModelScope.launch { innerState.emit(ViewState.Error(msg)) }
+    }
+
     fun startIntent(intent: I) {
         viewModelScope.launch {
-            reducer.execute(intent, state.value)
+            try { reducer.execute(intent, state.value) }
+            catch (e: Exception) { e.localizedMessage?.let { onError(it) } }
         }
     }
 

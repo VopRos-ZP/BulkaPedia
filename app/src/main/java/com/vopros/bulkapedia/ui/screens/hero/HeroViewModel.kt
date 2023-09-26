@@ -11,7 +11,7 @@ import com.vopros.bulkapedia.ui.view.ViewState
 import com.vopros.bulkapedia.user.UserRepository
 import com.vopros.bulkapedia.userSet.SetRepository
 import com.vopros.bulkapedia.userSet.UserSet
-import com.vopros.bulkapedia.userSet.UserSetWithUser
+import com.vopros.bulkapedia.userSet.UserSetUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
@@ -22,7 +22,7 @@ import javax.inject.Inject
 class HeroViewModel @Inject constructor(
     private val heroRepository: HeroRepository,
     private val setRepository: SetRepository,
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
 ): IntentViewModel<HeroViewIntent>() {
 
     private val _hero = MutableStateFlow<Hero?>(null)
@@ -39,36 +39,30 @@ class HeroViewModel @Inject constructor(
     }
 
     private suspend fun fetch(heroId: String) {
-        val onError: (String) -> Unit = { it ->
-            viewModelScope.launch { innerState.emit(ViewState.Error(it)) }
-        }
-        try {
-            setsListener = setRepository.listenAll(Callback(onError) {
-                viewModelScope.launch {
-                    val sets = it
-                        .filter { s -> s.hero == heroId }
-                        .sortedByDescending { s -> s.liked.count() }
-                        .take(3)
-                    _sets.emit(sets)
+        setsListener = setRepository.listenAll(Callback(this::onError) {
+            viewModelScope.launch {
+                val sets = it
+                    .filter { s -> s.hero == heroId }
+                    .sortedByDescending { s -> s.liked.count() }
+                    .take(3)
+                _sets.emit(sets)
+            }
+        })
+        heroListener = heroRepository.listenOne(heroId, Callback(this::onError) {
+            viewModelScope.launch { _hero.emit(it) }
+        })
+        _hero
+            .combine(_sets) { hero, sets -> Pair(hero, sets) }
+            .collect { (hero, sets) ->
+                if (hero != null) {
+                    innerState.emit(ViewState.Success(Pair(hero, sets.map {
+                        UserSetUseCase(it,
+                            userRepository.fetchOne(it.author),
+                            heroRepository.fetchOne(it.hero)
+                        )
+                    })))
                 }
-            })
-            heroListener = heroRepository.listenOne(heroId, Callback(onError) {
-                viewModelScope.launch { _hero.emit(it) }
-            })
-            _hero.combine(_sets) { hero, sets -> Pair(hero, sets) }
-                .collect { (hero, sets) ->
-                    if (hero != null) {
-                        innerState.emit(ViewState.Success(Pair(hero, sets.map {
-                            UserSetWithUser(
-                                it.id, userRepository.fetchOne(it.author),
-                                it.gears, it.hero, it.liked
-                            )
-                        })))
-                    }
-                }
-        } catch (e: RuntimeException) {
-            innerState.emit(ViewState.Error(e.message ?: "Runtime exception"))
-        }
+            }
     }
 
     private fun onDispose() {

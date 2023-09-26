@@ -162,6 +162,8 @@
     <string name="villa">Вилла</string>
     <string name="sawmill">Лесопилка</string>
     <string name="fortress">Крепость</string>
+    <string name="neo_town">Нео таун</string>
+    <string name="space_prison">Космическая тюрьма</string>
     <!--   Цг -->
     <string name="hospital">Госпиталь</string>
     <string name="psychiatric_hospital">Психиатрическая больница</string>

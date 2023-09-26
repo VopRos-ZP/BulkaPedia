@@ -9,4 +9,14 @@ data class Category(
     val enabled: Boolean,
     val icon: String,
     val destination: String,
-): Entity(id)
+): Entity(id) {
+
+    override fun toData(): Map<String, Any> = mapOf(
+        "title" to title,
+        "subTitle" to subTitle,
+        "enabled" to enabled,
+        "icon" to icon,
+        "destination" to destination,
+    )
+
+}

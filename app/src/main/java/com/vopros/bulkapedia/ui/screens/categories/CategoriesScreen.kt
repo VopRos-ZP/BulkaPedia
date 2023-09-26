@@ -20,31 +20,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.vopros.bulkapedia.R
 import com.vopros.bulkapedia.category.Category
-import com.vopros.bulkapedia.utils.iconNameToVector
-import com.vopros.bulkapedia.ui.navigation.Destinations
-import com.vopros.bulkapedia.ui.navigation.Navigation
-import com.vopros.bulkapedia.ui.navigation.NavigationScreen
-import com.vopros.bulkapedia.ui.navigation.ToCategories
-import com.vopros.bulkapedia.ui.navigation.ToHero
-import com.vopros.bulkapedia.ui.navigation.ToHeroes
-import com.vopros.bulkapedia.ui.navigation.ToMaps
 import com.vopros.bulkapedia.ui.screens.Screen
-import com.vopros.bulkapedia.ui.screens.hero.HeroScreen
-import com.vopros.bulkapedia.ui.screens.heroes.HeroesScreen
-import com.vopros.bulkapedia.ui.screens.maps.MapsScreen
 import com.vopros.bulkapedia.ui.theme.LocalNavController
-
-@Composable
-fun CategoriesNavList() {
-    Navigation(
-        startDestination = Destinations.CATEGORIES,
-        screens = listOf(
-            ToCategories,
-            ToHeroes, ToHero,
-            ToMaps,
-        )
-    )
-}
+import com.vopros.bulkapedia.utils.iconNameToVector
 
 @Composable
 fun CategoriesScreen() {

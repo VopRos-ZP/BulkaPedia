@@ -2,15 +2,17 @@ package com.vopros.bulkapedia.ui.screens.maps
 
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.text.font.FontWeight
 import com.vopros.bulkapedia.R
 import com.vopros.bulkapedia.map.GameMap
+import com.vopros.bulkapedia.ui.components.HCenterBox
 import com.vopros.bulkapedia.ui.components.Image
 import com.vopros.bulkapedia.ui.components.TagsWithRecycler
+import com.vopros.bulkapedia.ui.components.Text
 import com.vopros.bulkapedia.ui.components.tags.mapsTags
 import com.vopros.bulkapedia.ui.screens.Screen
-import com.vopros.bulkapedia.ui.screens.heroes.HeroCard
+import com.vopros.bulkapedia.utils.resourceManager
 
 @Composable
 fun MapsScreen() {
@@ -30,7 +32,9 @@ fun MapCard(map: GameMap) {
     Card(
         onClick = { /*TODO*/ },
     ) {
-        Text(text = map.id) // get name by id
+        HCenterBox {
+            Text(resourceManager.toSource(map.id), fontWeight = FontWeight.Bold)
+        }
         Image(url = map.image)
     }
 }

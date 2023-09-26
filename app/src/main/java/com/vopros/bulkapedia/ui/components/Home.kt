@@ -7,7 +7,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -21,7 +20,8 @@ import androidx.navigation.compose.rememberNavController
 import com.vopros.bulkapedia.ui.components.topbar.TopBar
 import com.vopros.bulkapedia.ui.navigation.BottomNavigationItem
 import com.vopros.bulkapedia.ui.navigation.Destinations
-import com.vopros.bulkapedia.ui.screens.categories.CategoriesNavList
+import com.vopros.bulkapedia.ui.navigation.navLists.CategoriesNavList
+import com.vopros.bulkapedia.ui.navigation.navLists.ProfileNavList
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -50,12 +50,8 @@ fun Home() {
             } } }
     ) {
         NavHost(modifier = Modifier.padding(it), navController = navController, startDestination = Destinations.WIKI) {
-            composable(route = Destinations.WIKI) {
-                CategoriesNavList()
-            }
-            composable(route = Destinations.PROFILE) {
-
-            }
+            composable(route = Destinations.WIKI) { CategoriesNavList() }
+            composable(route = Destinations.PROFILE) { ProfileNavList() }
         }
     }
 }
