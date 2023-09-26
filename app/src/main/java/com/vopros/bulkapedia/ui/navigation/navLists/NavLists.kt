@@ -11,6 +11,7 @@ import com.vopros.bulkapedia.ui.navigation.ToMap
 import com.vopros.bulkapedia.ui.navigation.ToMaps
 import com.vopros.bulkapedia.ui.navigation.ToProfile
 import com.vopros.bulkapedia.ui.navigation.ToProfileController
+import com.vopros.bulkapedia.ui.navigation.ToSetting
 
 @Composable
 fun CategoriesNavList() {
@@ -22,7 +23,9 @@ fun CategoriesNavList() {
             ToHeroes, ToHero,
             ToMaps, ToMap,
             /* Profile */
-            ToProfileController
+            ToProfileController,
+            /* Settings */
+            ToSetting,
         )
     )
 }
@@ -33,9 +36,12 @@ fun ProfileNavList() {
         startDestination = Destinations.PROFILE,
         screens = listOf(
             /* Profile Tab */
-            ToProfileController, ToLogin, ToProfile,
+            ToProfileController,
+            ToLogin, ToProfile,
             /* Wiki Tab */
             ToCategories,
+            /* Settings */
+            ToSetting,
         )
     )
 }

@@ -1,6 +1,8 @@
 package com.vopros.bulkapedia.ui.navigation
 
 object Destinations {
+    const val SETTINGS = "settings"
+
     const val WIKI = "wiki"
     const val PROFILE = "profile"
     const val LOGIN = "login"

@@ -11,6 +11,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import com.vopros.bulkapedia.ui.navigation.Destinations
 import com.vopros.bulkapedia.ui.theme.LocalTopBarViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -36,7 +37,7 @@ fun TopBar() {
         },
         actions = {
             IconButton(onClick = {
-                // navigate to settings
+                controller?.navigate(Destinations.SETTINGS) { launchSingleTop = true }
             }) {
                 Icon(
                     Icons.Filled.Settings,

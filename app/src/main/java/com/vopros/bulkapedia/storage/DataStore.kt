@@ -28,10 +28,16 @@ class DataStore @Inject constructor(
     val config = userId.combine(isSign) { id, isSign -> Pair(id, isSign) }
 
     suspend fun saveData(userId: String, isSign: Boolean) {
-        context.dataStore.edit {
-            it[USER_ID_KEY] = userId
-            it[SIGN_KEY] = isSign
-        }
+        saveUserId(userId)
+        saveIsSign(isSign)
+    }
+
+    suspend fun saveUserId(userId: String) {
+        context.dataStore.edit { it[USER_ID_KEY] = userId }
+    }
+
+    suspend fun saveIsSign(isSign: Boolean) {
+        context.dataStore.edit { it[SIGN_KEY] = isSign }
     }
 
 }

@@ -9,12 +9,14 @@ import com.vopros.bulkapedia.ui.screens.map.MapScreen
 import com.vopros.bulkapedia.ui.screens.maps.MapsScreen
 import com.vopros.bulkapedia.ui.screens.profile.ProfileScreen
 import com.vopros.bulkapedia.ui.screens.profileController.ProfileControllerScreen
+import com.vopros.bulkapedia.ui.screens.settings.SettingsScreen
 
 val ToCategories = NavigationScreen(Destinations.CATEGORIES) { CategoriesScreen() }
 val ToHeroes = NavigationScreen(Destinations.HEROES) { HeroesScreen() }
 val ToMaps = NavigationScreen(Destinations.MAPS) { MapsScreen() }
 val ToLogin = NavigationScreen(Destinations.LOGIN) { LoginScreen() }
 val ToProfileController = NavigationScreen(Destinations.PROFILE) { ProfileControllerScreen() }
+val ToSetting = NavigationScreen(Destinations.SETTINGS) { SettingsScreen() }
 
 val ToMap = NavigationScreen(
     "${Destinations.MAP}{mapId}",
