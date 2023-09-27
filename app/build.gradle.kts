@@ -7,11 +7,11 @@ plugins {
 }
 
 android {
-    namespace = "com.vopros.bulkapedia"
+    namespace = "vopros.bulkapedia"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.vopros.bulkapedia"
+        applicationId = "vopros.bulkapedia"
         minSdk = 28
         versionCode = 1
         versionName = "1.0"
@@ -53,11 +53,11 @@ android {
 
 dependencies {
     /** Glide **/
-    implementation("com.github.bumptech.glide:compose:1.0.0-alpha.5")
+    implementation(libs.compose)
     /** JSON **/
     implementation("com.fasterxml.jackson.core:jackson-databind:2.15.2")
     /** DI **/
-    implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
+    implementation(libs.hilt.navigation.compose)
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
     /** Firebase **/
@@ -66,21 +66,21 @@ dependencies {
     implementation("com.google.firebase:firebase-firestore-ktx")
     implementation("com.google.firebase:firebase-auth-ktx")
     /** DataStore **/
-    implementation("androidx.datastore:datastore-preferences:1.0.0")
+    implementation(libs.datastore.preferences)
     /** Core **/
     implementation(libs.core.ktx)
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
-    implementation("androidx.activity:activity-compose:1.7.2")
-    implementation("androidx.navigation:navigation-compose:2.7.3")
+    implementation(libs.lifecycle.runtime.ktx)
+    implementation(libs.activity.compose)
+    implementation(libs.navigation.compose)
     implementation(platform("androidx.compose:compose-bom:2023.03.00"))
     implementation("androidx.compose.ui:ui")
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
-    implementation("androidx.compose.material3:material3")
+    implementation("androidx.compose.material:material")
     implementation("androidx.compose.material:material-icons-extended")
-    testImplementation("junit:junit:4.13.2")
-    androidTestImplementation("androidx.test.ext:junit:1.1.5")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+    testImplementation(libs.junit)
+    androidTestImplementation(libs.ext.junit)
+    androidTestImplementation(libs.espresso.core)
     androidTestImplementation(platform("androidx.compose:compose-bom:2023.03.00"))
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     debugImplementation("androidx.compose.ui:ui-tooling")
