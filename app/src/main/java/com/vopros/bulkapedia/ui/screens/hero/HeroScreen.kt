@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Card
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -29,12 +30,15 @@ import com.vopros.bulkapedia.ui.components.Text
 import com.vopros.bulkapedia.ui.components.tab.Tab
 import com.vopros.bulkapedia.ui.components.tab.TabRowWithPager
 import com.vopros.bulkapedia.ui.components.userSet.UserSetCard
+import com.vopros.bulkapedia.ui.navigation.Destinations
 import com.vopros.bulkapedia.ui.screens.Screen
+import com.vopros.bulkapedia.ui.theme.LocalNavController
 import com.vopros.bulkapedia.userSet.UserSetUseCase
 import com.vopros.bulkapedia.utils.resourceManager
 
 @Composable
 fun HeroScreen(heroId: String) {
+    val controller = LocalNavController.current
     var title by remember { mutableIntStateOf(R.string.select_hero) }
     Screen<Pair<Hero, List<UserSetUseCase>>, HeroViewModel>(
         title = title, showBack = true,
@@ -47,6 +51,7 @@ fun HeroScreen(heroId: String) {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {
+            /* Hero icon with difficult */
             HeroThumbnail(hero.image) {
                 Text(
                     R.string.difficult,
@@ -54,10 +59,17 @@ fun HeroScreen(heroId: String) {
                 )
                 HeroDifficult(difficult = hero.difficult)
             }
-            /** UserSets **/
+
+            /* UserSets */
             TabRowWithPager(
                 listOf(Tab(R.string.one), Tab(R.string.two), Tab(R.string.three)), sets
             ) { HCenterBox { UserSetCard(it) } }
+
+            /* Add user set Button */
+            OutlinedButton(onClick = {
+                controller.navigate("${Destinations.CREATE_SET}/${hero.id}")
+            }) { Text(R.string.create_set) }
+
         }
     }
 }

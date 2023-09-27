@@ -16,7 +16,8 @@ fun navArg(name: String, type: NavType<*>): NamedNavArgument = navArgument(name)
     this.type = type
 }
 
-fun navArg(name: String, type: NavType<*>, defaultValue: Any): NamedNavArgument = navArgument(name) {
+fun <T> navArg(name: String, type: NavType<T>, defaultValue: T): NamedNavArgument = navArgument(name) {
     this.type = type
     this.defaultValue = defaultValue
+    this.nullable = type.isNullableAllowed
 }

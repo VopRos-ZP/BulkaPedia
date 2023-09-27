@@ -12,6 +12,8 @@ object Destinations {
     const val HEROES = "heroes"
     const val MAPS = "maps"
 
+    const val CREATE_SET = "create_set"
+
     const val HERO = "$HEROES/"
     const val MAP = "$MAPS/"
 

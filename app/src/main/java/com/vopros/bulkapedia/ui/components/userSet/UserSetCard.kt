@@ -1,6 +1,7 @@
 package com.vopros.bulkapedia.ui.components.userSet
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
@@ -113,17 +114,24 @@ fun UserSetCard(
 }
 
 @Composable
-fun Gears(gears: Map<String, String>) {
+fun Gears(gears: Map<String, String>, onClick: (String) -> Unit = {}) {
     Column(modifier = Modifier.height((75 * 3).dp)) {
-        GearRow(gears = listOf(gears["head"]!!, gears["body"]!!))
-        GearRow(gears = listOf(gears["arm"]!!, gears["leg"]!!))
-        GearRow(gears = listOf(gears["decor"]!!, gears["device"]!!))
+        GearRow(gears = listOf(gears["head"]!!, gears["body"]!!), onClick)
+        GearRow(gears = listOf(gears["arm"]!!, gears["leg"]!!), onClick)
+        GearRow(gears = listOf(gears["decor"]!!, gears["device"]!!), onClick)
     }
 }
 
 @Composable
-private fun GearRow(gears: List<String>) {
+private fun GearRow(gears: List<String>, onClick: (String) -> Unit) {
     Row(modifier = Modifier.width((75 * 2).dp)) {
-        gears.map { value -> Image(url = value, modifier = Modifier.size(75.dp)) }
+        gears.map { value ->
+            Image(
+                url = value,
+                modifier = Modifier
+                    .size(75.dp)
+                    .clickable { onClick(value) }
+            )
+        }
     }
 }

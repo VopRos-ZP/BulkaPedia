@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import com.vopros.bulkapedia.ui.navigation.Destinations
 import com.vopros.bulkapedia.ui.navigation.Navigation
 import com.vopros.bulkapedia.ui.navigation.ToCategories
+import com.vopros.bulkapedia.ui.navigation.ToCreateSet
 import com.vopros.bulkapedia.ui.navigation.ToHero
 import com.vopros.bulkapedia.ui.navigation.ToHeroes
 import com.vopros.bulkapedia.ui.navigation.ToLogin
@@ -22,6 +23,7 @@ fun CategoriesNavList() {
             ToCategories,
             ToHeroes, ToHero,
             ToMaps, ToMap,
+            ToCreateSet,
             /* Profile */
             ToProfileController,
             /* Settings */
@@ -38,6 +40,7 @@ fun ProfileNavList() {
             /* Profile Tab */
             ToProfileController,
             ToLogin, ToProfile,
+            ToCreateSet,
             /* Wiki Tab */
             ToCategories,
             /* Settings */

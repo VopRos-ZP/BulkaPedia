@@ -2,6 +2,7 @@ package com.vopros.bulkapedia.ui.navigation
 
 import androidx.navigation.NavType
 import com.vopros.bulkapedia.ui.screens.categories.CategoriesScreen
+import com.vopros.bulkapedia.ui.screens.createSet.CreateSetScreen
 import com.vopros.bulkapedia.ui.screens.hero.HeroScreen
 import com.vopros.bulkapedia.ui.screens.heroes.HeroesScreen
 import com.vopros.bulkapedia.ui.screens.login.LoginScreen
@@ -32,3 +33,16 @@ val ToHero = NavigationScreen(
     "${Destinations.HERO}{heroId}",
     listOf(navArg("heroId", NavType.StringType))
 ) { HeroScreen(it?.getString("heroId")!!) }
+
+val ToCreateSet = NavigationScreen(
+    "${Destinations.CREATE_SET}/{heroId}?setId={setId}",
+    listOf(
+        navArg("heroId", NavType.StringType),
+        navArg("setId", NavType.StringType, null),
+    )
+) {
+    CreateSetScreen(
+        heroId = it?.getString("heroId")!!,
+        setId = it.getString("setId")
+    )
+}

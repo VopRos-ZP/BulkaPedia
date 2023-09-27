@@ -259,5 +259,6 @@
     <string name="update_title">Ошибка версии</string>
     <string name="update_content">Доступна новая версия приложения</string>
     <string name="no_effects">Нет эффектов</string>
+    <string name="create_set">Создать сет</string>
 
 </resources>
