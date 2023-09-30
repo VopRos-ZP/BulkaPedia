@@ -1,5 +1,5 @@
 package vopros.bulkapedia.ui.view
 
-fun interface Reducer<I> {
-    suspend fun execute(intent: I, state: ViewState)
+interface Reducer<I> {
+//    suspend fun execute(intent: I, state: ViewState)
 }

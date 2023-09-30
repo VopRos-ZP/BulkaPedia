@@ -15,23 +15,23 @@ class MapViewModel @Inject constructor(
     private val mapRepository: MapRepository
 ): IntentViewModel<MapViewIntent>() {
 
-    private var listener: ListenerRegistration? = null
-
-    override var reducer: Reducer<MapViewIntent> = Reducer { intent, _ ->
-        when (intent) {
-            is MapViewIntent.Fetch -> fetch(intent.mapId)
-            is MapViewIntent.Dispose -> dispose()
-        }
-    }
-
-    private fun fetch(mapId: String) {
-        listener = mapRepository.listenOne(mapId, Callback(this::error) {
-            viewModelScope.launch { success(it) }
-        })
-    }
-
-    private fun dispose() {
-        listener?.remove()
-    }
+//    private var listener: ListenerRegistration? = null
+//
+//    override var reducer: Reducer<MapViewIntent> = Reducer { intent, _ ->
+//        when (intent) {
+//            is MapViewIntent.Fetch -> fetch(intent.mapId)
+//            is MapViewIntent.Dispose -> dispose()
+//        }
+//    }
+//
+//    private fun fetch(mapId: String) {
+//        listener = mapRepository.listenOne(mapId, Callback(this::error) {
+//            viewModelScope.launch { success(it) }
+//        })
+//    }
+//
+//    private fun dispose() {
+//        listener?.remove()
+//    }
 
 }

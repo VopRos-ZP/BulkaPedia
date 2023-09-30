@@ -54,20 +54,15 @@ inline fun <T, reified VM: IntentViewModel<*>> Screen(
     crossinline dispose: VM.() -> Unit = {},
     crossinline content: @Composable (VM, T) -> Unit
 ) {
-    ScreenView(title = title, showBack = showBack) {
-        val viewModel: VM = hiltViewModel()
-        val viewState = viewModel.state.collectAsState()
-        when (val state = viewState.value) {
-            is ViewState.Loading -> Loading()
-            is ViewState.Error -> Error(state.message) { viewModel.fetch() }
-            else -> {
-                val data = (state as ViewState.Success<T>).data
-                content(viewModel, data)
-            }
-        }
-        DisposableEffect(null) {
-            viewModel.fetch()
-            onDispose { viewModel.dispose() }
-        }
-    }
+//    ScreenView(title = title, showBack = showBack) {
+//        val viewModel: VM = hiltViewModel()
+//        val viewState = viewModel.state.collectAsState()
+//        when (val state = viewState.value) {
+//
+//        }
+//        DisposableEffect(null) {
+//            viewModel.fetch()
+//            onDispose { viewModel.dispose() }
+//        }
+//    }
 }

@@ -19,22 +19,22 @@ class CreateSetViewModel @Inject constructor(
     private val heroRepository: HeroRepository,
 ): IntentViewModel<CreateSetViewIntent>() {
 
-    override var reducer: Reducer<CreateSetViewIntent> = Reducer { intent, _ ->
-        when (intent) {
-            is CreateSetViewIntent.Start -> fetchSet(intent.heroId, intent.setId)
-        }
-    }
-
-    private suspend fun fetchSet(heroId: String, setId: String?) {
-        dataStore.userId.collect { token ->
-            val user = userRepository.fetchOne(token)
-            val hero = heroRepository.fetchOne(heroId)
-            val set = when (setId) {
-                null -> UserSet("", token, emptyMap(), heroId, emptyList())
-                else -> setRepository.fetchOne(setId)
-            }
-            success(UserSetUseCase(set, user, hero))
-        }
-    }
+//    override var reducer: Reducer<CreateSetViewIntent> = Reducer { intent, _ ->
+//        when (intent) {
+//            is CreateSetViewIntent.Start -> fetchSet(intent.heroId, intent.setId)
+//        }
+//    }
+//
+//    private suspend fun fetchSet(heroId: String, setId: String?) {
+//        dataStore.userId.collect { token ->
+//            val user = userRepository.fetchOne(token)
+//            val hero = heroRepository.fetchOne(heroId)
+//            val set = when (setId) {
+//                null -> UserSet("", token, emptyMap(), heroId, emptyList())
+//                else -> setRepository.fetchOne(setId)
+//            }
+//            success(UserSetUseCase(set, user, hero))
+//        }
+//    }
 
 }

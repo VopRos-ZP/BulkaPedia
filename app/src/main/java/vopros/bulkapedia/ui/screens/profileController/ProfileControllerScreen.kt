@@ -9,17 +9,17 @@ import vopros.bulkapedia.ui.theme.LocalNavController
 
 @Composable
 fun ProfileControllerScreen() {
-    val controller = LocalNavController.current
-    Screen<Pair<String, Boolean>, ProfileControllerViewModel>(
-        title = R.string.empty,
-        fetch = { startIntent(ProfileControllerViewIntent.Start) }
-    ) { _, pair ->
-        LaunchedEffect(pair) {
-            if (pair.second) {
-                controller.navigate("${Destinations.PROFILE}/${pair.first}")
-            } else {
-                controller.navigate(Destinations.LOGIN)
-            }
-        }
-    }
+//    val controller = LocalNavController.current
+//    Screen<Pair<String, Boolean>, ProfileControllerViewModel>(
+//        title = R.string.empty,
+//        fetch = { startIntent(ProfileControllerViewIntent.Start) }
+//    ) { _, pair ->
+//        LaunchedEffect(pair) {
+//            if (pair.second) {
+//                controller.navigate("${Destinations.PROFILE}/${pair.first}")
+//            } else {
+//                controller.navigate(Destinations.LOGIN)
+//            }
+//        }
+//    }
 }

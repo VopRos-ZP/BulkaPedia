@@ -18,14 +18,14 @@ import vopros.bulkapedia.utils.resourceManager
 
 @Composable
 fun MapsScreen() {
-    Screen<List<GameMap>, MapsViewModel>(
-        R.string.select_map, true,
-        { startIntent(MapsViewIntent.Start) }
-    ) { _, maps ->
-        TagsWithRecycler(mapsTags(), maps, { tag, map ->
-            tag?.id == map.mode || tag == null || tag.id.isEmpty()
-        }) { MapCard(it) }
-    }
+//    Screen<List<GameMap>, MapsViewModel>(
+//        R.string.select_map, true,
+//        { startIntent(MapsViewIntent.Start) }
+//    ) { _, maps ->
+//        TagsWithRecycler(mapsTags(), maps, { tag, map ->
+//            tag?.id == map.mode || tag == null || tag.id.isEmpty()
+//        }) { MapCard(it) }
+//    }
 }
 
 @OptIn(ExperimentalMaterialApi::class)

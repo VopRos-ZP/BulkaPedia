@@ -23,29 +23,29 @@ import vopros.bulkapedia.utils.resourceManager
 
 @Composable
 fun MapScreen(mapId: String) {
-    Screen<GameMap, MapViewModel>(
-        title = resourceManager.toSource(mapId), showBack = true,
-        fetch = { startIntent(MapViewIntent.Fetch(mapId)) },
-        dispose = { startIntent(MapViewIntent.Dispose) }
-    ) { _, map ->
-        var text by remember { mutableIntStateOf(R.string.show_spawns) }
-        var image by remember { mutableStateOf(map.image) }
-        Column(
-            modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.spacedBy(20.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            OutlinedCard { Image(url = image) }
-            OutlinedButton(onClick = {
-                image = when (image) {
-                    map.image -> map.spawns
-                    else -> map.image
-                }
-                text = when (text) {
-                    R.string.show_spawns -> R.string.hide_spawns
-                    else -> R.string.show_spawns
-                }
-            }) { Text(text) }
-        }
-    }
+//    Screen<GameMap, MapViewModel>(
+//        title = resourceManager.toSource(mapId), showBack = true,
+//        fetch = { startIntent(MapViewIntent.Fetch(mapId)) },
+//        dispose = { startIntent(MapViewIntent.Dispose) }
+//    ) { _, map ->
+//        var text by remember { mutableIntStateOf(R.string.show_spawns) }
+//        var image by remember { mutableStateOf(map.image) }
+//        Column(
+//            modifier = Modifier.fillMaxSize(),
+//            verticalArrangement = Arrangement.spacedBy(20.dp),
+//            horizontalAlignment = Alignment.CenterHorizontally
+//        ) {
+//            OutlinedCard { Image(url = image) }
+//            OutlinedButton(onClick = {
+//                image = when (image) {
+//                    map.image -> map.spawns
+//                    else -> map.image
+//                }
+//                text = when (text) {
+//                    R.string.show_spawns -> R.string.hide_spawns
+//                    else -> R.string.show_spawns
+//                }
+//            }) { Text(text) }
+//        }
+//    }
 }

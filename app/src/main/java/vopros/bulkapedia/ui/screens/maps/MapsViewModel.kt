@@ -11,14 +11,14 @@ class MapsViewModel @Inject constructor(
     private val mapRepository: MapRepository
 ): IntentViewModel<MapsViewIntent>() {
 
-    override var reducer: Reducer<MapsViewIntent> = Reducer { intent, _ ->
-        when (intent) {
-            is MapsViewIntent.Start -> fetchMaps()
-        }
-    }
-
-    private suspend fun fetchMaps() {
-        success(mapRepository.fetchAll())
-    }
+//    override var reducer: Reducer<MapsViewIntent> = Reducer { intent, _ ->
+//        when (intent) {
+//            is MapsViewIntent.Start -> fetchMaps()
+//        }
+//    }
+//
+//    private suspend fun fetchMaps() {
+//        success(mapRepository.fetchAll())
+//    }
 
 }

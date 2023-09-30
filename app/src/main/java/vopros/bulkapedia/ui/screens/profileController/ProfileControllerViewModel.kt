@@ -11,14 +11,14 @@ class ProfileControllerViewModel @Inject constructor(
     private val dataStore: DataStore
 ) : IntentViewModel<ProfileControllerViewIntent>() {
 
-    override var reducer: Reducer<ProfileControllerViewIntent> = Reducer { intent, _ ->
-        when (intent) {
-            is ProfileControllerViewIntent.Start -> init()
-        }
-    }
-
-    private suspend fun init() {
-        dataStore.config.collect { success(it) }
-    }
+//    override var reducer: Reducer<ProfileControllerViewIntent> = Reducer { intent, _ ->
+//        when (intent) {
+//            is ProfileControllerViewIntent.Start -> init()
+//        }
+//    }
+//
+//    private suspend fun init() {
+//        dataStore.config.collect { success(it) }
+//    }
 
 }

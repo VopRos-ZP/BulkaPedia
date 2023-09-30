@@ -24,48 +24,48 @@ import vopros.bulkapedia.ui.theme.LocalNavController
 
 @Composable
 fun LoginScreen() {
-    val email = remember { mutableStateOf("") }
-    val password = remember { mutableStateOf("") }
-    val controller = LocalNavController.current
-    Screen<Pair<String, Boolean>, LoginViewModel>(
-        title = R.string.login,
-        fetch = { startIntent(LoginViewIntent.Start) }
-    ) { viewModel, pair ->
-        LaunchedEffect(pair) {
-            if (pair.second) {
-                controller.navigate("${Destinations.PROFILE}/${pair.first}")
-            }
-        }
-        Column(
-            modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.spacedBy(20.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Image(
-                painter = painterResource(R.drawable.logo_no_bg),
-                contentDescription = "logo"
-            )
-            Column(
-                modifier = Modifier.fillMaxWidth(),
-                verticalArrangement = Arrangement.spacedBy(10.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                OutlinedTextField(
-                    state = email,
-                    label = R.string.enter_email,
-                    error = R.string.error_email,
-                    isError = !email.value.matches("\\w+@\\w+\\.\\w+".toRegex())
-                )
-                PasswordField(
-                    state = password,
-                    label = R.string.hint_password
-                )
-            }
-            Button(onClick = {
-                viewModel.startIntent(LoginViewIntent.Login(email.value, password.value))
-            }) {
-                Text(R.string.login)
-            }
-        }
-    }
+//    val email = remember { mutableStateOf("") }
+//    val password = remember { mutableStateOf("") }
+//    val controller = LocalNavController.current
+//    Screen<Pair<String, Boolean>, LoginViewModel>(
+//        title = R.string.login,
+//        fetch = { startIntent(LoginViewIntent.Start) }
+//    ) { viewModel, pair ->
+//        LaunchedEffect(pair) {
+//            if (pair.second) {
+//                controller.navigate("${Destinations.PROFILE}/${pair.first}")
+//            }
+//        }
+//        Column(
+//            modifier = Modifier.fillMaxSize(),
+//            verticalArrangement = Arrangement.spacedBy(20.dp),
+//            horizontalAlignment = Alignment.CenterHorizontally
+//        ) {
+//            Image(
+//                painter = painterResource(R.drawable.logo_no_bg),
+//                contentDescription = "logo"
+//            )
+//            Column(
+//                modifier = Modifier.fillMaxWidth(),
+//                verticalArrangement = Arrangement.spacedBy(10.dp),
+//                horizontalAlignment = Alignment.CenterHorizontally
+//            ) {
+//                OutlinedTextField(
+//                    state = email,
+//                    label = R.string.enter_email,
+//                    error = R.string.error_email,
+//                    isError = !email.value.matches("\\w+@\\w+\\.\\w+".toRegex())
+//                )
+//                PasswordField(
+//                    state = password,
+//                    label = R.string.hint_password
+//                )
+//            }
+//            Button(onClick = {
+//                viewModel.startIntent(LoginViewIntent.Login(email.value, password.value))
+//            }) {
+//                Text(R.string.login)
+//            }
+//        }
+//    }
 }

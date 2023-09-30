@@ -1,16 +1,48 @@
 package vopros.bulkapedia.ui.components
 
+import androidx.annotation.StringRes
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.res.stringResource
+import androidx.hilt.navigation.compose.hiltViewModel
+import vopros.bulkapedia.ui.screens.Error
 import vopros.bulkapedia.ui.theme.LocalNavController
 import vopros.bulkapedia.ui.theme.LocalTopBarViewModel
+import vopros.bulkapedia.ui.view.ErrViewModel
 
 @Composable
-fun ScreenView(
-    title: String, showBack: Boolean = false,
-    content: @Composable () -> Unit
+inline fun <reified V: ErrViewModel> ScreenView(
+    @StringRes title: Int,
+    showBack: Boolean = false,
+    viewModel: V = hiltViewModel(),
+    crossinline content: @Composable BoxScope.(V) -> Unit
 ) {
-    val viewModel = LocalTopBarViewModel.current
+    ScreenView(
+        title = stringResource(id = title),
+        showBack = showBack,
+        viewModel = viewModel,
+        content = content
+    )
+}
+
+@Composable
+inline fun <reified V: ErrViewModel> ScreenView(
+    title: String, showBack: Boolean = false,
+    viewModel: V = hiltViewModel(),
+    crossinline content: @Composable BoxScope.(V) -> Unit
+) {
+    val topBarViewModel = LocalTopBarViewModel.current
     val navController = LocalNavController.current
-    viewModel.update(title, showBack, navController)
-    content()
+    topBarViewModel.update(title, showBack, navController)
+
+    val error by viewModel.error.collectAsState()
+    CenterBox {
+        AnimatedVisibility(visible = error.isNotEmpty()) {
+            Error(message = error) {  }
+        }
+        content(viewModel)
+    }
 }

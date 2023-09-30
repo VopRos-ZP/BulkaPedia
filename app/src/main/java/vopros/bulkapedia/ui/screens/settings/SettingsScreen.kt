@@ -15,25 +15,25 @@ import vopros.bulkapedia.ui.screens.Screen
 
 @Composable
 fun SettingsScreen() {
-    Screen<Pair<String, Boolean>, SettingsViewModel>(
-        title = R.string.settings,
-        showBack = true,
-        fetch = { startIntent(SettingsViewIntent.Start) }
-    ) { viewModel, _ ->
-        Column(
-            modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.spacedBy(20.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            OutlinedButton(onClick = { /* Change email */ }) {
-                Text(resource = R.string.change_login)
-            }
-            OutlinedButton(onClick = { /* Change nickname */ }) {
-                Text(resource = R.string.change_nickname)
-            }
-            OutlinedButton(onClick = {
-                viewModel.startIntent(SettingsViewIntent.Logout)
-            }) { Text(resource = R.string.logout, color = Color.Red) }
-        }
-    }
+//    Screen<Pair<String, Boolean>, SettingsViewModel>(
+//        title = R.string.settings,
+//        showBack = true,
+//        fetch = { startIntent(SettingsViewIntent.Start) }
+//    ) { viewModel, _ ->
+//        Column(
+//            modifier = Modifier.fillMaxSize(),
+//            verticalArrangement = Arrangement.spacedBy(20.dp),
+//            horizontalAlignment = Alignment.CenterHorizontally
+//        ) {
+//            OutlinedButton(onClick = { /* Change email */ }) {
+//                Text(resource = R.string.change_login)
+//            }
+//            OutlinedButton(onClick = { /* Change nickname */ }) {
+//                Text(resource = R.string.change_nickname)
+//            }
+//            OutlinedButton(onClick = {
+//                viewModel.startIntent(SettingsViewIntent.Logout)
+//            }) { Text(resource = R.string.logout, color = Color.Red) }
+//        }
+//    }
 }

@@ -1,24 +1,23 @@
 package vopros.bulkapedia.ui.screens.heroes
 
-import vopros.bulkapedia.hero.HeroRepository
-import vopros.bulkapedia.ui.view.IntentViewModel
-import vopros.bulkapedia.ui.view.Reducer
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import vopros.bulkapedia.hero.Hero
+import vopros.bulkapedia.hero.HeroRepository
+import vopros.bulkapedia.ui.view.ErrViewModel
 import javax.inject.Inject
 
 @HiltViewModel
 class HeroesViewModel @Inject constructor(
     private val heroRepository: HeroRepository
-) : IntentViewModel<HeroesViewIntent>() {
+): ErrViewModel() {
 
-    override var reducer: Reducer<HeroesViewIntent> = Reducer { intent, _ ->
-        when (intent) {
-            is HeroesViewIntent.Start -> fetchHeroes()
-        }
-    }
+    private val _heroes = MutableStateFlow(emptyList<Hero>())
+    val heroes = _heroes.asStateFlow()
 
-    private suspend fun fetchHeroes() {
-        success(heroRepository.fetchAll())
+    fun fetchHeroes() {
+        coroutine { _heroes.emit(heroRepository.fetchAll()) }
     }
 
 }

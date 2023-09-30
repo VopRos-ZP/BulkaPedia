@@ -26,7 +26,7 @@ fun <T> TagsWithRecycler(
     itemContent: @Composable LazyItemScope.(item: T) -> Unit
 ) {
     val selectedTag = remember { mutableStateOf("") }
-    Column (
+    Column(
         modifier = Modifier
             .fillMaxSize()
             .background(Color.Transparent)
@@ -36,7 +36,7 @@ fun <T> TagsWithRecycler(
             true -> Loading()
             else -> LazyColumn(
                 modifier = Modifier.fillMaxSize(),
-                verticalArrangement = Arrangement.spacedBy(6.dp),
+                verticalArrangement = Arrangement.spacedBy(10.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 items(

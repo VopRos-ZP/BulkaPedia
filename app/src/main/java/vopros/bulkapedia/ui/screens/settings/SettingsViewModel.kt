@@ -13,20 +13,20 @@ class SettingsViewModel @Inject constructor(
     private val authRepository: AuthRepository
 ): IntentViewModel<SettingsViewIntent>() {
 
-    override var reducer: Reducer<SettingsViewIntent> = Reducer { intent, _ ->
-        when (intent) {
-            is SettingsViewIntent.Start -> init()
-            is SettingsViewIntent.Logout -> logout()
-        }
-    }
-
-    private suspend fun init() {
-        dataStore.config.collect { success(it) }
-    }
-
-    private suspend fun logout() {
-        authRepository.logout()
-        dataStore.saveIsSign(false)
-    }
+//    override var reducer: Reducer<SettingsViewIntent> = Reducer { intent, _ ->
+//        when (intent) {
+//            is SettingsViewIntent.Start -> init()
+//            is SettingsViewIntent.Logout -> logout()
+//        }
+//    }
+//
+//    private suspend fun init() {
+//        dataStore.config.collect { success(it) }
+//    }
+//
+//    private suspend fun logout() {
+//        authRepository.logout()
+//        dataStore.saveIsSign(false)
+//    }
 
 }

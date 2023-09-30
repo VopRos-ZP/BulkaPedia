@@ -38,40 +38,40 @@ import vopros.bulkapedia.utils.resourceManager
 
 @Composable
 fun HeroScreen(heroId: String) {
-    val controller = LocalNavController.current
-    var title by remember { mutableIntStateOf(R.string.select_hero) }
-    Screen<Pair<Hero, List<UserSetUseCase>>, HeroViewModel>(
-        title = title, showBack = true,
-        fetch = { startIntent(HeroViewIntent.Fetch(heroId)) },
-        dispose = { startIntent(HeroViewIntent.Dispose) }
-    ) { _, (hero, sets) ->
-        title = resourceManager.toSource(hero.id)
-        Column(
-            modifier = Modifier.fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(20.dp)
-        ) {
-            /* Hero icon with difficult */
-            HeroThumbnail(hero.image) {
-                Text(
-                    R.string.difficult,
-                    modifier = Modifier.padding(bottom = 15.dp)
-                )
-                HeroDifficult(difficult = hero.difficult)
-            }
-
-            /* UserSets */
-            TabRowWithPager(
-                listOf(Tab(R.string.one), Tab(R.string.two), Tab(R.string.three)), sets
-            ) { HCenterBox { UserSetCard(it) } }
-
-            /* Add user set Button */
-            OutlinedButton(onClick = {
-                controller.navigate("${Destinations.CREATE_SET}/${hero.id}")
-            }) { Text(R.string.create_set) }
-
-        }
-    }
+//    val controller = LocalNavController.current
+//    var title by remember { mutableIntStateOf(R.string.select_hero) }
+//    Screen<Pair<Hero, List<UserSetUseCase>>, HeroViewModel>(
+//        title = title, showBack = true,
+//        fetch = { startIntent(HeroViewIntent.Fetch(heroId)) },
+//        dispose = { startIntent(HeroViewIntent.Dispose) }
+//    ) { _, (hero, sets) ->
+//        title = resourceManager.toSource(hero.id)
+//        Column(
+//            modifier = Modifier.fillMaxSize(),
+//            horizontalAlignment = Alignment.CenterHorizontally,
+//            verticalArrangement = Arrangement.spacedBy(20.dp)
+//        ) {
+//            /* Hero icon with difficult */
+//            HeroThumbnail(hero.image) {
+//                Text(
+//                    R.string.difficult,
+//                    modifier = Modifier.padding(bottom = 15.dp)
+//                )
+//                HeroDifficult(difficult = hero.difficult)
+//            }
+//
+//            /* UserSets */
+//            TabRowWithPager(
+//                listOf(Tab(R.string.one), Tab(R.string.two), Tab(R.string.three)), sets
+//            ) { HCenterBox { UserSetCard(it) } }
+//
+//            /* Add user set Button */
+//            OutlinedButton(onClick = {
+//                controller.navigate("${Destinations.CREATE_SET}/${hero.id}")
+//            }) { Text(R.string.create_set) }
+//
+//        }
+//    }
 }
 
 @Composable

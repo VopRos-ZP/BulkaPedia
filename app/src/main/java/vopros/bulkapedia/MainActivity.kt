@@ -20,14 +20,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         resourceManager = ResourceManager()
-        setContent {
-            BulkapediaTheme {
-                CompositionLocalProvider(
-                    LocalTopBarViewModel provides hiltViewModel(),
-                    LocalNavController provides rememberNavController()
-                ) { Home() }
-            }
-        }
+        setContent { BulkapediaTheme { Home() } }
     }
 
 }
