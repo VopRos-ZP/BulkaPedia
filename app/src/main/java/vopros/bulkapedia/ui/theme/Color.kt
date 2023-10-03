@@ -2,14 +2,27 @@ package vopros.bulkapedia.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-val Primary = Color(0xFF000A3C)
-val Secondary = Color(0xFF00233C)
-val Tertiary = Color(0xFFFFFFFF)
+val Primary = Color(0xFF2D2D30)
+val Secondary = Color(0xFF1E1F22)
+val White = Color(0xFFDFE1E5)
+val SecondaryAscent = Color(0xFF43454A)
+val Teal200 = Color(0xFF03DAC5)
+val Blue = Color(0xFF366ACE)
 
-val Purple80 = Color(0xFF4C00FF) //0xFFD0BCFF
-val PurpleGrey80 = Color(0xFF000000) //0xFFCCC2DC
-val Pink80 = Color(0xFFFF004A) //0xFFEFB8C8
+data class BulkaPediaColors(
+    val primary: Color,
+    val primaryDark: Color,
+    val secondary: Color,
+    val secondaryDark: Color,
+    val tintColor: Color,
+    val white: Color
+)
 
-val Purple40 = Color(0xFF4C00FF) // 0xFF6650a4
-val PurpleGrey40 = Color(0xFF000000) //0xFF625b71
-val Pink40 = Color(0xFFFF004A) //0xFF7D5260
+val basePalette = BulkaPediaColors(
+    primary = Primary,
+    primaryDark = Secondary,
+    secondary = SecondaryAscent,
+    secondaryDark = Teal200,
+    tintColor = Blue,
+    white = White
+)

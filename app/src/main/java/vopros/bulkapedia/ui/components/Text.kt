@@ -14,12 +14,54 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.TextUnit
+import vopros.bulkapedia.ui.theme.BulkaPediaTheme
 
 @Composable
 fun Text(
     resource: Int,
     modifier: Modifier = Modifier,
-    color: Color = Color.Unspecified,
+    color: Color = BulkaPediaTheme.colors.white,
+    fontSize: TextUnit = TextUnit.Unspecified,
+    fontStyle: FontStyle? = null,
+    fontWeight: FontWeight? = null,
+    fontFamily: FontFamily? = null,
+    letterSpacing: TextUnit = TextUnit.Unspecified,
+    textDecoration: TextDecoration? = null,
+    textAlign: TextAlign? = null,
+    lineHeight: TextUnit = TextUnit.Unspecified,
+    overflow: TextOverflow = TextOverflow.Clip,
+    softWrap: Boolean = true,
+    maxLines: Int = Int.MAX_VALUE,
+    minLines: Int = 1,
+    onTextLayout: (TextLayoutResult) -> Unit = {},
+    style: TextStyle = LocalTextStyle.current
+) {
+    Text(
+        title = stringResource(id = resource),
+        modifier,
+        color,
+        fontSize,
+        fontStyle,
+        fontWeight,
+        fontFamily,
+        letterSpacing,
+        textDecoration,
+        textAlign,
+        lineHeight,
+        overflow,
+        softWrap,
+        maxLines,
+        minLines,
+        onTextLayout,
+        style
+    )
+}
+
+@Composable
+fun Text(
+    title: String,
+    modifier: Modifier = Modifier,
+    color: Color = BulkaPediaTheme.colors.white,
     fontSize: TextUnit = TextUnit.Unspecified,
     fontStyle: FontStyle? = null,
     fontWeight: FontWeight? = null,
@@ -36,7 +78,7 @@ fun Text(
     style: TextStyle = LocalTextStyle.current
 ) {
     androidx.compose.material.Text(
-        text = stringResource(id = resource),
+        title,
         modifier,
         color,
         fontSize,
