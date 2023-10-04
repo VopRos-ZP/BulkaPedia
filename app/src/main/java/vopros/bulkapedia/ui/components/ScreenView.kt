@@ -2,13 +2,16 @@ package vopros.bulkapedia.ui.components
 
 import androidx.annotation.StringRes
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import vopros.bulkapedia.ui.screens.Error
+import vopros.bulkapedia.ui.theme.BulkaPediaTheme
 import vopros.bulkapedia.ui.theme.LocalNavController
 import vopros.bulkapedia.ui.theme.LocalTopBarViewModel
 import vopros.bulkapedia.ui.view.ErrViewModel
@@ -39,7 +42,9 @@ inline fun <reified V: ErrViewModel> ScreenView(
     topBarViewModel.update(title, showBack, navController)
 
     val error by viewModel.error.collectAsState()
-    CenterBox {
+    CenterBox(
+        modifier = Modifier.background(BulkaPediaTheme.colors.primaryDark)
+    ) {
         AnimatedVisibility(visible = error.isNotEmpty()) {
             Error(message = error) {  }
         }
