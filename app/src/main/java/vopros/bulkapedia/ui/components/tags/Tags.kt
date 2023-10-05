@@ -11,7 +11,6 @@ import androidx.compose.material.Icon
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Close
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -21,16 +20,14 @@ import vopros.bulkapedia.ui.components.Text
 import vopros.bulkapedia.ui.components.cards.Card
 
 @Composable
-fun Tags(tags: List<Tag>, selected: MutableState<String>) {
+fun Tags(tags: List<Tag>, selected: Tag?, onSelect: (Tag) -> Unit) {
     LazyRow(
         modifier = Modifier.fillMaxWidth(),
         contentPadding = PaddingValues(vertical = 10.dp, horizontal = 20.dp),
         horizontalArrangement = Arrangement.spacedBy(10.dp)
     ) {
         items(tags) { tag ->
-            TagItem(tag, selected.value == tag.id) {
-                selected.value = if (selected.value == tag.id) "" else tag.id
-            }
+            TagItem(tag, selected == tag) { onSelect(tag) }
         }
     }
 }

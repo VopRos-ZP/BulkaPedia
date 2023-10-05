@@ -21,7 +21,7 @@ inline fun <reified V: ErrViewModel> ScreenView(
     @StringRes title: Int,
     showBack: Boolean = false,
     viewModel: V = hiltViewModel(),
-    crossinline content: @Composable BoxScope.(V) -> Unit
+    crossinline content: @Composable BoxScope.() -> Unit
 ) {
     ScreenView(
         title = stringResource(id = title),
@@ -35,7 +35,7 @@ inline fun <reified V: ErrViewModel> ScreenView(
 inline fun <reified V: ErrViewModel> ScreenView(
     title: String, showBack: Boolean = false,
     viewModel: V = hiltViewModel(),
-    crossinline content: @Composable BoxScope.(V) -> Unit
+    crossinline content: @Composable BoxScope.() -> Unit
 ) {
     val topBarViewModel = LocalTopBarViewModel.current
     val navController = LocalNavController.current
@@ -48,6 +48,6 @@ inline fun <reified V: ErrViewModel> ScreenView(
         AnimatedVisibility(visible = error.isNotEmpty()) {
             Error(message = error) {  }
         }
-        content(viewModel)
+        content()
     }
 }

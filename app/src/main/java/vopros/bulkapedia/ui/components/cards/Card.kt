@@ -4,7 +4,6 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ExperimentalMaterialApi
@@ -19,6 +18,7 @@ import vopros.bulkapedia.ui.theme.BulkaPediaTheme
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun OutlinedCard(
+    modifier: Modifier = Modifier,
     onClick: () -> Unit = {},
     spacedBy: Dp = 5.dp,
     horizontal: Alignment.Horizontal = Alignment.CenterHorizontally,
@@ -27,7 +27,7 @@ fun OutlinedCard(
     androidx.compose.material.Card(
         onClick = onClick,
         shape = RoundedCornerShape(5.dp),
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier,
         backgroundColor = Color.Transparent,
         border = BorderStroke(2.dp, BulkaPediaTheme.colors.primary)
     ) {
@@ -43,6 +43,7 @@ fun OutlinedCard(
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun Card(
+    modifier: Modifier = Modifier,
     onClick: () -> Unit = {},
     spacedBy: Dp = 5.dp,
     radius: Dp = 5.dp,
@@ -53,7 +54,7 @@ fun Card(
         onClick = onClick,
         backgroundColor = BulkaPediaTheme.colors.primary,
         shape = RoundedCornerShape(radius),
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier,
     ) {
         Column(
             modifier = Modifier.padding(10.dp),
