@@ -1,8 +1,8 @@
 package vopros.bulkapedia.ui.screens.categories
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Icon
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -24,8 +23,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import vopros.bulkapedia.R
 import vopros.bulkapedia.category.Category
 import vopros.bulkapedia.ui.components.ScreenView
-import vopros.bulkapedia.ui.components.cards.OutlinedCard
-import vopros.bulkapedia.ui.screens.Error
+import vopros.bulkapedia.ui.components.Text
+import vopros.bulkapedia.ui.components.cards.Card
+import vopros.bulkapedia.ui.theme.BulkaPediaTheme
 import vopros.bulkapedia.ui.theme.LocalNavController
 import vopros.bulkapedia.utils.iconNameToVector
 
@@ -38,7 +38,8 @@ fun CategoriesScreen(viewModel: CategoriesViewModel = hiltViewModel()) {
     ) {
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.spacedBy(6.dp),
+            contentPadding = PaddingValues(20.dp),
+            verticalArrangement = Arrangement.spacedBy(10.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             items(categories) { CategoryCard(it) }
@@ -50,7 +51,7 @@ fun CategoriesScreen(viewModel: CategoriesViewModel = hiltViewModel()) {
 @Composable
 fun CategoryCard(category: Category) {
     val controller = LocalNavController.current
-    OutlinedCard(
+    Card(
         onClick = {
             if (category.enabled) {
                 controller.navigate(category.destination) { launchSingleTop = true }
@@ -67,10 +68,14 @@ fun CategoryCard(category: Category) {
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(6.dp)
             ) {
-                Icon(iconNameToVector(category.icon), contentDescription = null)
-                Text(text = category.title, fontWeight = FontWeight.Bold)
+                Icon(
+                    iconNameToVector(category.icon),
+                    contentDescription = null,
+                    tint = BulkaPediaTheme.colors.tintColor
+                )
+                Text(title = category.title, fontWeight = FontWeight.Bold)
             }
-            Text(text = category.subTitle, fontSize = 12.sp)
+            Text(title = category.subTitle, fontSize = 12.sp)
         }
     }
 }

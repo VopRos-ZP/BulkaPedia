@@ -45,13 +45,14 @@ fun OutlinedCard(
 fun Card(
     onClick: () -> Unit = {},
     spacedBy: Dp = 5.dp,
+    radius: Dp = 5.dp,
     horizontal: Alignment.Horizontal = Alignment.CenterHorizontally,
     content: @Composable ColumnScope.() -> Unit
 ) {
     androidx.compose.material.Card(
         onClick = onClick,
         backgroundColor = BulkaPediaTheme.colors.primary,
-        shape = RoundedCornerShape(5.dp),
+        shape = RoundedCornerShape(radius),
         modifier = Modifier.fillMaxWidth(),
     ) {
         Column(

@@ -1,8 +1,8 @@
 package vopros.bulkapedia.ui.components
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyItemScope
@@ -12,7 +12,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import vopros.bulkapedia.ui.components.tags.Tag
 import vopros.bulkapedia.ui.components.tags.Tags
@@ -27,15 +26,14 @@ fun <T> TagsWithRecycler(
 ) {
     val selectedTag = remember { mutableStateOf("") }
     Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color.Transparent)
+        modifier = Modifier.fillMaxSize()
     ) {
         Tags(tags, selectedTag)
         when (list.isEmpty()) {
             true -> Loading()
             else -> LazyColumn(
                 modifier = Modifier.fillMaxSize(),
+                contentPadding = PaddingValues(20.dp),
                 verticalArrangement = Arrangement.spacedBy(10.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
