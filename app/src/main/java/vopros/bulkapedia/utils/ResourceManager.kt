@@ -1,5 +1,6 @@
 package vopros.bulkapedia.utils
 
+import android.util.Log
 import vopros.bulkapedia.R
 
 class ResourceManager {
@@ -113,6 +114,7 @@ class ResourceManager {
         "underground_base" to R.string.underground_base,
         "villa" to R.string.villa,
         "village" to R.string.village,
+        "wreckage_point" to R.string.wrackage_point,
 
         "tanks" to R.string.tanks,
         "scouts" to R.string.scouts,
@@ -121,11 +123,12 @@ class ResourceManager {
         "shortguns" to R.string.shortguns,
     )
 
-    fun toSource(str: String): Int {
+    fun toSource(str: String?): Int {
         return try {
             strings[str]!!
         } catch (_: Exception) {
-            throw RuntimeException("Resource `$str` not found")
+            Log.d("ResourceManager", "Resource `$str` not found")
+            R.string.empty
         }
     }
 
