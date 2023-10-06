@@ -7,13 +7,14 @@ import vopros.bulkapedia.ui.view.IntentViewModel
 import vopros.bulkapedia.ui.view.Reducer
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import vopros.bulkapedia.ui.view.ErrViewModel
 import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val dataStore: DataStore,
     private val authRepository: AuthRepository
-): IntentViewModel<LoginViewIntent>() {
+): ErrViewModel() {
 
 //    override var reducer: Reducer<LoginViewIntent> = Reducer { intent, _ ->
 //        when (intent) {

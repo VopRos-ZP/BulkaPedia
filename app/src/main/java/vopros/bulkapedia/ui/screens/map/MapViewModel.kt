@@ -8,12 +8,13 @@ import vopros.bulkapedia.ui.view.IntentViewModel
 import vopros.bulkapedia.ui.view.Reducer
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import vopros.bulkapedia.ui.view.ErrViewModel
 import javax.inject.Inject
 
 @HiltViewModel
 class MapViewModel @Inject constructor(
     private val mapRepository: MapRepository
-): IntentViewModel<MapViewIntent>() {
+): ErrViewModel() {
 
 //    private var listener: ListenerRegistration? = null
 //

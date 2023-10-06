@@ -6,7 +6,6 @@ import androidx.compose.runtime.Composable
 import vopros.bulkapedia.R
 import vopros.bulkapedia.ui.components.Text
 import vopros.bulkapedia.ui.components.userSet.Gears
-import vopros.bulkapedia.ui.screens.Screen
 import vopros.bulkapedia.ui.screens.hero.HeroThumbnail
 import vopros.bulkapedia.userSet.UserSetUseCase
 

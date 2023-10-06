@@ -4,12 +4,13 @@ import vopros.bulkapedia.storage.DataStore
 import vopros.bulkapedia.ui.view.IntentViewModel
 import vopros.bulkapedia.ui.view.Reducer
 import dagger.hilt.android.lifecycle.HiltViewModel
+import vopros.bulkapedia.ui.view.ErrViewModel
 import javax.inject.Inject
 
 @HiltViewModel
 class ProfileControllerViewModel @Inject constructor(
     private val dataStore: DataStore
-) : IntentViewModel<ProfileControllerViewIntent>() {
+): ErrViewModel() {
 
 //    override var reducer: Reducer<ProfileControllerViewIntent> = Reducer { intent, _ ->
 //        when (intent) {

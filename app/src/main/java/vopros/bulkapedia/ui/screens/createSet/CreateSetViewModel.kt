@@ -9,6 +9,7 @@ import vopros.bulkapedia.userSet.SetRepository
 import vopros.bulkapedia.userSet.UserSet
 import vopros.bulkapedia.userSet.UserSetUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import vopros.bulkapedia.ui.view.ErrViewModel
 import javax.inject.Inject
 
 @HiltViewModel
@@ -17,7 +18,7 @@ class CreateSetViewModel @Inject constructor(
     private val setRepository: SetRepository,
     private val userRepository: UserRepository,
     private val heroRepository: HeroRepository,
-): IntentViewModel<CreateSetViewIntent>() {
+): ErrViewModel() {
 
 //    override var reducer: Reducer<CreateSetViewIntent> = Reducer { intent, _ ->
 //        when (intent) {

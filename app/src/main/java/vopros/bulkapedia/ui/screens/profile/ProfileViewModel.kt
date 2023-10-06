@@ -16,6 +16,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
+import vopros.bulkapedia.ui.view.ErrViewModel
 import javax.inject.Inject
 
 @HiltViewModel
@@ -23,7 +24,7 @@ class ProfileViewModel @Inject constructor(
     private val setRepository: SetRepository,
     private val userRepository: UserRepository,
     private val heroRepository: HeroRepository
-): IntentViewModel<ProfileViewIntent>() {
+): ErrViewModel() {
 
 //    private val _user = MutableStateFlow<User?>(null)
 //    private val _sets = MutableStateFlow<List<UserSet>>(emptyList())

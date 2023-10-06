@@ -11,7 +11,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import vopros.bulkapedia.R
 import vopros.bulkapedia.ui.components.Text
-import vopros.bulkapedia.ui.screens.Screen
 
 @Composable
 fun SettingsScreen() {
