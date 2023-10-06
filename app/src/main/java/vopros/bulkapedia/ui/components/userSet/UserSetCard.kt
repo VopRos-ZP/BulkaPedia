@@ -17,11 +17,8 @@ import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.HideImage
 import androidx.compose.material.icons.filled.Image
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.Card
 import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
 import androidx.compose.material.IconToggleButton
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -34,7 +31,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import vopros.bulkapedia.ui.components.IconButton
 import vopros.bulkapedia.ui.components.Image
+import vopros.bulkapedia.ui.components.Text
+import vopros.bulkapedia.ui.components.cards.Card
 import vopros.bulkapedia.userSet.UserSetUseCase
 
 @Composable
@@ -50,31 +50,19 @@ fun UserSetCard(
         gears = container.set.gears,
         up = { AnimatedVisibility(expand && withHeroIcon) { Image(url = container.hero.image) } }
     ) {
-        Text(text = container.user.nickname)
+        Text(title = container.user.nickname)
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Text(text = "${container.set.liked.size}")
-            IconButton(onClick = { viewModel.like(container) }) {
-                Icon(
-                    if (container.set.liked.contains(config?.first)) Icons.Default.Favorite
-                    else Icons.Default.FavoriteBorder,
-                    contentDescription = null,
-                    tint = Color.Red
-                )
-            }
+            Text(title = "${container.set.liked.size}")
+            IconButton(
+                onClick = { viewModel.like(container) },
+                tint = Color.Red,
+                icon = if (container.set.liked.contains(config?.first)) Icons.Default.Favorite
+                else Icons.Default.FavoriteBorder
+            )
         }
         Row {
-            IconButton(onClick = { /* settings click */ }) {
-                Icon(
-                    Icons.Default.Settings,
-                    contentDescription = null
-                )
-            }
-            IconButton(onClick = { /* comment click */ }) {
-                Icon(
-                    Icons.Default.Comment,
-                    contentDescription = null
-                )
-            }
+            IconButton(onClick = { /* settings click */ }, icon = Icons.Default.Settings)
+            IconButton(onClick = { /* comment click */ }, icon = Icons.Default.Comment)
             if (withHeroIcon) {
                 IconToggleButton(
                     checked = expand,
@@ -97,7 +85,7 @@ fun UserSetCard(
     up: @Composable () -> Unit = {},
     content: @Composable ColumnScope.() -> Unit
 ) {
-    Card {
+    Card(radius = 10.dp) {
         Column(modifier = Modifier.padding(15.dp)) {
             up()
             Row(horizontalArrangement = Arrangement.spacedBy(15.dp)) {

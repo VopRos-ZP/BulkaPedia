@@ -10,68 +10,76 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.Card
 import androidx.compose.material.OutlinedButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import vopros.bulkapedia.R
-import vopros.bulkapedia.hero.Hero
 import vopros.bulkapedia.ui.components.HCenterBox
 import vopros.bulkapedia.ui.components.Image
+import vopros.bulkapedia.ui.components.Loading
+import vopros.bulkapedia.ui.components.ScreenView
 import vopros.bulkapedia.ui.components.Text
+import vopros.bulkapedia.ui.components.cards.Card
 import vopros.bulkapedia.ui.components.tab.Tab
 import vopros.bulkapedia.ui.components.tab.TabRowWithPager
 import vopros.bulkapedia.ui.components.userSet.UserSetCard
 import vopros.bulkapedia.ui.navigation.Destinations
-import vopros.bulkapedia.ui.screens.Screen
+import vopros.bulkapedia.ui.theme.Blue
+import vopros.bulkapedia.ui.theme.BulkaPediaTheme
 import vopros.bulkapedia.ui.theme.LocalNavController
-import vopros.bulkapedia.userSet.UserSetUseCase
-import vopros.bulkapedia.utils.resourceManager
 
 @Composable
-fun HeroScreen(heroId: String) {
-//    val controller = LocalNavController.current
-//    var title by remember { mutableIntStateOf(R.string.select_hero) }
-//    Screen<Pair<Hero, List<UserSetUseCase>>, HeroViewModel>(
-//        title = title, showBack = true,
-//        fetch = { startIntent(HeroViewIntent.Fetch(heroId)) },
-//        dispose = { startIntent(HeroViewIntent.Dispose) }
-//    ) { _, (hero, sets) ->
-//        title = resourceManager.toSource(hero.id)
-//        Column(
-//            modifier = Modifier.fillMaxSize(),
-//            horizontalAlignment = Alignment.CenterHorizontally,
-//            verticalArrangement = Arrangement.spacedBy(20.dp)
-//        ) {
-//            /* Hero icon with difficult */
-//            HeroThumbnail(hero.image) {
-//                Text(
-//                    R.string.difficult,
-//                    modifier = Modifier.padding(bottom = 15.dp)
-//                )
-//                HeroDifficult(difficult = hero.difficult)
-//            }
-//
-//            /* UserSets */
-//            TabRowWithPager(
-//                listOf(Tab(R.string.one), Tab(R.string.two), Tab(R.string.three)), sets
-//            ) { HCenterBox { UserSetCard(it) } }
-//
-//            /* Add user set Button */
-//            OutlinedButton(onClick = {
-//                controller.navigate("${Destinations.CREATE_SET}/${hero.id}")
-//            }) { Text(R.string.create_set) }
-//
-//        }
-//    }
+fun HeroScreen(heroId: String, viewModel: HeroViewModel = hiltViewModel()) {
+    val hero by viewModel.hero.collectAsState()
+    val sets by viewModel.sets.collectAsState()
+    val controller = LocalNavController.current
+    ScreenView(
+        title = hero?.id ?: "",
+        showBack = true,
+        viewModel = viewModel
+    ) {
+        when (hero) {
+            null -> Loading()
+            else -> {
+                Column(
+                    modifier = Modifier.fillMaxSize().padding(vertical = 20.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.spacedBy(20.dp)
+                ) {
+                    /* Hero icon with difficult */
+                    HeroThumbnail(hero!!.image) {
+                        Text(
+                            R.string.difficult,
+                            modifier = Modifier.padding(bottom = 15.dp)
+                        )
+                        HeroDifficult(difficult = hero!!.difficult)
+                    }
+
+                    /* UserSets */
+                    TabRowWithPager(
+                        listOf(Tab(R.string.one), Tab(R.string.two), Tab(R.string.three)), sets
+                    ) { HCenterBox { UserSetCard(it) } }
+
+                    /* Add user set Button */
+                    OutlinedButton(onClick = {
+                        controller.navigate("${Destinations.CREATE_SET}/${hero!!.id}")
+                    }) { Text(R.string.create_set) }
+                }
+            }
+        }
+    }
+    DisposableEffect(heroId) {
+        viewModel.fetch(heroId)
+        onDispose { viewModel.dispose() }
+    }
 }
 
 @Composable
@@ -81,7 +89,7 @@ fun HeroThumbnail(
 ) {
     Card {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Image(url = image)
+            Image(url = image, modifier = Modifier.size(150.dp))
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.SpaceEvenly,
@@ -108,9 +116,9 @@ fun HeroDifficult(difficult: String) {
 
 private fun getDifficultImages(difficult: String): List<Color> {
     return when (difficult) {
-        "easy" -> listOf(Color.Yellow, Color.Transparent, Color.Transparent)
-        "normal" -> listOf(Color.Yellow, Color.Yellow, Color.Transparent)
-        "hard" -> listOf(Color.Yellow, Color.Yellow, Color.Yellow)
+        "easy" -> listOf(Blue, Color.Transparent, Color.Transparent)
+        "normal" -> listOf(Blue, Blue, Color.Transparent)
+        "hard" -> listOf(Blue, Blue, Blue)
         else -> emptyList()
     }
 }

@@ -19,7 +19,6 @@ import vopros.bulkapedia.ui.components.OutlinedTextField
 import vopros.bulkapedia.ui.components.PasswordField
 import vopros.bulkapedia.ui.components.Text
 import vopros.bulkapedia.ui.navigation.Destinations
-import vopros.bulkapedia.ui.screens.Screen
 import vopros.bulkapedia.ui.theme.LocalNavController
 
 @Composable

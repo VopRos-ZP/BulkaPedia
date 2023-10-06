@@ -20,7 +20,6 @@ import vopros.bulkapedia.ui.components.CenterBox
 import vopros.bulkapedia.ui.components.HCenterBox
 import vopros.bulkapedia.ui.components.Text
 import vopros.bulkapedia.ui.components.userSet.UserSetCard
-import vopros.bulkapedia.ui.screens.Screen
 import vopros.bulkapedia.user.User
 import vopros.bulkapedia.userSet.UserSetUseCase
 

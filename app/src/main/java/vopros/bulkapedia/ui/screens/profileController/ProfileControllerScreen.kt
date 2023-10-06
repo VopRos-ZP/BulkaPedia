@@ -4,7 +4,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import vopros.bulkapedia.R
 import vopros.bulkapedia.ui.navigation.Destinations
-import vopros.bulkapedia.ui.screens.Screen
 import vopros.bulkapedia.ui.theme.LocalNavController
 
 @Composable

@@ -18,7 +18,6 @@ import vopros.bulkapedia.map.GameMap
 import vopros.bulkapedia.ui.components.Image
 import vopros.bulkapedia.ui.components.Text
 import vopros.bulkapedia.ui.components.cards.OutlinedCard
-import vopros.bulkapedia.ui.screens.Screen
 import vopros.bulkapedia.utils.resourceManager
 
 @Composable
