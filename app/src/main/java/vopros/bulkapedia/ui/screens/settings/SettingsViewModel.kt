@@ -2,8 +2,7 @@ package vopros.bulkapedia.ui.screens.settings
 
 import vopros.bulkapedia.firebase.AuthRepository
 import vopros.bulkapedia.storage.DataStore
-import vopros.bulkapedia.ui.view.IntentViewModel
-import vopros.bulkapedia.ui.view.Reducer
+
 import dagger.hilt.android.lifecycle.HiltViewModel
 import vopros.bulkapedia.ui.view.ErrViewModel
 import javax.inject.Inject

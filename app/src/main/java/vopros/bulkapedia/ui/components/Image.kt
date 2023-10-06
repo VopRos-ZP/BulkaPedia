@@ -2,13 +2,13 @@ package vopros.bulkapedia.ui.components
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import coil.compose.AsyncImage
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 
-@OptIn(ExperimentalGlideComposeApi::class)
 @Composable
 fun Image(url: String, modifier: Modifier = Modifier) {
-    GlideImage(
+    AsyncImage(
         model = url,
         contentDescription = null,
         modifier = modifier

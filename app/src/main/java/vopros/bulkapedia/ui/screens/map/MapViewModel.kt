@@ -1,13 +1,12 @@
 package vopros.bulkapedia.ui.screens.map
 
-import androidx.lifecycle.viewModelScope
 import com.google.firebase.firestore.ListenerRegistration
-import vopros.bulkapedia.core.Callback
-import vopros.bulkapedia.map.MapRepository
-import vopros.bulkapedia.ui.view.IntentViewModel
-import vopros.bulkapedia.ui.view.Reducer
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import vopros.bulkapedia.core.Callback
+import vopros.bulkapedia.map.GameMap
+import vopros.bulkapedia.map.MapRepository
 import vopros.bulkapedia.ui.view.ErrViewModel
 import javax.inject.Inject
 
@@ -16,23 +15,22 @@ class MapViewModel @Inject constructor(
     private val mapRepository: MapRepository
 ): ErrViewModel() {
 
-//    private var listener: ListenerRegistration? = null
-//
-//    override var reducer: Reducer<MapViewIntent> = Reducer { intent, _ ->
-//        when (intent) {
-//            is MapViewIntent.Fetch -> fetch(intent.mapId)
-//            is MapViewIntent.Dispose -> dispose()
-//        }
-//    }
-//
-//    private fun fetch(mapId: String) {
-//        listener = mapRepository.listenOne(mapId, Callback(this::error) {
-//            viewModelScope.launch { success(it) }
+    private val _map = MutableStateFlow<GameMap?>(null)
+    val map = _map.asStateFlow()
+
+    private var listener: ListenerRegistration? = null
+
+    fun fetch(mapId: String) {
+        coroutine {
+            _map.emit(mapRepository.fetchOne(mapId))
+        }
+//        listener = mapRepository.listenOne(mapId, Callback(::error) {
+//            coroutine { _map.emit(it) }
 //        })
-//    }
-//
-//    private fun dispose() {
-//        listener?.remove()
-//    }
+    }
+
+    fun dispose() {
+        listener?.remove()
+    }
 
 }

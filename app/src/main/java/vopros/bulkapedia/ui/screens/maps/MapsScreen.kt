@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.material.Card
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -24,6 +23,7 @@ import vopros.bulkapedia.R
 import vopros.bulkapedia.map.GameMap
 import vopros.bulkapedia.ui.components.Image
 import vopros.bulkapedia.ui.components.ScreenView
+import vopros.bulkapedia.ui.components.cards.Card
 import vopros.bulkapedia.ui.components.tags.Tag
 import vopros.bulkapedia.ui.components.tags.Tags
 import vopros.bulkapedia.ui.components.tags.mapsTags
@@ -56,7 +56,6 @@ fun MapsScreen(viewModel: MapsViewModel = hiltViewModel()) {
     LaunchedEffect(selectedTag) { viewModel.fetchMaps(selectedTag) }
 }
 
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun MapCard(
     modifier: Modifier = Modifier,

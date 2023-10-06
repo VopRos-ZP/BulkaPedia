@@ -3,8 +3,7 @@ package vopros.bulkapedia.ui.screens.login
 import androidx.lifecycle.viewModelScope
 import vopros.bulkapedia.firebase.AuthRepository
 import vopros.bulkapedia.storage.DataStore
-import vopros.bulkapedia.ui.view.IntentViewModel
-import vopros.bulkapedia.ui.view.Reducer
+
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import vopros.bulkapedia.ui.view.ErrViewModel

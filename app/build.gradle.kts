@@ -52,6 +52,8 @@ android {
 }
 
 dependencies {
+    /** Coil **/
+    implementation(libs.coil.compose)
     /** Glide **/
     implementation(libs.compose)
     /** JSON **/

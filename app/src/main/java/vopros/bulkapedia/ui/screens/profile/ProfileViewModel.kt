@@ -5,8 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.google.firebase.firestore.ListenerRegistration
 import vopros.bulkapedia.core.Callback
 import vopros.bulkapedia.hero.HeroRepository
-import vopros.bulkapedia.ui.view.IntentViewModel
-import vopros.bulkapedia.ui.view.Reducer
+
 import vopros.bulkapedia.user.User
 import vopros.bulkapedia.user.UserRepository
 import vopros.bulkapedia.userSet.SetRepository
