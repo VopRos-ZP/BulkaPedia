@@ -21,12 +21,9 @@ class MapViewModel @Inject constructor(
     private var listener: ListenerRegistration? = null
 
     fun fetch(mapId: String) {
-        coroutine {
-            _map.emit(mapRepository.fetchOne(mapId))
-        }
-//        listener = mapRepository.listenOne(mapId, Callback(::error) {
-//            coroutine { _map.emit(it) }
-//        })
+        listener = mapRepository.listenOne(mapId, Callback(::error) {
+            coroutine { _map.emit(it) }
+        })
     }
 
     fun dispose() {

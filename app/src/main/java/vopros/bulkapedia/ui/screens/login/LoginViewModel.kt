@@ -15,6 +15,8 @@ class LoginViewModel @Inject constructor(
     private val authRepository: AuthRepository
 ): ErrViewModel() {
 
+    
+
 //    override var reducer: Reducer<LoginViewIntent> = Reducer { intent, _ ->
 //        when (intent) {
 //            is LoginViewIntent.Start -> init()
