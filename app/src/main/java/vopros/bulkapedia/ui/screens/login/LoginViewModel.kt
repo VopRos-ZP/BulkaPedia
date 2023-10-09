@@ -1,11 +1,10 @@
 package vopros.bulkapedia.ui.screens.login
 
-import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import vopros.bulkapedia.firebase.AuthRepository
 import vopros.bulkapedia.storage.DataStore
-
-import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.launch
 import vopros.bulkapedia.ui.view.ErrViewModel
 import javax.inject.Inject
 
@@ -15,26 +14,15 @@ class LoginViewModel @Inject constructor(
     private val authRepository: AuthRepository
 ): ErrViewModel() {
 
-    
+    private val _config = MutableStateFlow(Pair("", false))
+    val config = _config.asStateFlow()
 
-//    override var reducer: Reducer<LoginViewIntent> = Reducer { intent, _ ->
-//        when (intent) {
-//            is LoginViewIntent.Start -> init()
-//            is LoginViewIntent.Login -> login(intent.email, intent.password)
-//        }
-//    }
-//
-//    private suspend fun init() {
-//        dataStore.config.collect { success(it) }
-//    }
-//
-//    private suspend fun login(email: String, password: String) {
-//        authRepository.login(email, password, this::error) { user ->
-//            viewModelScope.launch {
-//                dataStore.saveData(user.id, true)
-//                init() /* call collect config from DataStore */
-//            }
-//        }
-//    }
+    fun login(email: String, password: String) {
+        coroutine {
+            authRepository.login(email, password, ::error) {
+                coroutine { dataStore.saveData(it.id, true) }
+            }
+        }
+    }
 
 }

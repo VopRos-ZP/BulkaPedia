@@ -12,6 +12,7 @@ import vopros.bulkapedia.ui.theme.LocalNavController
 fun ProfileControllerScreen(viewModel: ProfileControllerViewModel = hiltViewModel()) {
     val controller = LocalNavController.current
     val config by viewModel.config.collectAsState()
+    LaunchedEffect(null) { viewModel.fetchConfig() }
     LaunchedEffect(config) {
         when (config.second) {
             true -> controller.navigate("${Destinations.PROFILE}/${config.first}")

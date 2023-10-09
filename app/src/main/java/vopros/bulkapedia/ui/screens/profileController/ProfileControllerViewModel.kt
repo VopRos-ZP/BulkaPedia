@@ -1,7 +1,6 @@
 package vopros.bulkapedia.ui.screens.profileController
 
 import vopros.bulkapedia.storage.DataStore
-
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -17,9 +16,7 @@ class ProfileControllerViewModel @Inject constructor(
     val config = _config.asStateFlow()
 
     fun fetchConfig() {
-        coroutine {
-            dataStore.config.collect { _config.emit(it) }
-        }
+        coroutine { dataStore.config.collect { _config.emit(it) } }
     }
 
 }
