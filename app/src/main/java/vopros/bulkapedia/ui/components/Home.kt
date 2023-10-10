@@ -13,7 +13,10 @@ import com.ramcosta.composedestinations.navigation.dependency
 import vopros.bulkapedia.ui.components.topbar.TopBar
 import vopros.bulkapedia.ui.screens.NavGraphs
 import vopros.bulkapedia.ui.screens.categories.CategoriesViewModel
+import vopros.bulkapedia.ui.screens.createSet.CreateSetViewModel
 import vopros.bulkapedia.ui.screens.destinations.CategoriesScreenDestination
+import vopros.bulkapedia.ui.screens.destinations.CreateSetScreenDestination
+import vopros.bulkapedia.ui.screens.destinations.HeroScreenDestination
 import vopros.bulkapedia.ui.screens.destinations.HeroesScreenDestination
 import vopros.bulkapedia.ui.screens.destinations.LoginScreenDestination
 import vopros.bulkapedia.ui.screens.destinations.MapScreenDestination
@@ -21,6 +24,7 @@ import vopros.bulkapedia.ui.screens.destinations.MapsScreenDestination
 import vopros.bulkapedia.ui.screens.destinations.ProfileControllerScreenDestination
 import vopros.bulkapedia.ui.screens.destinations.ProfileScreenDestination
 import vopros.bulkapedia.ui.screens.destinations.SettingsScreenDestination
+import vopros.bulkapedia.ui.screens.hero.HeroViewModel
 import vopros.bulkapedia.ui.screens.heroes.HeroesViewModel
 import vopros.bulkapedia.ui.screens.login.LoginViewModel
 import vopros.bulkapedia.ui.screens.map.MapViewModel
@@ -48,16 +52,22 @@ fun Home() {
                 modifier = Modifier.padding(it),
                 navController = navController,
                 dependenciesContainerBuilder = {
+                    /* Root */
                     dependency(CategoriesScreenDestination) { hiltViewModel<CategoriesViewModel>() }
                     dependency(ProfileControllerScreenDestination) { hiltViewModel<ProfileControllerViewModel>() }
-
+                    /* Heroes */
                     dependency(HeroesScreenDestination) { hiltViewModel<HeroesViewModel>() }
-
+                    dependency(HeroScreenDestination) { hiltViewModel<HeroViewModel>() }
+                    /* Create user set */
+                    dependency(CreateSetScreenDestination) { hiltViewModel<CreateSetViewModel>() }
+                    /* Maps */
                     dependency(MapsScreenDestination) { hiltViewModel<MapsViewModel>() }
                     dependency(MapScreenDestination) { hiltViewModel<MapViewModel>() }
-
-                    dependency(LoginScreenDestination) { hiltViewModel<LoginViewModel>() }
+                    /* Profile */
                     dependency(ProfileScreenDestination) { hiltViewModel<ProfileViewModel>() }
+                    /* Auth */
+                    dependency(LoginScreenDestination) { hiltViewModel<LoginViewModel>() }
+                    /* Settings */
                     dependency(SettingsScreenDestination) { hiltViewModel<SettingsViewModel>() }
                 }
             )
