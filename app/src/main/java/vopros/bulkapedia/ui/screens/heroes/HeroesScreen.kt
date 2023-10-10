@@ -16,18 +16,22 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import vopros.bulkapedia.R
 import vopros.bulkapedia.hero.Hero
 import vopros.bulkapedia.ui.components.Image
 import vopros.bulkapedia.ui.components.ScreenView
+import vopros.bulkapedia.ui.components.Text
 import vopros.bulkapedia.ui.components.cards.Card
 import vopros.bulkapedia.ui.components.tags.Tag
 import vopros.bulkapedia.ui.components.tags.Tags
 import vopros.bulkapedia.ui.components.tags.heroesTags
 import vopros.bulkapedia.ui.navigation.Destinations
+import vopros.bulkapedia.ui.theme.BulkaPediaTheme
 import vopros.bulkapedia.ui.theme.LocalNavController
+import vopros.bulkapedia.utils.resourceManager
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -64,6 +68,7 @@ fun HeroCard(modifier: Modifier = Modifier, hero: Hero) {
         modifier = modifier,
         onClick = { controller.navigate("${Destinations.HERO}${hero.id}") }
     ) {
+        Text(resource = resourceManager.toSource(hero.id), color = BulkaPediaTheme.colors.white, fontWeight = FontWeight.Bold)
         Image(url = hero.image)
     }
 }

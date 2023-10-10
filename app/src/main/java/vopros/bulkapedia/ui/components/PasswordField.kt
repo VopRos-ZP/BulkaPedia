@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Icon
 import androidx.compose.material.IconToggleButton
 import androidx.compose.material.OutlinedTextField
+import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
@@ -18,12 +19,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
+import vopros.bulkapedia.ui.theme.BulkaPediaTheme
 
 @Composable
 fun OutlinedTextField(
     state: MutableState<String>,
     label: Int,
-    error: Int? = null,
     isError: Boolean = false
 ) {
     OutlinedTextField(
@@ -32,13 +33,14 @@ fun OutlinedTextField(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 20.dp),
-        label = {
-            when (error) {
-                null -> Text(label)
-                else -> if (isError) Text(error)
-            }
-        },
-        isError = isError
+        label = { Text(label) },
+        isError = isError,
+        colors = TextFieldDefaults.outlinedTextFieldColors(
+            textColor = BulkaPediaTheme.colors.white,
+            cursorColor = BulkaPediaTheme.colors.tintColor,
+            unfocusedBorderColor = BulkaPediaTheme.colors.secondary,
+            focusedBorderColor = BulkaPediaTheme.colors.tintColor
+        )
     )
 }
 
@@ -59,13 +61,18 @@ fun PasswordField(
             IconToggleButton(checked = isVisible, onCheckedChange = { isVisible = it }) {
                 Icon(
                     if (isVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff,
-                    contentDescription = null
+                    contentDescription = null,
+                    tint = BulkaPediaTheme.colors.tintColor
                 )
             }
         },
         label = { Text(label) },
-        visualTransformation = if (isVisible) VisualTransformation.None else PasswordVisualTransformation(
-            '*'
+        visualTransformation = if (isVisible) VisualTransformation.None else PasswordVisualTransformation(),
+        colors = TextFieldDefaults.outlinedTextFieldColors(
+            textColor = BulkaPediaTheme.colors.white,
+            cursorColor = BulkaPediaTheme.colors.tintColor,
+            unfocusedBorderColor = BulkaPediaTheme.colors.secondary,
+            focusedBorderColor = BulkaPediaTheme.colors.tintColor
         )
     )
 }

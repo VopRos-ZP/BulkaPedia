@@ -33,7 +33,7 @@ fun LoginScreen(viewModel: LoginViewModel = hiltViewModel()) {
     val config by viewModel.config.collectAsState()
     ScreenView(
         title = R.string.login,
-        viewModel = viewModel
+        viewModel = viewModel,
     ) {
         Column(
             modifier = Modifier.fillMaxSize(),
@@ -52,7 +52,6 @@ fun LoginScreen(viewModel: LoginViewModel = hiltViewModel()) {
                 OutlinedTextField(
                     state = email,
                     label = R.string.enter_email,
-                    error = R.string.error_email,
                     isError = !email.value.matches("\\w+@\\w+\\.\\w+".toRegex())
                 )
                 PasswordField(
