@@ -24,14 +24,14 @@ import kotlin.math.sin
 fun Difficult_Preview() {
     BulkapediaTheme {
         Surface(color = BulkaPediaTheme.colors.primaryDark) {
-            Difficult(mechanics = 3f, speed = 3f, attack = 5f)
+            Difficult(mechanics = 1f, speed = 1f, attack = 3f)
         }
     }
 }
 
 @Composable
 fun Difficult(mechanics: Float, speed: Float, attack: Float) {
-    SpiderChart(values = listOf(mechanics, speed, attack), maxValue = 5f, labels = listOf("Механики", "Скорость", "Урон"))
+    SpiderChart(values = listOf(mechanics, speed, attack), maxValue = 3f, labels = listOf("Механики", "Скорость", "Урон"))
 }
 
 @Composable

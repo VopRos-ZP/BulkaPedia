@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.Icon
 import androidx.compose.material.IconToggleButton
-import androidx.compose.material.OutlinedButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
@@ -28,7 +27,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
@@ -39,12 +37,12 @@ import vopros.bulkapedia.ui.components.Image
 import vopros.bulkapedia.ui.components.Loading
 import vopros.bulkapedia.ui.components.ScreenView
 import vopros.bulkapedia.ui.components.Text
+import vopros.bulkapedia.ui.components.button.OutlinedButton
 import vopros.bulkapedia.ui.components.cards.Card
 import vopros.bulkapedia.ui.components.tab.Tab
 import vopros.bulkapedia.ui.components.tab.TabRowWithPager
 import vopros.bulkapedia.ui.components.userSet.UserSetCard
 import vopros.bulkapedia.ui.screens.destinations.CreateSetScreenDestination
-import vopros.bulkapedia.ui.theme.Blue
 import vopros.bulkapedia.ui.theme.BulkaPediaTheme
 import vopros.bulkapedia.utils.resourceManager
 
@@ -105,7 +103,7 @@ fun HeroScreen(
                                     }
                                 }
                                 AnimatedVisibility(visible = isShow) {
-                                    Difficult(mechanics = 3f, speed = 3f, attack = 5f)
+                                    Difficult(mechanics = 2f, speed = 1f, attack = 3f)
                                 }
                             }
                         }
@@ -120,7 +118,7 @@ fun HeroScreen(
                     item {
                         OutlinedButton(onClick = {
                             navigator.navigate(CreateSetScreenDestination(heroId, null))
-                        }) { Text(R.string.create_set) }
+                        }, text = R.string.create_set)
                     }
                 }
             }
@@ -146,14 +144,5 @@ fun HeroThumbnail(
                 content = content
             )
         }
-    }
-}
-
-private fun getDifficultImages(difficult: String): List<Color> {
-    return when (difficult) {
-        "easy" -> listOf(Blue, Color.Transparent, Color.Transparent)
-        "normal" -> listOf(Blue, Blue, Color.Transparent)
-        "hard" -> listOf(Blue, Blue, Blue)
-        else -> emptyList()
     }
 }
