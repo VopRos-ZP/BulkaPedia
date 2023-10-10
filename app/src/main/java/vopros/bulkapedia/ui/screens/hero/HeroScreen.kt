@@ -32,6 +32,7 @@ import vopros.bulkapedia.ui.components.cards.Card
 import vopros.bulkapedia.ui.components.tab.Tab
 import vopros.bulkapedia.ui.components.tab.TabRowWithPager
 import vopros.bulkapedia.ui.components.userSet.UserSetCard
+import vopros.bulkapedia.ui.screens.destinations.CreateSetScreenDestination
 import vopros.bulkapedia.ui.theme.Blue
 import vopros.bulkapedia.utils.resourceManager
 
@@ -73,7 +74,7 @@ fun HeroScreen(
 
                     /* Add user set Button */
                     OutlinedButton(onClick = {
-                        
+                        navigator.navigate(CreateSetScreenDestination(heroId, null))
                     }) { Text(R.string.create_set) }
                 }
             }
