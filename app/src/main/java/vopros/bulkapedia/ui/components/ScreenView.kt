@@ -45,7 +45,7 @@ inline fun <reified V: ErrViewModel> ScreenView(
         modifier = Modifier.background(BulkaPediaTheme.colors.primaryDark)
     ) {
         AnimatedVisibility(visible = error.isNotEmpty()) {
-            Error(message = error) {  }
+            Error(message = error, onClose = viewModel::closeError)
         }
         content()
     }

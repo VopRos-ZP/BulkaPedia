@@ -13,12 +13,16 @@ open class ErrViewModel : ViewModel() {
     private val _error = MutableStateFlow("")
     val error = _error.asStateFlow()
 
-    protected val errorHandler = CoroutineExceptionHandler { _, err ->
+    private val errorHandler = CoroutineExceptionHandler { _, err ->
         viewModelScope.launch { error(err.localizedMessage ?: "") }
     }
 
     protected fun error(message: String = "") {
         viewModelScope.launch{ _error.emit(message) }
+    }
+
+    fun closeError() {
+        coroutine { _error.emit("") }
     }
 
     protected fun coroutine(block: suspend CoroutineScope.() -> Unit) {
