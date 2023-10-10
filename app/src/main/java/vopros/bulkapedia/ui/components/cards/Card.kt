@@ -29,7 +29,7 @@ fun OutlinedCard(
         shape = RoundedCornerShape(5.dp),
         modifier = modifier,
         backgroundColor = Color.Transparent,
-        border = BorderStroke(2.dp, BulkaPediaTheme.colors.primary)
+        border = BorderStroke(2.dp, BulkaPediaTheme.colors.tintColor)
     ) {
         Column(
             modifier = Modifier.padding(10.dp),
@@ -47,12 +47,13 @@ fun Card(
     onClick: () -> Unit = {},
     spacedBy: Dp = 5.dp,
     radius: Dp = 5.dp,
+    color: Color = BulkaPediaTheme.colors.primary,
     horizontal: Alignment.Horizontal = Alignment.CenterHorizontally,
     content: @Composable ColumnScope.() -> Unit
 ) {
     androidx.compose.material.Card(
         onClick = onClick,
-        backgroundColor = BulkaPediaTheme.colors.primary,
+        backgroundColor = color,
         shape = RoundedCornerShape(radius),
         modifier = modifier,
     ) {
