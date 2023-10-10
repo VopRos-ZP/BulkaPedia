@@ -1,28 +1,39 @@
 package vopros.bulkapedia.ui.screens.hero
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.Icon
+import androidx.compose.material.IconToggleButton
 import androidx.compose.material.OutlinedButton
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.unit.dp
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import vopros.bulkapedia.R
+import vopros.bulkapedia.ui.components.Difficult
 import vopros.bulkapedia.ui.components.HCenterBox
 import vopros.bulkapedia.ui.components.Image
 import vopros.bulkapedia.ui.components.Loading
@@ -34,6 +45,7 @@ import vopros.bulkapedia.ui.components.tab.TabRowWithPager
 import vopros.bulkapedia.ui.components.userSet.UserSetCard
 import vopros.bulkapedia.ui.screens.destinations.CreateSetScreenDestination
 import vopros.bulkapedia.ui.theme.Blue
+import vopros.bulkapedia.ui.theme.BulkaPediaTheme
 import vopros.bulkapedia.utils.resourceManager
 
 @Destination
@@ -53,29 +65,63 @@ fun HeroScreen(
         when (hero) {
             null -> Loading()
             else -> {
-                Column(
-                    modifier = Modifier.fillMaxSize().padding(vertical = 20.dp),
+                var isShow by remember { mutableStateOf(false) }
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize(),
                     horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.spacedBy(20.dp)
+                    verticalArrangement = Arrangement.spacedBy(20.dp),
+                    contentPadding = PaddingValues(vertical = 20.dp)
                 ) {
                     /* Hero icon with difficult */
-                    HeroThumbnail(hero!!.image) {
-                        Text(
-                            R.string.difficult,
-                            modifier = Modifier.padding(bottom = 15.dp)
-                        )
-                        HeroDifficult(difficult = hero!!.difficult)
+                    item {
+                        Card(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 20.dp)
+                        ) {
+                            Image(url = hero!!.image, modifier = Modifier.height(150.dp))
+                        }
                     }
-
+                    item {
+                        Card(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 20.dp)
+                        ) {
+                            Column(
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                Row(verticalAlignment = Alignment.CenterVertically) {
+                                    Text(resource = R.string.difficult)
+                                    Spacer(modifier = Modifier.weight(1f))
+                                    IconToggleButton(checked = isShow, onCheckedChange = { isShow = it }) {
+                                        val icon = if (isShow) Icons.Default.KeyboardArrowUp
+                                        else Icons.Default.KeyboardArrowDown
+                                        Icon(
+                                            imageVector = icon,
+                                            contentDescription = null,
+                                            tint = BulkaPediaTheme.colors.tintColor
+                                        )
+                                    }
+                                }
+                                AnimatedVisibility(visible = isShow) {
+                                    Difficult(mechanics = 3f, speed = 3f, attack = 5f)
+                                }
+                            }
+                        }
+                    }
                     /* UserSets */
-                    TabRowWithPager(
-                        listOf(Tab(R.string.one), Tab(R.string.two), Tab(R.string.three)), sets
-                    ) { HCenterBox { UserSetCard(it) } }
-
+                    item {
+                        TabRowWithPager(
+                            listOf(Tab(R.string.one), Tab(R.string.two), Tab(R.string.three)), sets
+                        ) { HCenterBox { UserSetCard(it) } }
+                    }
                     /* Add user set Button */
-                    OutlinedButton(onClick = {
-                        navigator.navigate(CreateSetScreenDestination(heroId, null))
-                    }) { Text(R.string.create_set) }
+                    item {
+                        OutlinedButton(onClick = {
+                            navigator.navigate(CreateSetScreenDestination(heroId, null))
+                        }) { Text(R.string.create_set) }
+                    }
                 }
             }
         }
@@ -98,21 +144,6 @@ fun HeroThumbnail(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.SpaceEvenly,
                 content = content
-            )
-        }
-    }
-}
-
-@Composable
-fun HeroDifficult(difficult: String) {
-    val colors = getDifficultImages(difficult)
-    Row(modifier = Modifier.background(Color.Transparent)) {
-        colors.map {
-            Box(modifier = Modifier
-                .padding(end = 10.dp)
-                .size(width = 50.dp, height = 15.dp)
-                .background(it, RectangleShape)
-                .border(1.dp, Color.Black)
             )
         }
     }
