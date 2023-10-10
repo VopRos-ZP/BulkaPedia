@@ -9,11 +9,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.annotation.RootNavGraph
 import vopros.bulkapedia.R
 import vopros.bulkapedia.ui.components.Text
 
+@RootNavGraph
+@Destination
 @Composable
-fun SettingsScreen() {
+fun SettingsScreen(viewModel: SettingsViewModel) {
 //    Screen<Pair<String, Boolean>, SettingsViewModel>(
 //        title = R.string.settings,
 //        showBack = true,

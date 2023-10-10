@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -18,7 +17,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import vopros.bulkapedia.R
 import vopros.bulkapedia.map.GameMap
 import vopros.bulkapedia.ui.components.Image
@@ -27,12 +27,12 @@ import vopros.bulkapedia.ui.components.cards.Card
 import vopros.bulkapedia.ui.components.tags.Tag
 import vopros.bulkapedia.ui.components.tags.Tags
 import vopros.bulkapedia.ui.components.tags.mapsTags
-import vopros.bulkapedia.ui.navigation.Destinations
-import vopros.bulkapedia.ui.theme.LocalNavController
+import vopros.bulkapedia.ui.screens.destinations.MapScreenDestination
 
 @OptIn(ExperimentalFoundationApi::class)
+@Destination
 @Composable
-fun MapsScreen(viewModel: MapsViewModel = hiltViewModel()) {
+fun MapsScreen(navigator: DestinationsNavigator, viewModel: MapsViewModel) {
     val tags = mapsTags()
     val maps by viewModel.maps.collectAsState()
     var selectedTag by remember { mutableStateOf<Tag?>(null) }
@@ -49,7 +49,9 @@ fun MapsScreen(viewModel: MapsViewModel = hiltViewModel()) {
                 verticalArrangement = Arrangement.spacedBy(5.dp),
                 horizontalArrangement = Arrangement.spacedBy(5.dp)
             ) {
-                items(maps) { MapCard(Modifier.animateItemPlacement(), it) }
+                items(maps) { MapCard(Modifier.animateItemPlacement(), it) {
+                    navigator.navigate(MapScreenDestination(it.id))
+                } }
             }
         }
     }
@@ -59,11 +61,11 @@ fun MapsScreen(viewModel: MapsViewModel = hiltViewModel()) {
 @Composable
 fun MapCard(
     modifier: Modifier = Modifier,
-    map: GameMap
+    map: GameMap,
+    onClick: () -> Unit
 ) {
-    val controller = LocalNavController.current
     Card(
         modifier = modifier,
-        onClick = { controller.navigate("${Destinations.MAP}${map.id}") },
+        onClick = onClick,
     ) { Image(url = map.image) }
 }

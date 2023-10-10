@@ -18,7 +18,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+import com.ramcosta.composedestinations.annotation.Destination
 import vopros.bulkapedia.R
 import vopros.bulkapedia.hero.Hero
 import vopros.bulkapedia.ui.components.Image
@@ -28,14 +28,13 @@ import vopros.bulkapedia.ui.components.cards.Card
 import vopros.bulkapedia.ui.components.tags.Tag
 import vopros.bulkapedia.ui.components.tags.Tags
 import vopros.bulkapedia.ui.components.tags.heroesTags
-import vopros.bulkapedia.ui.navigation.Destinations
 import vopros.bulkapedia.ui.theme.BulkaPediaTheme
-import vopros.bulkapedia.ui.theme.LocalNavController
 import vopros.bulkapedia.utils.resourceManager
 
 @OptIn(ExperimentalFoundationApi::class)
+@Destination
 @Composable
-fun HeroesScreen(viewModel: HeroesViewModel = hiltViewModel()) {
+fun HeroesScreen(viewModel: HeroesViewModel) {
     val tags = heroesTags()
     val heroes by viewModel.heroes.collectAsState()
     var selectedTag by remember { mutableStateOf<Tag?>(null) }
@@ -63,10 +62,9 @@ fun HeroesScreen(viewModel: HeroesViewModel = hiltViewModel()) {
 
 @Composable
 fun HeroCard(modifier: Modifier = Modifier, hero: Hero) {
-    val controller = LocalNavController.current
     Card(
         modifier = modifier,
-        onClick = { controller.navigate("${Destinations.HERO}${hero.id}") }
+        onClick = {  }
     ) {
         Text(resource = resourceManager.toSource(hero.id), color = BulkaPediaTheme.colors.white, fontWeight = FontWeight.Bold)
         Image(url = hero.image)

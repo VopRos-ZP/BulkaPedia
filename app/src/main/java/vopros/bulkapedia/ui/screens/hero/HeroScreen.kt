@@ -31,9 +31,7 @@ import vopros.bulkapedia.ui.components.cards.Card
 import vopros.bulkapedia.ui.components.tab.Tab
 import vopros.bulkapedia.ui.components.tab.TabRowWithPager
 import vopros.bulkapedia.ui.components.userSet.UserSetCard
-import vopros.bulkapedia.ui.navigation.Destinations
 import vopros.bulkapedia.ui.theme.Blue
-import vopros.bulkapedia.ui.theme.BulkaPediaTheme
 import vopros.bulkapedia.ui.theme.LocalNavController
 
 @Composable
@@ -70,7 +68,6 @@ fun HeroScreen(heroId: String, viewModel: HeroViewModel = hiltViewModel()) {
 
                     /* Add user set Button */
                     OutlinedButton(onClick = {
-                        controller.navigate("${Destinations.CREATE_SET}/${hero!!.id}")
                     }) { Text(R.string.create_set) }
                 }
             }

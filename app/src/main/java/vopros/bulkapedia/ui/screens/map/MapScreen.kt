@@ -15,6 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.ramcosta.composedestinations.annotation.Destination
 import vopros.bulkapedia.R
 import vopros.bulkapedia.ui.components.Image
 import vopros.bulkapedia.ui.components.Loading
@@ -23,8 +24,9 @@ import vopros.bulkapedia.ui.components.cards.Card
 import vopros.bulkapedia.ui.components.checkBox.CheckBox
 import vopros.bulkapedia.utils.resourceManager
 
+@Destination
 @Composable
-fun MapScreen(mapId: String, viewModel: MapViewModel = hiltViewModel()) {
+fun MapScreen(mapId: String, viewModel: MapViewModel) {
     val map by viewModel.map.collectAsState()
     ScreenView(
         title = resourceManager.toSource(map?.id),

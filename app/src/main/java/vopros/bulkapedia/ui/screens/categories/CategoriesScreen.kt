@@ -20,17 +20,24 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.annotation.RootNavGraph
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import vopros.bulkapedia.R
 import vopros.bulkapedia.category.Category
 import vopros.bulkapedia.ui.components.ScreenView
 import vopros.bulkapedia.ui.components.Text
 import vopros.bulkapedia.ui.components.cards.Card
+import vopros.bulkapedia.ui.screens.destinations.HeroesScreenDestination
+import vopros.bulkapedia.ui.screens.destinations.MapsScreenDestination
 import vopros.bulkapedia.ui.theme.BulkaPediaTheme
 import vopros.bulkapedia.ui.theme.LocalNavController
 import vopros.bulkapedia.utils.iconNameToVector
 
+@RootNavGraph(start = true)
+@Destination
 @Composable
-fun CategoriesScreen(viewModel: CategoriesViewModel = hiltViewModel()) {
+fun CategoriesScreen(navigator: DestinationsNavigator, viewModel: CategoriesViewModel) {
     val categories by viewModel.categories.collectAsState()
     ScreenView(
         title = R.string.wiki,
@@ -42,22 +49,21 @@ fun CategoriesScreen(viewModel: CategoriesViewModel = hiltViewModel()) {
             verticalArrangement = Arrangement.spacedBy(10.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            items(categories) { CategoryCard(it) }
+            items(categories) { CategoryCard(it) {
+                navigator.navigate(when (it.destination) {
+                    "maps" -> MapsScreenDestination()
+                    "heroes" -> HeroesScreenDestination()
+                    else -> throw RuntimeException()
+                })
+            } }
         }
     }
     LaunchedEffect(null) { viewModel.fetchCategories() }
 }
 
 @Composable
-fun CategoryCard(category: Category) {
-    val controller = LocalNavController.current
-    Card(
-        onClick = {
-            if (category.enabled) {
-                controller.navigate(category.destination) { launchSingleTop = true }
-            }
-        }
-    ) {
+fun CategoryCard(category: Category, onClick: () -> Unit) {
+    Card(onClick = onClick) {
         Column(
             modifier = Modifier
                 .fillMaxSize()

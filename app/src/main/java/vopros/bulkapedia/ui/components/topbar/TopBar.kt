@@ -8,12 +8,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import vopros.bulkapedia.R
 import vopros.bulkapedia.ui.components.IconButton
 import vopros.bulkapedia.ui.components.Text
-import vopros.bulkapedia.ui.navigation.Destinations
 import vopros.bulkapedia.ui.theme.BulkaPediaTheme
 import vopros.bulkapedia.ui.theme.BulkapediaTheme
 import vopros.bulkapedia.ui.theme.LocalTopBarViewModel
@@ -21,7 +21,6 @@ import vopros.bulkapedia.ui.theme.LocalTopBarViewModel
 @Composable
 fun TopBar() {
     val viewModel = LocalTopBarViewModel.current
-
     val title by viewModel.title.collectAsState()
     val showBack by viewModel.showBack.collectAsState()
     val controller by viewModel.navController.collectAsState()
@@ -44,7 +43,7 @@ fun TopBar_Preview() {
 fun TopBar(title: String, showBack: Boolean, controller: NavController?) {
     TopAppBar(
         backgroundColor = BulkaPediaTheme.colors.primary,
-        title = { Text(title = title) },
+        title = { Text(title = title, fontWeight = FontWeight.Bold) },
         navigationIcon = {
             if (showBack) {
                 IconButton(
@@ -55,7 +54,6 @@ fun TopBar(title: String, showBack: Boolean, controller: NavController?) {
         },
         actions = {
             IconButton(onClick = {
-                controller?.navigate(Destinations.SETTINGS) { launchSingleTop = true }
             }, icon = Icons.Filled.Settings)
         }
     )
