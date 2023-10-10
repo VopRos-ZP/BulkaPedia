@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.application)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt.android)
     alias(libs.plugins.google.services)
@@ -56,8 +57,9 @@ dependencies {
     implementation(libs.coil.compose)
     /** Glide **/
     implementation(libs.compose)
-    /** JSON **/
-    implementation("com.fasterxml.jackson.core:jackson-databind:2.15.2")
+    /** Navigation **/
+    implementation(libs.core)
+    ksp(libs.ksp)
     /** DI **/
     implementation(libs.hilt.navigation.compose)
     implementation(libs.hilt.android)
