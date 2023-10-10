@@ -20,7 +20,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import vopros.bulkapedia.R
 import vopros.bulkapedia.ui.components.HCenterBox
 import vopros.bulkapedia.ui.components.Image
@@ -32,15 +33,19 @@ import vopros.bulkapedia.ui.components.tab.Tab
 import vopros.bulkapedia.ui.components.tab.TabRowWithPager
 import vopros.bulkapedia.ui.components.userSet.UserSetCard
 import vopros.bulkapedia.ui.theme.Blue
-import vopros.bulkapedia.ui.theme.LocalNavController
+import vopros.bulkapedia.utils.resourceManager
 
+@Destination
 @Composable
-fun HeroScreen(heroId: String, viewModel: HeroViewModel = hiltViewModel()) {
+fun HeroScreen(
+    navigator: DestinationsNavigator,
+    viewModel: HeroViewModel,
+    heroId: String
+) {
     val hero by viewModel.hero.collectAsState()
     val sets by viewModel.sets.collectAsState()
-    val controller = LocalNavController.current
     ScreenView(
-        title = hero?.id ?: "",
+        title = resourceManager.toSource(heroId),
         showBack = true,
         viewModel = viewModel
     ) {
@@ -68,6 +73,7 @@ fun HeroScreen(heroId: String, viewModel: HeroViewModel = hiltViewModel()) {
 
                     /* Add user set Button */
                     OutlinedButton(onClick = {
+                        
                     }) { Text(R.string.create_set) }
                 }
             }
