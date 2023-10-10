@@ -19,6 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import vopros.bulkapedia.R
 import vopros.bulkapedia.hero.Hero
 import vopros.bulkapedia.ui.components.Image
@@ -28,13 +29,14 @@ import vopros.bulkapedia.ui.components.cards.Card
 import vopros.bulkapedia.ui.components.tags.Tag
 import vopros.bulkapedia.ui.components.tags.Tags
 import vopros.bulkapedia.ui.components.tags.heroesTags
+import vopros.bulkapedia.ui.screens.destinations.HeroScreenDestination
 import vopros.bulkapedia.ui.theme.BulkaPediaTheme
 import vopros.bulkapedia.utils.resourceManager
 
 @OptIn(ExperimentalFoundationApi::class)
 @Destination
 @Composable
-fun HeroesScreen(viewModel: HeroesViewModel) {
+fun HeroesScreen(navigator: DestinationsNavigator, viewModel: HeroesViewModel) {
     val tags = heroesTags()
     val heroes by viewModel.heroes.collectAsState()
     var selectedTag by remember { mutableStateOf<Tag?>(null) }
@@ -51,7 +53,9 @@ fun HeroesScreen(viewModel: HeroesViewModel) {
                 verticalArrangement = Arrangement.spacedBy(5.dp),
                 horizontalArrangement = Arrangement.spacedBy(5.dp)
             ) {
-                items(heroes) { HeroCard(Modifier.animateItemPlacement(), it) }
+                items(heroes) { HeroCard(Modifier.animateItemPlacement(), it) {
+                    navigator.navigate(HeroScreenDestination(it.id))
+                } }
             }
         }
     }
@@ -61,10 +65,10 @@ fun HeroesScreen(viewModel: HeroesViewModel) {
 }
 
 @Composable
-fun HeroCard(modifier: Modifier = Modifier, hero: Hero) {
+fun HeroCard(modifier: Modifier = Modifier, hero: Hero, onClick: () -> Unit) {
     Card(
         modifier = modifier,
-        onClick = {  }
+        onClick = onClick
     ) {
         Text(resource = resourceManager.toSource(hero.id), color = BulkaPediaTheme.colors.white, fontWeight = FontWeight.Bold)
         Image(url = hero.image)
