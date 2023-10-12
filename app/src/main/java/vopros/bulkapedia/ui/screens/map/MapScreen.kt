@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -14,7 +13,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import vopros.bulkapedia.R
 import vopros.bulkapedia.ui.components.Image
@@ -26,12 +24,13 @@ import vopros.bulkapedia.utils.resourceManager
 
 @Destination
 @Composable
-fun MapScreen(mapId: String, viewModel: MapViewModel) {
+fun MapScreen(viewModel: MapViewModel, mapId: String) {
     val map by viewModel.map.collectAsState()
     ScreenView(
         title = resourceManager.toSource(map?.id),
         showBack = true,
-        viewModel = viewModel
+        viewModel = viewModel,
+        fetch = { fetch(mapId) }
     ) {
         when (val m = map) {
             null -> Loading()
@@ -54,9 +53,5 @@ fun MapScreen(mapId: String, viewModel: MapViewModel) {
                 }
             }
         }
-    }
-    DisposableEffect(mapId) {
-        viewModel.fetch(mapId)
-        onDispose { viewModel.dispose() }
     }
 }

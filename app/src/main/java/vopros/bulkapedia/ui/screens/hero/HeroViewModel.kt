@@ -1,6 +1,5 @@
 package vopros.bulkapedia.ui.screens.hero
 
-import com.google.firebase.firestore.ListenerRegistration
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -26,14 +25,11 @@ class HeroViewModel @Inject constructor(
     private val _sets = MutableStateFlow<List<UserSetUseCase>>(emptyList())
     val sets = _sets.asStateFlow()
 
-    private var setsListener: ListenerRegistration? = null
-    private var heroListener: ListenerRegistration? = null
-
     fun fetch(heroId: String) {
-        heroListener = heroRepository.listenOne(heroId, Callback(::error) {
+        listeners["hero"] = heroRepository.listenOne(heroId, Callback(::error) {
             coroutine { _hero.emit(it) }
         })
-        setsListener = setRepository.listenAll(Callback(::error) {
+        listeners["set"] = setRepository.listenAll(Callback(::error) {
             coroutine {
                 val top3 = it
                     .filter { s -> s.hero == heroId }
@@ -46,11 +42,6 @@ class HeroViewModel @Inject constructor(
                 _sets.emit(top3)
             }
         })
-    }
-
-    fun dispose() {
-        heroListener?.remove()
-        setsListener?.remove()
     }
 
 }

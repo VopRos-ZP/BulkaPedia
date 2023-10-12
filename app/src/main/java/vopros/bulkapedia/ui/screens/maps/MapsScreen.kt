@@ -9,7 +9,6 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -39,7 +38,9 @@ fun MapsScreen(navigator: DestinationsNavigator, viewModel: MapsViewModel) {
     ScreenView(
         title = R.string.select_map,
         showBack = true,
-        viewModel = viewModel
+        viewModel = viewModel,
+        key = selectedTag,
+        fetch = { fetchMaps(selectedTag) }
     ) {
         Column(modifier = Modifier.fillMaxSize()) {
             Tags(tags, selectedTag) { selectedTag = if (selectedTag == it) null else it }
@@ -55,7 +56,6 @@ fun MapsScreen(navigator: DestinationsNavigator, viewModel: MapsViewModel) {
             }
         }
     }
-    LaunchedEffect(selectedTag) { viewModel.fetchMaps(selectedTag) }
 }
 
 @Composable

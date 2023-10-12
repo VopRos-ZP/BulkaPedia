@@ -19,7 +19,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -58,7 +57,8 @@ fun HeroScreen(
     ScreenView(
         title = resourceManager.toSource(heroId),
         showBack = true,
-        viewModel = viewModel
+        viewModel = viewModel,
+        fetch = { fetch(heroId) }
     ) {
         when (hero) {
             null -> Loading()
@@ -123,10 +123,6 @@ fun HeroScreen(
                 }
             }
         }
-    }
-    DisposableEffect(heroId) {
-        viewModel.fetch(heroId)
-        onDispose { viewModel.dispose() }
     }
 }
 

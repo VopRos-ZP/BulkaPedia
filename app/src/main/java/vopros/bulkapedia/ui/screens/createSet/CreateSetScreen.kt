@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.OutlinedButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -28,7 +27,8 @@ fun CreateSetScreen(
     ScreenView(
         title = R.string.create_set,
         showBack = true,
-        viewModel = viewModel
+        viewModel = viewModel,
+        fetch = { init(heroId, setId) }
     ) {
         when (val case = useCase) {
             null -> Loading()
@@ -48,5 +48,4 @@ fun CreateSetScreen(
             }
         }
     }
-    LaunchedEffect(heroId, setId) { viewModel.init(heroId, setId) }
 }

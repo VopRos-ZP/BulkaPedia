@@ -11,7 +11,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Icon
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -19,7 +18,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
@@ -31,7 +29,6 @@ import vopros.bulkapedia.ui.components.cards.Card
 import vopros.bulkapedia.ui.screens.destinations.HeroesScreenDestination
 import vopros.bulkapedia.ui.screens.destinations.MapsScreenDestination
 import vopros.bulkapedia.ui.theme.BulkaPediaTheme
-import vopros.bulkapedia.ui.theme.LocalNavController
 import vopros.bulkapedia.utils.iconNameToVector
 
 @RootNavGraph(start = true)
@@ -41,7 +38,8 @@ fun CategoriesScreen(navigator: DestinationsNavigator, viewModel: CategoriesView
     val categories by viewModel.categories.collectAsState()
     ScreenView(
         title = R.string.wiki,
-        viewModel = viewModel
+        viewModel = viewModel,
+        fetch = { fetchCategories() }
     ) {
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
@@ -58,7 +56,6 @@ fun CategoriesScreen(navigator: DestinationsNavigator, viewModel: CategoriesView
             } }
         }
     }
-    LaunchedEffect(null) { viewModel.fetchCategories() }
 }
 
 @Composable

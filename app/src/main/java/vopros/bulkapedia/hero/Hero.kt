@@ -21,4 +21,18 @@ data class Hero(
         "stats" to stats,
     )
 
+    companion object {
+
+        val EMPTY = Hero(
+            id = "",
+            active = true,
+            difficult = "",
+            image = "",
+            type = "",
+            counterpicks = emptyList(),
+            stats = emptyMap()
+        )
+
+    }
+
 }

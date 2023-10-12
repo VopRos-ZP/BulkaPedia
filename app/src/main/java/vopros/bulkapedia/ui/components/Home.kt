@@ -16,6 +16,7 @@ import vopros.bulkapedia.ui.screens.categories.CategoriesViewModel
 import vopros.bulkapedia.ui.screens.createSet.CreateSetViewModel
 import vopros.bulkapedia.ui.screens.destinations.CategoriesScreenDestination
 import vopros.bulkapedia.ui.screens.destinations.CreateSetScreenDestination
+import vopros.bulkapedia.ui.screens.destinations.HeroInfoScreenDestination
 import vopros.bulkapedia.ui.screens.destinations.HeroScreenDestination
 import vopros.bulkapedia.ui.screens.destinations.HeroesScreenDestination
 import vopros.bulkapedia.ui.screens.destinations.LoginScreenDestination
@@ -25,6 +26,7 @@ import vopros.bulkapedia.ui.screens.destinations.ProfileControllerScreenDestinat
 import vopros.bulkapedia.ui.screens.destinations.ProfileScreenDestination
 import vopros.bulkapedia.ui.screens.destinations.SettingsScreenDestination
 import vopros.bulkapedia.ui.screens.hero.HeroViewModel
+import vopros.bulkapedia.ui.screens.heroInfo.HeroInfoViewModel
 import vopros.bulkapedia.ui.screens.heroes.HeroesViewModel
 import vopros.bulkapedia.ui.screens.login.LoginViewModel
 import vopros.bulkapedia.ui.screens.map.MapViewModel
@@ -58,6 +60,7 @@ fun Home() {
                     /* Heroes */
                     dependency(HeroesScreenDestination) { hiltViewModel<HeroesViewModel>() }
                     dependency(HeroScreenDestination) { hiltViewModel<HeroViewModel>() }
+                    dependency(HeroInfoScreenDestination) { hiltViewModel<HeroInfoViewModel>() }
                     /* Create user set */
                     dependency(CreateSetScreenDestination) { hiltViewModel<CreateSetViewModel>() }
                     /* Maps */

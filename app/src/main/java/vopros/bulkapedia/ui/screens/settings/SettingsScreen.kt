@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -21,7 +20,8 @@ fun SettingsScreen(navigator: DestinationsNavigator, viewModel: SettingsViewMode
     ScreenView(
         title = R.string.settings,
         showBack = true,
-        viewModel = viewModel
+        viewModel = viewModel,
+        fetch = { init() }
     ) {
         Column(
             modifier = Modifier.fillMaxSize(),
@@ -43,5 +43,4 @@ fun SettingsScreen(navigator: DestinationsNavigator, viewModel: SettingsViewMode
             )
         }
     }
-    LaunchedEffect(null) { viewModel.init() }
 }

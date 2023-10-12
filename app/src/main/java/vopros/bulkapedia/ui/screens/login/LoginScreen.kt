@@ -16,25 +16,23 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import vopros.bulkapedia.R
 import vopros.bulkapedia.ui.components.OutlinedTextField
 import vopros.bulkapedia.ui.components.PasswordField
 import vopros.bulkapedia.ui.components.ScreenView
 import vopros.bulkapedia.ui.components.Text
-import vopros.bulkapedia.ui.theme.LocalNavController
 
 @Destination
 @Composable
 fun LoginScreen(viewModel: LoginViewModel) {
     val email = remember { mutableStateOf("") }
     val password = remember { mutableStateOf("") }
-    val controller = LocalNavController.current
     val config by viewModel.config.collectAsState()
     ScreenView(
         title = R.string.login,
         viewModel = viewModel,
+        fetch = {  }
     ) {
         Column(
             modifier = Modifier.fillMaxSize(),

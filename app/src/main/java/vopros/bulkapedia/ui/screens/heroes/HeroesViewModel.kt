@@ -3,6 +3,7 @@ package vopros.bulkapedia.ui.screens.heroes
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import vopros.bulkapedia.core.Callback
 import vopros.bulkapedia.hero.Hero
 import vopros.bulkapedia.hero.HeroRepository
 import vopros.bulkapedia.ui.components.tags.Tag
@@ -18,10 +19,12 @@ class HeroesViewModel @Inject constructor(
     val heroes = _heroes.asStateFlow()
 
     fun fetchHeroes(tag: Tag? = null) {
-        coroutine {
-            _heroes.emit(emptyList()) // clear LazyVerticalGrid
-            _heroes.emit(heroRepository.fetchAll().filter { h -> h.type == tag?.id || tag == null })
-        }
+        listeners["hero"] = heroRepository.listenAll(Callback(::error) {
+            coroutine {
+                //_heroes.emit(emptyList()) // clear LazyVerticalGrid
+                _heroes.emit(it.filter { h -> h.type == tag?.id || tag == null })
+            }
+        })
     }
 
 }

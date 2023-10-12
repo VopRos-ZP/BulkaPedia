@@ -26,7 +26,7 @@ import vopros.bulkapedia.userSet.UserSetUseCase
 
 @Destination
 @Composable
-fun ProfileScreen(userId: String, viewModel: ProfileViewModel) {
+fun ProfileScreen(viewModel: ProfileViewModel, userId: String) {
 //    val profile = stringResource(R.string.profile)
 //    var title by remember { mutableStateOf(profile) }
 //    Screen<Pair<User, List<UserSetUseCase>>, ProfileViewModel>(
