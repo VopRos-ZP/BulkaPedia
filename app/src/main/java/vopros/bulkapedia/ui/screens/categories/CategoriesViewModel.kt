@@ -1,5 +1,6 @@
 package vopros.bulkapedia.ui.screens.categories
 
+import android.util.Log
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -17,7 +18,11 @@ class CategoriesViewModel @Inject constructor(
     val categories = _categories.asStateFlow()
 
     fun fetchCategories() {
-        coroutine { _categories.emit(categoryRepository.fetchAll()) }
+        coroutine {
+            val categories = categoryRepository.fetchAll()
+            _categories.emit(categories)
+            Log.d("CategoriesViewModel", "$categories")
+        }
     }
 
 }
