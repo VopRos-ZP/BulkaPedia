@@ -22,7 +22,7 @@ class HeroViewModel @Inject constructor(
     private val _hero = MutableStateFlow<Hero?>(null)
     val hero = _hero.asStateFlow()
 
-    private val _sets = MutableStateFlow<List<UserSetUseCase>>(emptyList())
+    private val _sets = MutableStateFlow<List<UserSetUseCase>?>(null)
     val sets = _sets.asStateFlow()
 
     fun fetch(heroId: String) {

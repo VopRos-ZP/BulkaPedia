@@ -85,7 +85,7 @@ fun UserSetCard(
     up: @Composable () -> Unit = {},
     content: @Composable ColumnScope.() -> Unit
 ) {
-    Card(radius = 10.dp) {
+    Card(radius = 15.dp) {
         Column(modifier = Modifier.padding(15.dp)) {
             up()
             Row(horizontalArrangement = Arrangement.spacedBy(15.dp)) {

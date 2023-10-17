@@ -15,7 +15,7 @@ class HeroesViewModel @Inject constructor(
     private val heroRepository: HeroRepository
 ): ErrViewModel() {
 
-    private val _heroes = MutableStateFlow(emptyList<Hero>())
+    private val _heroes = MutableStateFlow<List<Hero>?>(null)
     val heroes = _heroes.asStateFlow()
 
     fun fetchHeroes(tag: Tag? = null) {

@@ -23,6 +23,8 @@ import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import vopros.bulkapedia.R
 import vopros.bulkapedia.category.Category
+import vopros.bulkapedia.ui.components.CenterBox
+import vopros.bulkapedia.ui.components.Loading
 import vopros.bulkapedia.ui.components.ScreenView
 import vopros.bulkapedia.ui.components.Text
 import vopros.bulkapedia.ui.components.cards.Card
@@ -41,19 +43,25 @@ fun CategoriesScreen(navigator: DestinationsNavigator, viewModel: CategoriesView
         viewModel = viewModel,
         fetch = { fetchCategories() }
     ) {
-        LazyColumn(
-            modifier = Modifier.fillMaxSize(),
-            contentPadding = PaddingValues(20.dp),
-            verticalArrangement = Arrangement.spacedBy(10.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            items(categories) { CategoryCard(it) {
-                navigator.navigate(when (it.destination) {
-                    "maps" -> MapsScreenDestination()
-                    "heroes" -> HeroesScreenDestination()
-                    else -> throw RuntimeException()
-                })
-            } }
+        when (val cs = categories) {
+            null -> Loading()
+            emptyList<Category>() -> CenterBox {
+                Text(resource = R.string.empty_sets)
+            }
+            else -> LazyColumn(
+                modifier = Modifier.fillMaxSize(),
+                contentPadding = PaddingValues(20.dp),
+                verticalArrangement = Arrangement.spacedBy(10.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                items(cs) { CategoryCard(it) {
+                    navigator.navigate(when (it.destination) {
+                        "maps" -> MapsScreenDestination()
+                        "heroes" -> HeroesScreenDestination()
+                        else -> throw RuntimeException()
+                    })
+                } }
+            }
         }
     }
 }

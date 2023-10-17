@@ -21,7 +21,9 @@ import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import vopros.bulkapedia.R
 import vopros.bulkapedia.hero.Hero
+import vopros.bulkapedia.ui.components.CenterBox
 import vopros.bulkapedia.ui.components.Image
+import vopros.bulkapedia.ui.components.Loading
 import vopros.bulkapedia.ui.components.ScreenView
 import vopros.bulkapedia.ui.components.Text
 import vopros.bulkapedia.ui.components.cards.Card
@@ -48,15 +50,19 @@ fun HeroesScreen(navigator: DestinationsNavigator, viewModel: HeroesViewModel) {
     ) {
         Column(modifier = Modifier.fillMaxSize()) {
             Tags(tags, selectedTag) { selectedTag = if (selectedTag == it) null else it }
-            LazyVerticalGrid(
-                columns = GridCells.Adaptive(150.dp),
-                contentPadding = PaddingValues(start = 20.dp, end = 20.dp, bottom = 20.dp),
-                verticalArrangement = Arrangement.spacedBy(5.dp),
-                horizontalArrangement = Arrangement.spacedBy(5.dp)
-            ) {
-                items(heroes) { HeroCard(Modifier.animateItemPlacement(), it) {
-                    navigator.navigate(HeroScreenDestination(it.id))
-                } }
+            when (val hs = heroes) {
+                null -> Loading()
+                emptyList<Hero>() -> CenterBox { Text(resource = R.string.empty_sets) }
+                else -> LazyVerticalGrid(
+                    columns = GridCells.Adaptive(150.dp),
+                    contentPadding = PaddingValues(start = 20.dp, end = 20.dp, bottom = 20.dp),
+                    verticalArrangement = Arrangement.spacedBy(5.dp),
+                    horizontalArrangement = Arrangement.spacedBy(5.dp)
+                ) {
+                    items(hs) { HeroCard(Modifier.animateItemPlacement(), it) {
+                        navigator.navigate(HeroScreenDestination(it.id))
+                    } }
+                }
             }
         }
     }

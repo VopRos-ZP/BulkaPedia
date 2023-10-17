@@ -14,7 +14,7 @@ class CategoriesViewModel @Inject constructor(
     private val categoryRepository: CategoryRepository
 ): ErrViewModel() {
 
-    private val _categories = MutableStateFlow(emptyList<Category>())
+    private val _categories = MutableStateFlow<List<Category>?>(null)
     val categories = _categories.asStateFlow()
 
     fun fetchCategories() {
