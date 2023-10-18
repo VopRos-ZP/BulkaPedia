@@ -13,8 +13,10 @@ import com.ramcosta.composedestinations.navigation.dependency
 import vopros.bulkapedia.ui.components.topbar.TopBar
 import vopros.bulkapedia.ui.screens.NavGraphs
 import vopros.bulkapedia.ui.screens.categories.CategoriesViewModel
+import vopros.bulkapedia.ui.screens.comments.CommentsViewModel
 import vopros.bulkapedia.ui.screens.createSet.CreateSetViewModel
 import vopros.bulkapedia.ui.screens.destinations.CategoriesScreenDestination
+import vopros.bulkapedia.ui.screens.destinations.CommentsScreenDestination
 import vopros.bulkapedia.ui.screens.destinations.CreateSetScreenDestination
 import vopros.bulkapedia.ui.screens.destinations.HeroInfoScreenDestination
 import vopros.bulkapedia.ui.screens.destinations.HeroScreenDestination
@@ -61,6 +63,8 @@ fun Home() {
                     dependency(HeroesScreenDestination) { hiltViewModel<HeroesViewModel>() }
                     dependency(HeroScreenDestination) { hiltViewModel<HeroViewModel>() }
                     dependency(HeroInfoScreenDestination) { hiltViewModel<HeroInfoViewModel>() }
+                    /* Comments */
+                    dependency(CommentsScreenDestination) { hiltViewModel<CommentsViewModel>() }
                     /* Create user set */
                     dependency(CreateSetScreenDestination) { hiltViewModel<CreateSetViewModel>() }
                     /* Maps */

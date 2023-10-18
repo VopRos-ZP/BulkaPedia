@@ -40,7 +40,8 @@ import vopros.bulkapedia.userSet.UserSetUseCase
 @Composable
 fun UserSetCard(
     container: UserSetUseCase,
-    withHeroIcon: Boolean = false
+    withHeroIcon: Boolean = false,
+    onCommentClick: () -> Unit = {}
 ) {
     var expand by remember { mutableStateOf(false) }
     val viewModel: UserSetCardViewModel = hiltViewModel()
@@ -62,7 +63,7 @@ fun UserSetCard(
         }
         Row {
             IconButton(onClick = { /* settings click */ }, icon = Icons.Default.Settings)
-            IconButton(onClick = { /* comment click */ }, icon = Icons.Default.Comment)
+            IconButton(onClick = onCommentClick, icon = Icons.Default.Comment)
             if (withHeroIcon) {
                 IconToggleButton(
                     checked = expand,

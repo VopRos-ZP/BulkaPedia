@@ -29,6 +29,7 @@ import vopros.bulkapedia.ui.components.cards.Card
 import vopros.bulkapedia.ui.components.tab.Tab
 import vopros.bulkapedia.ui.components.tab.TabRowWithPager
 import vopros.bulkapedia.ui.components.userSet.UserSetCard
+import vopros.bulkapedia.ui.screens.destinations.CommentsScreenDestination
 import vopros.bulkapedia.ui.screens.destinations.CreateSetScreenDestination
 import vopros.bulkapedia.utils.resourceManager
 
@@ -70,7 +71,9 @@ fun HeroScreen(
                     item {
                         TabRowWithPager(
                             listOf(Tab(R.string.one), Tab(R.string.two), Tab(R.string.three)), sets
-                        ) { HCenterBox { UserSetCard(it) } }
+                        ) { HCenterBox { UserSetCard(it) {
+                            navigator.navigate(CommentsScreenDestination(it.set.id))
+                        } } }
                     }
                     /* Add user set Button */
                     item {

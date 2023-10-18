@@ -1,8 +1,11 @@
 package vopros.bulkapedia.firebase
 
+import android.util.Log
 import com.google.firebase.firestore.DocumentSnapshot
 import vopros.bulkapedia.category.Category
 import vopros.bulkapedia.category.CategoryDTO
+import vopros.bulkapedia.comment.Comment
+import vopros.bulkapedia.comment.CommentDTO
 import vopros.bulkapedia.hero.Hero
 import vopros.bulkapedia.hero.HeroDTO
 import vopros.bulkapedia.map.GameMap
@@ -17,6 +20,9 @@ import vopros.bulkapedia.userSet.UserSetDTO
  *
  * **/
 inline fun <reified T, D> toObject(dto: Class<D>, doc: DocumentSnapshot, toPojo: (D) -> T?): T? {
+    if (dto == CommentDTO::class.java) {
+        Log.d("ToObject", "${doc["author"]} ${doc.toObject(dto)}")
+    }
     return toPojo(doc.toObject(dto)!!)
 }
 
@@ -38,4 +44,8 @@ fun toUserSet(doc: DocumentSnapshot): UserSet? = toObject(UserSetDTO::class.java
 
 fun toUser(doc: DocumentSnapshot): User? = toObject(UserDTO::class.java, doc) {
     User(it.id, it.admin, it.email, it.nickname, it.password, it.updateEmail, it.updateNickname)
+}
+
+fun toComment(doc: DocumentSnapshot): Comment? = toObject(CommentDTO::class.java, doc) {
+    Comment(it.id, it.author, it.set, it.text, it.date)
 }
