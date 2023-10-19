@@ -4,6 +4,11 @@ import android.util.Log
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.ListenerRegistration
+import com.google.firebase.firestore.ktx.snapshots
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.count
+import kotlinx.coroutines.launch
 import vopros.bulkapedia.core.Callback
 import vopros.bulkapedia.core.Entity
 import kotlinx.coroutines.tasks.await
@@ -14,7 +19,9 @@ open class FirebaseImpl<T: Entity>(
 ) : Firebase<T> {
 
     override fun listenAll(callback: Callback<List<T>>): ListenerRegistration {
+        Log.d("FirebaseImpl", ref.id)
         return ref.addSnapshotListener { value, error ->
+            Log.d("FirebaseImpl", "${value?.documents?.size}")
             value?.documents?.mapNotNull(transform)?.let(callback.onSuccess)
             error?.localizedMessage?.let(callback.onError)
         }
@@ -43,8 +50,10 @@ open class FirebaseImpl<T: Entity>(
     }
 
     override suspend fun update(t: T) {
-        Log.d("Update", "update: ${t.id}")
-        ref.document(t.id).set(t.toData()).await()
+        when (t.id) {
+            "" -> ref.document()
+            else -> ref.document(t.id)
+        }.set(t.toData()).await()
     }
 
     override suspend fun delete(t: T) {

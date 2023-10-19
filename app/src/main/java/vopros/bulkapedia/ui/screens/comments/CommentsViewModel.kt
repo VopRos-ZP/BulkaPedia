@@ -54,4 +54,8 @@ class CommentsViewModel @Inject constructor(
         coroutine { dataStore.userId.collect { _author.emit(it) } }
     }
 
+    fun sendComment(comment: Comment) {
+        coroutine { commentRepository.update(comment) }
+    }
+
 }

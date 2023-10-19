@@ -15,7 +15,7 @@ android {
         applicationId = "vopros.bulkapedia"
         minSdk = 28
         versionCode = 1
-        versionName = "1.0"
+        versionName = "0.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -71,6 +71,8 @@ dependencies {
     implementation("com.google.firebase:firebase-auth-ktx")
     /** DataStore **/
     implementation(libs.datastore.preferences)
+    /** Constraint Layout **/
+    implementation("androidx.constraintlayout:constraintlayout-compose:1.0.1")
     /** Core **/
     implementation(libs.core.ktx)
     implementation(libs.lifecycle.runtime.ktx)

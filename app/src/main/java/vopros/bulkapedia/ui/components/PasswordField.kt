@@ -23,6 +23,7 @@ import vopros.bulkapedia.ui.theme.BulkaPediaTheme
 
 @Composable
 fun OutlinedTextField(
+    modifier: Modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp),
     state: MutableState<String>,
     label: Int,
     isError: Boolean = false
@@ -30,9 +31,7 @@ fun OutlinedTextField(
     OutlinedTextField(
         value = state.value,
         onValueChange = { state.value = it },
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 20.dp),
+        modifier = modifier,
         label = { Text(label) },
         isError = isError,
         colors = TextFieldDefaults.outlinedTextFieldColors(

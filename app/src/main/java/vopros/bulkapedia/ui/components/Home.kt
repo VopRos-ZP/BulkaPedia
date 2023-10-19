@@ -26,6 +26,7 @@ import vopros.bulkapedia.ui.screens.destinations.MapScreenDestination
 import vopros.bulkapedia.ui.screens.destinations.MapsScreenDestination
 import vopros.bulkapedia.ui.screens.destinations.ProfileControllerScreenDestination
 import vopros.bulkapedia.ui.screens.destinations.ProfileScreenDestination
+import vopros.bulkapedia.ui.screens.destinations.RegistrationScreenDestination
 import vopros.bulkapedia.ui.screens.destinations.SettingsScreenDestination
 import vopros.bulkapedia.ui.screens.hero.HeroViewModel
 import vopros.bulkapedia.ui.screens.heroInfo.HeroInfoViewModel
@@ -35,6 +36,7 @@ import vopros.bulkapedia.ui.screens.map.MapViewModel
 import vopros.bulkapedia.ui.screens.maps.MapsViewModel
 import vopros.bulkapedia.ui.screens.profile.ProfileViewModel
 import vopros.bulkapedia.ui.screens.profileController.ProfileControllerViewModel
+import vopros.bulkapedia.ui.screens.registration.RegistrationViewModel
 import vopros.bulkapedia.ui.screens.settings.SettingsViewModel
 import vopros.bulkapedia.ui.theme.LocalNavController
 import vopros.bulkapedia.ui.theme.LocalTopBarViewModel
@@ -49,7 +51,7 @@ fun Home() {
         Scaffold(
             modifier = Modifier.fillMaxSize(),
             topBar = { TopBar() },
-            bottomBar = { BottomNavigation(navController) }
+            bottomBar = { BottomNavigation(navController) },
         ) {
             DestinationsNavHost(
                 navGraph = NavGraphs.root,
@@ -74,6 +76,7 @@ fun Home() {
                     dependency(ProfileScreenDestination) { hiltViewModel<ProfileViewModel>() }
                     /* Auth */
                     dependency(LoginScreenDestination) { hiltViewModel<LoginViewModel>() }
+                    dependency(RegistrationScreenDestination) { hiltViewModel<RegistrationViewModel>() }
                     /* Settings */
                     dependency(SettingsScreenDestination) { hiltViewModel<SettingsViewModel>() }
                 }

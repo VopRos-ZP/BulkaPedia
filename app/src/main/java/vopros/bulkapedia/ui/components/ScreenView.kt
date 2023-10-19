@@ -22,7 +22,7 @@ inline fun <reified V: ErrViewModel> ScreenView(
     showBack: Boolean = false,
     viewModel: V = hiltViewModel(),
     key: Any? = null,
-    crossinline fetch: V.() -> Unit,
+    crossinline fetch: V.() -> Unit = {},
     crossinline content: @Composable BoxScope.() -> Unit
 ) {
     ScreenView(
@@ -40,7 +40,7 @@ inline fun <reified V: ErrViewModel> ScreenView(
     title: String, showBack: Boolean = false,
     viewModel: V = hiltViewModel(),
     key: Any? = null,
-    crossinline fetch: V.() -> Unit,
+    crossinline fetch: V.() -> Unit = {},
     crossinline content: @Composable BoxScope.() -> Unit
 ) {
     val topBarViewModel = LocalTopBarViewModel.current

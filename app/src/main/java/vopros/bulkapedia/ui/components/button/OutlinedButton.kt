@@ -33,13 +33,15 @@ fun OutlinedButton(
     text: Int,
     modifier: Modifier = Modifier,
     bgColor: Color = Color.Transparent,
-    color: Color = BulkaPediaTheme.colors.tintColor
+    color: Color = BulkaPediaTheme.colors.tintColor,
+    enabled: Boolean = true,
 ) {
     OutlinedButton(
         onClick = onClick,
         modifier = modifier,
         bgColor = bgColor,
-        color = color
+        color = color,
+        enabled = enabled
     ) { Text(text, color = color) }
 }
 
@@ -49,6 +51,7 @@ fun OutlinedButton(
     modifier: Modifier = Modifier,
     bgColor: Color = Color.Transparent,
     color: Color = BulkaPediaTheme.colors.tintColor,
+    enabled: Boolean = true,
     content: @Composable RowScope.() -> Unit
 ) {
     androidx.compose.material.OutlinedButton(
@@ -57,7 +60,8 @@ fun OutlinedButton(
         border = BorderStroke(2.dp, color),
         colors = ButtonDefaults.outlinedButtonColors(
             backgroundColor = bgColor
-        )
+        ),
+        enabled = enabled
     ) {
         Row(
             horizontalArrangement = Arrangement.spacedBy(5.dp),
