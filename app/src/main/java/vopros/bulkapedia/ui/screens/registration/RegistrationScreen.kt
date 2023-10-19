@@ -1,11 +1,14 @@
 package vopros.bulkapedia.ui.screens.registration
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -14,6 +17,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import vopros.bulkapedia.R
 import vopros.bulkapedia.ui.components.OutlinedTextField
 import vopros.bulkapedia.ui.components.PasswordField
@@ -55,11 +59,13 @@ fun RegistrationScreen_Preview() {
 
 @Destination
 @Composable
-fun RegistrationScreen(viewModel: RegistrationViewModel) {
+fun RegistrationScreen(navigator: DestinationsNavigator, viewModel: RegistrationViewModel) {
     val emailState = remember { mutableStateOf("") }
     val passwordState = remember { mutableStateOf("") }
     val repeatPasswordState = remember { mutableStateOf("") }
     val nicknameState = remember { mutableStateOf("") }
+    val err = viewModel.error.collectAsState()
+    LaunchedEffect(err.value) { Log.d("RegScreen", err.value) }
     ScreenView(
         title = R.string.registration,
         showBack = true,
@@ -85,10 +91,11 @@ fun RegistrationScreen(viewModel: RegistrationViewModel) {
                 PasswordField(state = repeatPasswordState, label = R.string.hint_password)
             }
             OutlinedButton(onClick = {
-                viewModel.register(emailState.value, passwordState.value, nicknameState.value)
+                viewModel.register(emailState.value, passwordState.value, nicknameState.value) {
+                    navigator.navigateUp()
+                }
             },
                 text = R.string.registration,
-                enabled = passwordState.value == repeatPasswordState.value
             )
         }
     }

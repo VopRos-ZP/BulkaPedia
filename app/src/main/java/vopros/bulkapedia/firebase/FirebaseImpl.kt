@@ -50,10 +50,12 @@ open class FirebaseImpl<T: Entity>(
     }
 
     override suspend fun update(t: T) {
-        when (t.id) {
+        val doc = when (t.id) {
             "" -> ref.document()
             else -> ref.document(t.id)
-        }.set(t.toData()).await()
+        }
+        val data = t.toData()
+        doc.set(data).await()
     }
 
     override suspend fun delete(t: T) {

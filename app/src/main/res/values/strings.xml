@@ -136,11 +136,14 @@
     <string name="slayer">Slayer</string>
     <string name="mirage">Mirage</string>
     <string name="lynx">Lynx</string>
+    <!--    Танки -->
     <string name="smog">Smog</string>
     <string name="dragoon">Dragoon</string>
     <string name="bastion">Bastion</string>
     <string name="bertha">Bertha</string>
     <string name="leviathan">Leviathan</string>
+    <string name="ramsey">Ramsey</string>
+    <!--   Штурмовики -->
     <string name="stalker">Stalker</string>
     <string name="doc">Doc</string>
     <string name="tess">Tess</string>

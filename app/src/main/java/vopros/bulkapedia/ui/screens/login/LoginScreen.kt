@@ -17,22 +17,25 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import vopros.bulkapedia.R
 import vopros.bulkapedia.ui.components.OutlinedTextField
 import vopros.bulkapedia.ui.components.PasswordField
 import vopros.bulkapedia.ui.components.ScreenView
 import vopros.bulkapedia.ui.components.Text
+import vopros.bulkapedia.ui.components.button.OutlinedButton
+import vopros.bulkapedia.ui.screens.destinations.ProfileScreenDestination
+import vopros.bulkapedia.ui.screens.destinations.RegistrationScreenDestination
 
 @Destination
 @Composable
-fun LoginScreen(viewModel: LoginViewModel) {
+fun LoginScreen(navigator: DestinationsNavigator, viewModel: LoginViewModel) {
     val email = remember { mutableStateOf("") }
     val password = remember { mutableStateOf("") }
     val config by viewModel.config.collectAsState()
     ScreenView(
         title = R.string.login,
         viewModel = viewModel,
-        fetch = {  }
     ) {
         Column(
             modifier = Modifier.fillMaxSize(),
@@ -61,11 +64,15 @@ fun LoginScreen(viewModel: LoginViewModel) {
             Button(onClick = { viewModel.login(email.value, password.value) }) {
                 Text(R.string.login)
             }
+            OutlinedButton(
+                onClick = { navigator.navigate(RegistrationScreenDestination()) },
+                text = R.string.registration
+            )
         }
     }
     LaunchedEffect(config) {
         if (config.second) {
-
+            navigator.navigate(ProfileScreenDestination(config.first))
         }
     }
 }
