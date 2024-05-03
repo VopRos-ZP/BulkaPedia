@@ -13,6 +13,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Bulkapedia"
+rootProject.name = "BulkaPedia"
 include(":app")
- 

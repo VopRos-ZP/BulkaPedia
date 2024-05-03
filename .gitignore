@@ -1,6 +1,5 @@
 *.iml
-/.gradle/
-/gradle/wrapper/
+.gradle
 /local.properties
 /.idea/
 .DS_Store

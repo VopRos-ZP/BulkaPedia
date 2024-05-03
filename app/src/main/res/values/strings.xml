@@ -15,8 +15,10 @@
     <string name="menu_workshop">Workshop</string>
     <string name="show_spawns">Show spawns</string>
     <string name="hide_spawns">Hide spawns</string>
-    <!--   найстройки -->
+    <!--   настройки -->
     <string name="settings_text">Text</string>
+    <string name="confidentiality">Сonfidentiality</string>
+    <string name="close">Close</string>
     <string name="profile">Profile</string>
     <string name="account">Account</string>
     <string name="your_sets">Your sets</string>
@@ -254,6 +256,7 @@
     <string name="winrate">Win rate</string>
     <string name="revives">Revives</string>
     <string name="hide">Click to hide</string>
+    <string name="need_login_for_use_it">You must be logged in</string>
     <string name="call_with_dev">Developer\ncontact</string>
     <string name="enter_text">Enter text</string>
     <string name="chat">Chat</string>
