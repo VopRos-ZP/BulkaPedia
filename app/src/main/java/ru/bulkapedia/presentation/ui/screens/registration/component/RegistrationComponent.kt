@@ -9,8 +9,12 @@ interface RegistrationComponent {
 
     fun onEmailChanged(email: String)
     fun onPasswordChanged(password: String)
+    fun toggleShowPassword()
     fun onConfirmPasswordChanged(confirmPassword: String)
+    fun toggleShowConfirmPassword()
     fun onNicknameChanged(nickname: String)
     fun onNavBackClick()
     fun onRegistrationClick()
+    fun onCloseError()
+
 }

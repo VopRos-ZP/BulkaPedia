@@ -6,12 +6,14 @@ import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.coroutines.coroutineExecutorFactory
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.launch
+import ru.bulkapedia.di.qualifiers.DefaultSF
 import ru.bulkapedia.domain.model.User
 import ru.bulkapedia.domain.repository.AuthRepository
 import ru.bulkapedia.domain.repository.UserRepository
 import javax.inject.Inject
 
 class RegistrationStoreFactory @Inject constructor(
+    @DefaultSF
     private val storeFactory: StoreFactory,
     private val authRepository: AuthRepository,
     private val userRepository: UserRepository
@@ -28,6 +30,12 @@ class RegistrationStoreFactory @Inject constructor(
                 onIntent<Registration.Intent.ConfirmPasswordChanged> { dispatch(Registration.Msg.ConfirmPasswordChanged(it.value)) }
                 onIntent<Registration.Intent.NicknameChanged> { dispatch(Registration.Msg.NicknameChanged(it.value)) }
                 onIntent<Registration.Intent.NavigationBackClick> { publish(Registration.Label.BackToLogin) }
+                onIntent<Registration.Intent.ToggleShowPassword> {
+                    dispatch(Registration.Msg.ShowPasswordChanged(!state().isShowPassword))
+                }
+                onIntent<Registration.Intent.ToggleShowConfirmPassword> {
+                    dispatch(Registration.Msg.ShowPasswordChanged(!state().isShowConfirmPassword))
+                }
                 onIntent<Registration.Intent.RegistrationClick> {
                     val handler = CoroutineExceptionHandler { _, throwable ->
                         Log.e("RegistrationStore", throwable.stackTraceToString())
@@ -36,7 +44,7 @@ class RegistrationStoreFactory @Inject constructor(
                     }
                     launch(handler) {
                         authRepository.signUp(state().email, state().password)?.let { uid ->
-                            userRepository.upsert(User(id = uid, nickname = state().nickname,))
+                            userRepository.upsert(User(id = uid, nickname = state().nickname))
                         }
                     }
                 }
@@ -48,6 +56,8 @@ class RegistrationStoreFactory @Inject constructor(
                     is Registration.Msg.ErrorChanged -> copy(error = it.value)
                     is Registration.Msg.NicknameChanged -> copy(nickname = it.value)
                     is Registration.Msg.PasswordChanged -> copy(password = it.value)
+                    is Registration.Msg.ShowPasswordChanged -> copy(isShowPassword = it.value)
+                    is Registration.Msg.ShowConfirmPasswordChanged -> copy(isShowConfirmPassword = it.value)
                 }
             }
         ) {}

@@ -4,6 +4,9 @@ import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.mvikotlin.core.instancekeeper.getStore
 import com.arkivanov.mvikotlin.extensions.coroutines.labels
 import com.arkivanov.mvikotlin.extensions.coroutines.stateFlow
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -12,10 +15,10 @@ import ru.bulkapedia.presentation.ui.screens.registration.mvi.Registration
 import ru.bulkapedia.presentation.ui.screens.registration.mvi.RegistrationStoreFactory
 import javax.inject.Inject
 
-class DefaultRegistrationComponent @Inject constructor(
+class DefaultRegistrationComponent @AssistedInject constructor(
     private val registrationStoreFactory: RegistrationStoreFactory,
-    private val onBackClick: () -> Unit,
-    private val onSuccess: () -> Unit,
+    @Assisted("onNavBackClick") private val onNavBackClick: () -> Unit,
+    @Assisted("onSuccess") private val onSuccess: () -> Unit,
     context: ComponentContext
 ) : RegistrationComponent, ComponentContext by context {
 
@@ -26,7 +29,7 @@ class DefaultRegistrationComponent @Inject constructor(
         scope.launch {
             store.labels.collect {
                 when (it) {
-                    Registration.Label.BackToLogin -> onBackClick()
+                    Registration.Label.BackToLogin -> onNavBackClick()
                     Registration.Label.Success -> onSuccess()
                 }
             }
@@ -44,8 +47,16 @@ class DefaultRegistrationComponent @Inject constructor(
         store.accept(Registration.Intent.PasswordChanged(password))
     }
 
+    override fun toggleShowPassword() {
+        store.accept(Registration.Intent.ToggleShowPassword)
+    }
+
     override fun onConfirmPasswordChanged(confirmPassword: String) {
         store.accept(Registration.Intent.ConfirmPasswordChanged(confirmPassword))
+    }
+
+    override fun toggleShowConfirmPassword() {
+        store.accept(Registration.Intent.ToggleShowConfirmPassword)
     }
 
     override fun onNicknameChanged(nickname: String) {
@@ -58,6 +69,20 @@ class DefaultRegistrationComponent @Inject constructor(
 
     override fun onRegistrationClick() {
         store.accept(Registration.Intent.RegistrationClick)
+    }
+
+    override fun onCloseError() {
+        store.accept(Registration.Intent.ErrorChanged)
+    }
+
+    @AssistedFactory
+    interface Factory {
+
+        fun create(
+            @Assisted("onNavBackClick") onNavBackClick: () -> Unit,
+            @Assisted("onSuccess") onSuccess: () -> Unit,
+        ): DefaultRegistrationComponent
+
     }
 
 }

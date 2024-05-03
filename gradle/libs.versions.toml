@@ -89,6 +89,6 @@ core = ["androidx-core", "lifecycle-runtime-ktx"]
 compose = ["androidx-foundation", "androidx-runtime", "androidx-material",
     "androidx-material-icons-extended", "androidx-ui", "androidx-ui-graphics",
     "androidx-ui-tooling", "androidx-ui-tooling-preview", "androidx-lifecycle-viewmodel-compose"]
-firebase = ["firebase-auth", "firebase-storage", "firebase-firestore", "firebase-crashlytics", "firebase-analytics"]
+firebase = ["firebase-auth", "firebase-storage", "firebase-firestore", "firebase-analytics"]
 decompose = ["decompose", "decompose-jetpack"]
 mvikotlin = ["mvikotlin", "mvikotlin-rx", "mvikotlin-main", "mvikotlin-logging", "mvikotlin-extensions-coroutines"]

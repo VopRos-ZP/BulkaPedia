@@ -1,15 +1,11 @@
 package ru.bulkapedia.presentation.components
 
 import kotlinx.coroutines.flow.StateFlow
+import ru.bulkapedia.presentation.ui.screens.login.mvi.Login
 
 interface LoginComponent {
 
-    data class Model(
-        val email: String,
-        val password: String
-    )
-
-    val model: StateFlow<Model>
+    val model: StateFlow<Login.State>
 
     fun onEmailChanged(email: String)
 

@@ -1,12 +1,8 @@
 package ru.bulkapedia.presentation.ui.screens.root
 
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.Login
-import androidx.compose.material.icons.filled.Book
-import androidx.compose.material.icons.filled.Window
-import androidx.compose.material.icons.outlined.SportsEsports
 import androidx.compose.material3.Icon
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
@@ -16,48 +12,39 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.compose.rememberNavController
-import ru.bulkapedia.presentation.def.DefaultRootComponent
-import ru.bulkapedia.presentation.screens.Screen
-import ru.bulkapedia.presentation.ui.navigation.AppNavGraph
+import com.arkivanov.decompose.extensions.compose.jetpack.stack.Children
+import com.arkivanov.decompose.extensions.compose.jetpack.subscribeAsState
+import com.arkivanov.decompose.router.stack.backStack
+import com.arkivanov.decompose.router.stack.items
+import ru.bulkapedia.presentation.ui.screens.categories.CategoriesScreen
+import ru.bulkapedia.presentation.ui.screens.login.LoginScreen
 
 @Composable
-fun RootContent() {
-    val navHostController = rememberNavController()
-
-    val items = listOf(
-        Screen.WIKI to Icons.Filled.Book,
-        Screen.TOURNAMENTS to Icons.Outlined.SportsEsports,
-        Screen.AUTH to Icons.AutoMirrored.Filled.Login
-    )
+fun RootContent(component: RootComponent) {
     Scaffold(
         topBar = {},
-        bottomBar = {
-            BottomNavigationBar(
-                navHostController = navHostController,
-                items = items
-            )
-        }
+        bottomBar = { BottomNavigationBar(component = component) }
     ) {
-        AppNavGraph(
-            navHostController = navHostController,
+        Children(
+            stack = component.stack,
             modifier = Modifier.padding(it)
-        )
+        ) { child ->
+            when (val instance = child.instance) {
+                is RootComponent.Child.Categories -> CategoriesScreen(component = instance.component)
+                is RootComponent.Child.Login -> LoginScreen(component = instance.component)
+            }
+        }
     }
 }
 
 @Composable
-fun BottomNavigationBar(
-    navHostController: NavHostController,
-    items: List<Pair<Screen, ImageVector>>
-) {
-    val backStackEntry by navHostController.currentBackStackEntryAsState()
+fun BottomNavigationBar(component: RootComponent) {
     NavigationBar {
-        items.forEach { (screen, icon) ->
+        component.stack.items.forEach {
             NavigationBarItem(
-                selected = backStackEntry?.destination?.route == screen.route,
-                onClick = { navHostController.navigate(screen.route) },
-                icon = { Icon(imageVector = icon, contentDescription = null) }
+                selected = component.stack.backStack.last() == it,
+                onClick = {  },
+                icon = { /*Icon(imageVector = icon, contentDescription = null)*/ }
             )
         }
     }

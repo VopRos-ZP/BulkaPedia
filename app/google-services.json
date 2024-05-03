@@ -1,21 +1,21 @@
 {
   "project_info": {
-    "project_number": "762230958326",
-    "project_id": "bulkapedia-66ef5",
-    "storage_bucket": "bulkapedia-66ef5.appspot.com"
+    "project_number": "133575962034",
+    "project_id": "bullet-echo-books",
+    "storage_bucket": "bullet-echo-books.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:762230958326:android:9558f29648b50d35a9e4d7",
+        "mobilesdk_app_id": "1:133575962034:android:7f846a62014ffc15db08ab",
         "android_client_info": {
-          "package_name": "vopros.bulkapedia"
+          "package_name": "ru.bulkapedia"
         }
       },
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyCBfe1lQIQpy8y5UjccR6ep9NBcuf_mWAQ"
+          "current_key": "AIzaSyC3jJMrtELhe9De6hWAubVNc4eoQtrkVXQ"
         }
       ],
       "services": {

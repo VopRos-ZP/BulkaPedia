@@ -24,10 +24,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import ru.bulkapedia.presentation.components.LoginComponent
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LoginScreen() {
+fun LoginScreen(component: LoginComponent) {
     Scaffold(
         topBar = { CenterAlignedTopAppBar(title = { Text(text = "Авторизация") }) }
     ) {

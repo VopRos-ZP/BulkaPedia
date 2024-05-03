@@ -86,7 +86,7 @@ class ResourceManager {
 
         // map modes
         "battle_royale" to R.string.battle_royale_mode,
-        "king_of_hill" to R.string.kings_of_hill_mode,
+        "king_of_the_hill" to R.string.kings_of_hill_mode,
         "squad" to R.string.squad_mode,
         "sabotage" to R.string.sabotage_mode,
         /* Map names */

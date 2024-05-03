@@ -7,6 +7,7 @@ import com.arkivanov.mvikotlin.extensions.coroutines.coroutineBootstrapper
 import com.arkivanov.mvikotlin.extensions.coroutines.coroutineExecutorFactory
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.launch
+import ru.bulkapedia.di.qualifiers.DefaultSF
 import ru.bulkapedia.domain.model.GameMap
 import ru.bulkapedia.domain.repository.MapsRepository
 import ru.bulkapedia.presentation.ui.screens.map.mvi.MapStore.Intent
@@ -15,6 +16,7 @@ import ru.bulkapedia.presentation.ui.screens.map.mvi.MapStore.State
 import javax.inject.Inject
 
 class MapStoreFactory @Inject constructor(
+    @DefaultSF
     private val storeFactory: StoreFactory,
     private val mapsRepository: MapsRepository
 ) {

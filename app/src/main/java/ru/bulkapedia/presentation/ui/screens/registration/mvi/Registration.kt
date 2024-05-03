@@ -5,7 +5,9 @@ object Registration {
     data class State(
         val email: String = "",
         val password: String = "",
+        val isShowPassword: Boolean = false,
         val confirmPassword: String = "",
+        val isShowConfirmPassword: Boolean = false,
         val nickname: String = "",
         val error: String? = null
     )
@@ -18,6 +20,8 @@ object Registration {
         data object ErrorChanged : Intent
         data object RegistrationClick : Intent
         data object NavigationBackClick : Intent
+        data object ToggleShowPassword : Intent
+        data object ToggleShowConfirmPassword : Intent
     }
 
     sealed interface Label {
@@ -31,6 +35,8 @@ object Registration {
         data class ConfirmPasswordChanged(val value: String) : Msg
         data class NicknameChanged(val value: String) : Msg
         data class ErrorChanged(val value: String?) : Msg
+        data class ShowPasswordChanged(val value: Boolean) : Msg
+        data class ShowConfirmPasswordChanged(val value: Boolean) : Msg
     }
 
     sealed interface Action
