@@ -1,7 +1,5 @@
 package ru.bulkapedia.presentation.screens.signIn.mvi
 
-import com.ramcosta.composedestinations.spec.Direction
-
 class SignIn {
 
     sealed interface Intent {
@@ -19,7 +17,7 @@ class SignIn {
     )
 
     sealed interface Label {
-        data class Navigate(val direction: Direction): Label
+        data class Navigate(val direction: String): Label
         data class Snackbar(val message: String): Label
     }
 

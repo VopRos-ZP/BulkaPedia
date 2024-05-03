@@ -1,64 +1,56 @@
 package ru.bulkapedia.data.repository
 
-import io.github.jan.supabase.annotations.SupabaseExperimental
-import io.github.jan.supabase.postgrest.Postgrest
-import io.github.jan.supabase.postgrest.query.PostgrestRequestBuilder
-import io.github.jan.supabase.realtime.Realtime
-import io.github.jan.supabase.realtime.channel
-import io.github.jan.supabase.realtime.postgresListDataFlow
-import io.github.jan.supabase.realtime.postgresSingleDataFlow
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.firestore.snapshots
+import com.google.firebase.firestore.toObject
+import com.google.firebase.firestore.toObjects
+import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.tasks.await
 import ru.bulkapedia.domain.model.User
 import ru.bulkapedia.domain.repository.UserRepository
 import ru.bulkapedia.domain.utils.Table
 import javax.inject.Inject
 
-class UserRepositoryImpl @Inject constructor(
-    private val postgrest: Postgrest,
-    realtime: Realtime
-) : UserRepository {
+class UserRepositoryImpl @Inject constructor() : UserRepository {
 
-    private val channel = realtime.channel("users")
     private val table = Table.USERS
-    private val eqFilter: PostgrestRequestBuilder.(String) -> Unit = { id -> filter { User::id eq id } }
+    private val collection = Firebase.firestore.collection(table)
 
     override suspend fun fetchAll(): List<User> {
-        return postgrest.from(table)
-            .select()
-            .decodeList()
+        return collection.get().await().toObjects()
     }
 
     override suspend fun fetchById(id: String): User {
-        return postgrest.from(table)
-            .select { eqFilter(this, id) }
-            .decodeSingle()
+        return collection.document(id).get().await().toObject()!!
     }
 
     override suspend fun upsert(user: User) {
-        postgrest.from(table).upsert(user)
+
     }
 
     override suspend fun delete(id: String) {
-        postgrest.from(table).delete { eqFilter(this, id) }
+        collection.document(id).delete().await()
     }
 
-    @OptIn(SupabaseExperimental::class)
     override suspend fun listenAll(): Flow<List<User>> {
-        return channel.postgresListDataFlow(table = table, primaryKey = User::id)
+        return collection.snapshots().map { it.toObjects() }
     }
 
-    @OptIn(SupabaseExperimental::class)
     override suspend fun listenById(id: String): Flow<User> {
-        return channel.postgresSingleDataFlow(table = table, primaryKey = User::id) {
-            User::id eq id
+        return callbackFlow {
+            awaitClose {  }
         }
     }
 
     override suspend fun subscribe() {
-        channel.subscribe()
+
     }
 
     override suspend fun dispose() {
-        channel.unsubscribe()
+
     }
 }

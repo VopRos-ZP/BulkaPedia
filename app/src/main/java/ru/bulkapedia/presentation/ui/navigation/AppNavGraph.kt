@@ -19,7 +19,7 @@ fun AppNavGraph(
         modifier = modifier
     ) {
         composable(Screen.WIKI.route) {
-            CategoriesScreen()
+            //CategoriesScreen()
         }
         composable(Screen.TOURNAMENTS.route) {
 

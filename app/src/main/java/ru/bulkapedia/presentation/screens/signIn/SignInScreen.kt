@@ -19,15 +19,11 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.arkivanov.mvikotlin.extensions.coroutines.labels
 import com.arkivanov.mvikotlin.extensions.coroutines.stateFlow
-import com.ramcosta.composedestinations.annotation.Destination
 import ru.bulkapedia.presentation.screens.signIn.mvi.SignIn
 import ru.bulkapedia.R
-import com.ramcosta.composedestinations.annotation.RootNavGraph
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 @OptIn(ExperimentalCoroutinesApi::class)
-@RootNavGraph(start = true)
-@Destination
 @Composable
 fun SignInScreen(
     viewModel: SignInViewModel = hiltViewModel<SignInViewModel>()

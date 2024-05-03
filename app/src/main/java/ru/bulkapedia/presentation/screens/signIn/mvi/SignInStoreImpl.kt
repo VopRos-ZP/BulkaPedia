@@ -9,7 +9,6 @@ import ru.bulkapedia.di.qualifiers.LoggingSF
 import ru.bulkapedia.domain.repository.AuthRepository
 import javax.inject.Inject
 
-@OptIn(ExperimentalMviKotlinApi::class)
 class SignInStoreImpl @Inject constructor(
     @LoggingSF
     private val storeFactory: StoreFactory,
@@ -28,10 +27,7 @@ by storeFactory.create<SignIn.Intent, Nothing, SignIn.Msg, SignIn.State, SignIn.
         onIntent<SignIn.Intent.LoginClick> {
             launch {
                 try {
-                    when (authRepository.signIn(state.email, state.password)) {
-                        true -> {/*publish(SignIn.Label.Navigate())*/}
-                        else -> {}
-                    }
+                    authRepository.signIn(state().email, state().password)
                 } catch (e: Exception) {
                     dispatch(SignIn.Msg.Error(e.localizedMessage))
                 }
