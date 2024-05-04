@@ -116,11 +116,11 @@ class ResourceManager {
         "village" to R.string.village,
         "wreckage_point" to R.string.wrackage_point,
 
-        "tanks" to R.string.tanks,
-        "scouts" to R.string.scouts,
-        "snipers" to R.string.snipers,
-        "troopers" to R.string.troopers,
-        "shortguns" to R.string.shortguns,
+        "tank" to R.string.tanks,
+        "scout" to R.string.scouts,
+        "sniper" to R.string.snipers,
+        "trooper" to R.string.troopers,
+        "shortgun" to R.string.shortguns,
     )
 
     fun fromSource(id: Int): String {

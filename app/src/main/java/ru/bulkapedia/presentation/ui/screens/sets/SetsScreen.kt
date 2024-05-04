@@ -1,4 +1,4 @@
-package ru.bulkapedia.presentation.ui.screens.maps
+package ru.bulkapedia.presentation.ui.screens.sets
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -18,45 +18,43 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
-import ru.bulkapedia.domain.model.GameMap
-import ru.bulkapedia.domain.model.MapMode
-import ru.bulkapedia.domain.utils.Utils.resourceManager
+import ru.bulkapedia.domain.model.Hero
+import ru.bulkapedia.domain.model.HeroType
+import ru.bulkapedia.domain.utils.Utils
 import ru.bulkapedia.presentation.ui.alert.WithAlert
 import ru.bulkapedia.presentation.ui.components.ScaffoldToolbar
-import ru.bulkapedia.presentation.ui.navigation.Screen
 
 @Composable
-fun MapsScreen(
+fun SetsScreen(
     navController: NavController,
-    viewModel: MapsViewModel =  hiltViewModel()
+    viewModel: SetsViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsState()
-    ScaffoldToolbar(text = "Карты", navController) {
+    ScaffoldToolbar(text = "Сеты", navController) {
         WithAlert(message = state.error, onClose = viewModel::closeError)
         Column(modifier = Modifier.fillMaxSize()) {
-            val tags = MapMode.entries.toList()
+            val tags = HeroType.entries.toList()
             LazyRow(
                 modifier = Modifier.fillMaxWidth(),
                 contentPadding = PaddingValues(horizontal = 20.dp),
                 horizontalArrangement = Arrangement.spacedBy(5.dp)
             ) {
-                items(tags) { mode ->
-                    val isSelected = state.selectedMode == mode
+                items(tags) { type ->
+                    val isSelected = state.selectedHeroType == type
                     FilterChip(
                         selected = isSelected,
-                        onClick = { viewModel.filterMaps(if (isSelected) null else mode) },
-                        label = { Text(text = stringResource(resourceManager.toSource(mode.name.lowercase()))) }
+                        onClick = { viewModel.filterType(if (isSelected) null else type) },
+                        label = { Text(text = stringResource(Utils.resourceManager.toSource(type.name.lowercase()))) }
                     )
                 }
             }
-            val maps = state.selectedMode?.let { mode -> state.maps.filter { m -> m.mode == mode } } ?: state.maps
+            val heroes = state.selectedHeroType?.let { type -> state.heroes.filter { m -> m.type == type } } ?: state.heroes
             LazyVerticalGrid(
                 columns = GridCells.Fixed(2),
                 modifier = Modifier.fillMaxSize(),
@@ -64,33 +62,24 @@ fun MapsScreen(
                 verticalArrangement = Arrangement.spacedBy(20.dp),
                 horizontalArrangement = Arrangement.spacedBy(20.dp),
             ) {
-                items(maps) { map ->
-                    GameMapCard(map) { navController.navigate(Screen.Map(map.id).route) }
+                items(heroes) { hero ->
+                    HeroCard(hero) {}
                 }
             }
         }
     }
     LaunchedEffect(key1 = Unit) {
-        viewModel.fetchMaps()
+        viewModel.fetchHeroes()
     }
 }
 
 @Composable
-fun GameMapCard(map: GameMap, onClick: () -> Unit) {
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        onClick = onClick
-    ) {
-        Column(
-            modifier = Modifier.fillMaxWidth().padding(10.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(5.dp)
-        ) {
-            Text(text = stringResource(resourceManager.toSource(map.id)))
-            AsyncImage(
-                model = map.original,
-                contentDescription = null
-            )
-        }
+fun HeroCard(hero: Hero, onClick: () ->  Unit) {
+    Card(onClick = onClick) {
+        AsyncImage(
+            model = hero.image,
+            contentDescription = null,
+            modifier = Modifier.fillMaxSize().padding(top = 5.dp)
+        )
     }
 }

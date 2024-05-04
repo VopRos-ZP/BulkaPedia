@@ -13,17 +13,23 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import ru.bulkapedia.domain.model.Category
 import ru.bulkapedia.presentation.ui.screens.categories.component.CategoriesComponent
 
 @Composable
-fun CategoriesScreen(component: CategoriesComponent) {
-    val state by component.state.collectAsState()
+fun CategoriesScreen(
+    navController: NavController,
+    viewModel: CategoriesViewModel = hiltViewModel()
+) {
+    val state by viewModel.state.collectAsState()
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
@@ -35,7 +41,7 @@ fun CategoriesScreen(component: CategoriesComponent) {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             items(state.categories) {
-                CategoryCard(it) { component.onCategoryClick(it) }
+                CategoryCard(it) { navController.navigate(it.id) }
             }
         }
         if (state.error != null) {
@@ -43,12 +49,15 @@ fun CategoriesScreen(component: CategoriesComponent) {
                 onDismissRequest = {/* On click outside */},
                 text = { Text(text = state.error!!) },
                 confirmButton = {
-                    Button(onClick = { component.onCloseError() }) {
+                    Button(onClick = { viewModel.closeError() }) {
                         Text(text = "Закрыть")
                     }
                 }
             )
         }
+    }
+    LaunchedEffect(key1 = Unit) {
+        viewModel.fetchCategories()
     }
 }
 
@@ -57,6 +66,7 @@ fun CategoryCard(category: Category, onClick: () -> Unit) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         onClick = onClick,
+        enabled = category.enabled
     ) {
         Box(modifier = Modifier.padding(20.dp)) {
             Text(text = category.title)

@@ -5,10 +5,12 @@ import com.google.firebase.firestore.PropertyName
 
 data class CategoryDto(
     @DocumentId
-    var id: String = "",
-    var title: String = "",
+    val id: String = "",
+    val title: String = "",
+    @JvmField
     @PropertyName("is_enabled")
-    var enabled: Boolean = false,
+    val enabled: Boolean = false,
+    @JvmField
     @PropertyName("is_visible")
-    var visible: Boolean = false
+    val visible: Boolean = false
 )

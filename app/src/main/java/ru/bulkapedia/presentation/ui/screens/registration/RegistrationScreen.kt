@@ -27,20 +27,25 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import ru.bulkapedia.R
 import ru.bulkapedia.presentation.ui.alert.WithAlert
 import ru.bulkapedia.presentation.ui.screens.registration.component.RegistrationComponent
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RegistrationScreen(component: RegistrationComponent) {
-    val state by component.state.collectAsState()
+fun RegistrationScreen(
+    navController: NavController,
+    viewModel: RegistrationViewModel = hiltViewModel(),
+) {
+    val state by viewModel.state.collectAsState()
     Scaffold(
         topBar = {
             TopAppBar(
                 title = { Text(text = "Регистрация") },
                 navigationIcon = {
-                    IconButton(onClick = component::onNavBackClick) {
+                    IconButton(onClick = { navController.navigateUp() }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Default.ArrowBack,
                             contentDescription = null
@@ -56,20 +61,20 @@ fun RegistrationScreen(component: RegistrationComponent) {
                 .padding(it),
             contentAlignment = Alignment.Center
         ) {
-            WithAlert(message = state.error, onClose = component::onCloseError)
+            WithAlert(message = state.error, onClose = viewModel::closeError)
             Column(
                 verticalArrangement = Arrangement.spacedBy(20.dp)
             ) {
                 OutlinedTextField(
                     value = state.email,
-                    onValueChange = component::onEmailChanged,
+                    onValueChange = viewModel::emailChanged,
                     modifier = Modifier.fillMaxWidth(),
                     singleLine = true,
                     placeholder = { Text(text = "Введите почту") }
                 )
                 OutlinedTextField(
                     value = state.password,
-                    onValueChange = component::onPasswordChanged,
+                    onValueChange = viewModel::passwordChanged,
                     modifier = Modifier.fillMaxWidth(),
                     singleLine = true,
                     placeholder = { Text(text = "Введите пароль") },
@@ -80,14 +85,14 @@ fun RegistrationScreen(component: RegistrationComponent) {
                             true -> Icons.Default.VisibilityOff
                             else -> Icons.Default.Visibility
                         }
-                        IconButton(onClick = component::toggleShowPassword) {
+                        IconButton(onClick = viewModel::toggleShowPassword) {
                             Icon(imageVector = icon, contentDescription = null)
                         }
                     }
                 )
                 OutlinedTextField(
                     value = state.confirmPassword,
-                    onValueChange = component::onConfirmPasswordChanged,
+                    onValueChange = viewModel::confirmPasswordChanged,
                     modifier = Modifier.fillMaxWidth(),
                     singleLine = true,
                     placeholder = { Text(text = "Повторите пароль") },
@@ -98,19 +103,19 @@ fun RegistrationScreen(component: RegistrationComponent) {
                             true -> Icons.Default.VisibilityOff
                             else -> Icons.Default.Visibility
                         }
-                        IconButton(onClick = component::toggleShowConfirmPassword) {
+                        IconButton(onClick = viewModel::toggleShowConfirmPassword) {
                             Icon(imageVector = icon, contentDescription = null)
                         }
                     }
                 )
                 OutlinedTextField(
                     value = state.nickname,
-                    onValueChange = component::onNicknameChanged,
+                    onValueChange = viewModel::nicknameChanged,
                     modifier = Modifier.fillMaxWidth(),
                     singleLine = true,
                     placeholder = { Text(text = "Введите игровой ник") }
                 )
-                Button(onClick = component::onRegistrationClick) {
+                Button(onClick = { viewModel.registrationClick {} }) {
                     Text(text = stringResource(id = R.string.registration))
                 }
             }
