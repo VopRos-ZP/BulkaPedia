@@ -1,0 +1,3 @@
+package ru.bulkapedia.presentation.screens.categories
+
+sealed interface CategoriesViewIntent

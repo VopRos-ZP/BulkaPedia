@@ -1,149 +1,94 @@
 plugins {
-    alias(libs.plugins.androidApplication)
-    alias(libs.plugins.kotlinAndroid)
-    alias(libs.plugins.googleServices)
-    alias(libs.plugins.hiltAndroid)
-    alias(libs.plugins.kotlinSerialization)
-    alias(libs.plugins.kotlinSafeArgs)
-    alias(libs.plugins.kotlinKapt)
+    alias(libs.plugins.android.application)
+    alias(libs.plugins.jetbrains.kotlin.android)
+    alias(libs.plugins.jetbrains.kotlin.serialization)
+    alias(libs.plugins.ksp)
 }
 
 android {
-    compileSdk = 33
+    namespace = "ru.bulkapedia"
+    compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.bulkapedia"
+        applicationId = "ru.bulkapedia"
         minSdk = 26
-        versionCode = 36
-        versionName = "0.3.6"
+        targetSdk = 34
+        versionCode = 1
+        versionName = "1.0"
+
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary = true
         }
     }
 
     buildTypes {
-        getByName("release") {
+        release {
             isMinifyEnabled = false
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
         }
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.4.6"
+    kotlinOptions {
+        jvmTarget = "${JavaVersion.VERSION_17}"
     }
     buildFeatures {
-        viewBinding = true
         compose = true
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.5.13"
     }
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
-    namespace = "com.bulkapedia"
 }
 
 dependencies {
-    /** Project **/
-    /** Categories **/
-    implementation(project(":categories:data"))
-    implementation(project(":categories:domain"))
-    //implementation(project(":categories:ui"))
-    /** Chat **/
-    implementation(project(":chat:data"))
-    implementation(project(":chat:domain"))
-    //implementation(project(":chat:ui"))
-    /** Comments **/
-    implementation(project(":comments:data"))
-    implementation(project(":comments:domain"))
-    //implementation(project(":comments:ui"))
-    /** Effects **/
-    implementation(project(":effects:data"))
-    implementation(project(":effects:domain"))
-    //implementation(project(":effects:ui"))
-    /** Gears **/
-    implementation(project(":gears:data"))
-    implementation(project(":gears:domain"))
-    //implementation(project(":gears:ui"))
-    /** Heroes **/
-    implementation(project(":heroes:data"))
-    implementation(project(":heroes:domain"))
-    //implementation(project(":heroes:ui"))
-    /** HeroInfo **/
-    implementation(project(":heroInfo:data"))
-    implementation(project(":heroInfo:domain"))
-    //implementation(project(":heroInfo:ui"))
-    /** Mains **/
-    implementation(project(":mains:data"))
-    implementation(project(":mains:domain"))
-    //implementation(project(":mains:ui"))
-    /** Maps **/
-    implementation(project(":maps:data"))
-    implementation(project(":maps:domain"))
-    //implementation(project(":maps:ui"))
-    /** Mechanics **/
-    implementation(project(":mechanics:data"))
-    implementation(project(":mechanics:domain"))
-    //implementation(project(":mechanics:ui"))
-    /** Sets **/
-    implementation(project(":sets:data"))
-    implementation(project(":sets:domain"))
-    //implementation(project(":sets:ui"))
-    /** Users **/
-    implementation(project(":users:data"))
-    implementation(project(":users:domain"))
-    //implementation(project(":users:ui"))
-    /** Core **/
-    implementation(project(":core:domain"))
-    /** Firebase (project) **/
-    implementation(project(":firebase:firestore"))
-    implementation(project(":firebase:database"))
-
-    /** Compose **/
-    implementation(platform(libs.compose.bom))
-    implementation(libs.androidx.foundation)
-    implementation(libs.androidx.runtime)
+    implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.lifecycle.runtime.ktx)
+    implementation(libs.androidx.activity.compose)
+    implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.ui)
+    implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
-    implementation(libs.androidx.material)
-    implementation(libs.androidx.material.icons.extended)
-    implementation(libs.androidx.lifecycle.viewmodel.compose)
-    implementation(libs.androidx.navigation.compose)
-    implementation(libs.androidx.constraintlayout.compose)
+    implementation(libs.androidx.material3)
+    implementation(libs.androidx.material3.icons)
+    implementation(libs.androidx.compose.navigation)
+    /** Koin **/
+    implementation(platform(libs.koin.bom))
+    implementation(libs.koin.core)
+    implementation(libs.koin.android)
+    implementation(libs.koin.compose)
+    /** Ktor **/
+    implementation(libs.ktor.cio)
+    /** Supabase **/
+    implementation(platform(libs.supabase.bom))
+    implementation(libs.supabase.gotrue)
+    implementation(libs.supabase.storage)
+    implementation(libs.supabase.postgres)
+    implementation(libs.supabase.realtime)
+    /** Room **/
+    implementation(libs.room.ktx)
+    implementation(libs.room.runtime)
+    ksp(libs.room.compiler)
+    /** MVI **/
+    implementation(libs.orbit.core)
+    implementation(libs.orbit.viewmodel)
+    implementation(libs.orbit.compose)
+    /** Test **/
+    testImplementation(libs.junit)
+    androidTestImplementation(libs.androidx.junit)
+    androidTestImplementation(libs.androidx.espresso.core)
+    androidTestImplementation(platform(libs.androidx.compose.bom))
+    androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
-    /** Coroutines **/
-    implementation(libs.kotlinx.coroutines.core)
-    implementation(libs.kotlinx.coroutines.android)
-    /** Json **/
-    implementation(libs.kotlinx.serialization.json)
-    /** AndroidX **/
-    implementation(libs.core.ktx)
-    implementation(libs.appcompat)
-    implementation(libs.navigation.runtime.ktx)
-    implementation(libs.lifecycle.runtime.ktx)
-    implementation(libs.androidx.navigation.fragment.ktx)
-    implementation(libs.androidx.navigation.ui.ktx)
-    implementation(libs.androidx.datastore.preferences)
-    /** Firebase **/
-    implementation(platform(libs.firebase.bom))
-    implementation(libs.firebase.database)
-    implementation(libs.firebase.firestore)
-    implementation(libs.firebase.storage)
-    implementation(libs.firebase.auth) {
-        exclude(module = "play-services-safetynet")
-    }
-    /** DI **/
-    implementation(libs.hilt.android)
-    implementation(libs.androidx.hilt.navigation.compose)
-    kapt(libs.hilt.compiler)// replace to ksp
-    /** In-App-Update **/
-    implementation(libs.app.update.ktx)
-    /** YouTube **/
-    implementation(libs.core)
-    /** Glide **/
-    implementation(libs.glide)
-    implementation(libs.compose)
+    debugImplementation(libs.androidx.ui.test.manifest)
 }
