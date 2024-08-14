@@ -25,7 +25,9 @@ class SupabaseWrapper {
         install(Auth)
         install(Storage)
         install(Realtime)
-        install(Postgrest)
+        install(Postgrest) {
+            this.defaultSchema = ConfigApp.PROD_SCHEMA
+        }
     }
 
     val auth = client.auth

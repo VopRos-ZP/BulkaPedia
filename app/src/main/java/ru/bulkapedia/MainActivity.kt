@@ -13,7 +13,6 @@ class MainActivity : ComponentActivity() {
     @OptIn(KoinExperimentalAPI::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
 
         setContent { KoinAndroidContext { MainScreen() } }
     }

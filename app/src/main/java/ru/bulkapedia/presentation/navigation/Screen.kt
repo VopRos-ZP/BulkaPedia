@@ -27,6 +27,10 @@ sealed class Screen(val route: String) {
 
         private const val ROUTE_CATEGORIES_FLOW = "categories_flow"
         private const val ROUTE_CATEGORIES = "categories"
+
+        const val ROUTE_SETS = "sets"
+        const val ROUTE_MECHANICS = "mechanics"
+
         private const val ROUTE_NOTIFICATIONS = "notifications"
 
         private const val ROUTE_PROFILE_FLOW = "profile_flow"

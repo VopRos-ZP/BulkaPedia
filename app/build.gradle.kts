@@ -79,6 +79,8 @@ dependencies {
     implementation(libs.room.ktx)
     implementation(libs.room.runtime)
     ksp(libs.room.compiler)
+    /** Coil **/
+    implementation(libs.coil.compose)
     /** MVI **/
     implementation(libs.orbit.core)
     implementation(libs.orbit.viewmodel)

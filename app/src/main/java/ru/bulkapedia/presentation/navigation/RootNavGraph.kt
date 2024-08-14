@@ -13,20 +13,30 @@ fun RootNavGraph(
     modifier: Modifier = Modifier,
     isLogin: Boolean = false,
     navController: NavHostController,
-    onNavigate: (Screen) -> Unit
+    onBack: () -> Unit,
+    onNavigate: (Screen) -> Unit,
 ) {
     NavHost(
         modifier = modifier,
         navController = navController,
         startDestination = Screen.CategoriesFlow.route,
     ) {
-        categoriesNavGraph(onNavigate = onNavigate)
+        categoriesNavGraph(
+            onBack = onBack,
+            onNavigate = onNavigate
+        )
         composable(route = Screen.Notifications.route) {
             NotificationsScreen(onNavigate = onNavigate)
         }
         when (isLogin) {
-            true -> profileNavGraph(onNavigate = onNavigate)
-            else -> loginNavGraph(onNavigate = onNavigate)
+            true -> profileNavGraph(
+
+                onNavigate = onNavigate
+            )
+            else -> loginNavGraph(
+                onBack = onBack,
+                onNavigate = onNavigate
+            )
         }
     }
 }

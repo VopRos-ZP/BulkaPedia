@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="language">ru</string>
+    <string name="language">Русский</string>
     <string name="select_hero">Выберите героя</string>
     <string name="select_map">Выберите карту</string>
     <string name="ignore_personal_gears">Игнорировать персональную снарягу</string>
     <string name="hide_effects">Скрыть эффекты</string>
     <string name="battle_royale_mode">Королевская Битва</string>
     <string name="squad_mode">Стенка</string>
-    <string name="kings_of_hill_mode">Царь горы</string>
-    <string name="all_modes">Универсальная</string>
+    <string name="king_of_hill_mode">Царь горы</string>
     <string name="menu_gears">Снаряжение</string>
     <string name="menu_maps">Карты</string>
     <string name="menu_workshop">Мастерская</string>
@@ -22,6 +21,7 @@
     <string name="account">Аккаунт</string>
     <string name="registration_login">Регистрация/Вход</string>
     <string name="login">Вход</string>
+    <string name="login_action">Войти</string>
     <string name="change_login">Именить логин</string>
     <string name="change_nickname">Именить ник</string>
     <string name="logout">Выход</string>
@@ -136,18 +136,21 @@
     <string name="slayer">Губитель</string>
     <string name="mirage">Мираж</string>
     <string name="lynx">Линкс</string>
+    <string name="blizzard">Вьюга</string>
     <!--   Танки -->
     <string name="smog">Смог</string>
     <string name="dragoon">Драгун</string>
     <string name="bastion">Бастион</string>
     <string name="bertha">Берта</string>
     <string name="leviathan">Левиафан</string>
+    <string name="ramsey">Рамзи</string>
     <!--   Штурмовики -->
     <string name="stalker">Сталкер</string>
     <string name="doc">Док</string>
     <string name="tess">Тесс</string>
     <string name="levi">Леви</string>
     <string name="satoshi">Сатоши</string>
+    <string name="vi">Ви</string>
     <!--   названия карт -->
     <!--   Кб -->
     <string name="hotel">Отель</string>
@@ -214,6 +217,7 @@
     <string name="show_buffs">Показать усиления</string>
     <string name="hide_buffs">Скрыть усиления</string>
     <string name="enter_email">Введите электронную почту</string>
+    <string name="enter_password">Введите пароль</string>
 
     <string name="health">Здоровье</string>
     <string name="armor">Броня</string>

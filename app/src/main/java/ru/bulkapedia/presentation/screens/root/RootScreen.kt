@@ -19,6 +19,7 @@ fun RootScreen() {
         RootNavGraph(
             modifier = Modifier.padding(it),
             navController = navController,
+            onBack = { navController.navigateUp() },
             onNavigate = { screen -> navController.navigate(screen.route) }
         )
     }

@@ -2,6 +2,7 @@ package ru.bulkapedia.presentation.screens.categories
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -16,7 +17,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import org.koin.androidx.compose.koinViewModel
-import ru.bulkapedia.domain.category.Category
+import ru.bulkapedia.domain.model.Category
 import ru.bulkapedia.presentation.navigation.Screen
 
 @Composable
@@ -32,7 +33,7 @@ fun CategoriesScreen(
     ) {
         items(state.categories) {
             CategoryItem(category = it) {
-                onNavigate(Screen.CategoryOf(it.title))
+                onNavigate(Screen.CategoryOf(it.route))
             }
         }
     }
@@ -45,12 +46,16 @@ fun CategoryItem(
 ) {
     Card(
         onClick = onClick,
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 20.dp),
+        modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(10.dp),
         enabled = category.isEnabled
     ) {
-        Text(text = category.title)
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 20.dp)
+        ) {
+            Text(text = category.title)
+        }
     }
 }

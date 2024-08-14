@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import ru.bulkapedia.domain.category.Category
+import ru.bulkapedia.domain.model.Category
 import ru.bulkapedia.domain.category.GetAllCategoryUseCase
 
 class CategoriesViewModel(
