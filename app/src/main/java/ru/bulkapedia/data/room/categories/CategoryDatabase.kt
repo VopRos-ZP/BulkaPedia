@@ -9,4 +9,8 @@ import androidx.room.RoomDatabase
 )
 abstract class CategoryDatabase : RoomDatabase() {
     abstract val dao: CategoryDao
+
+    companion object {
+        const val NAME = "category"
+    }
 }

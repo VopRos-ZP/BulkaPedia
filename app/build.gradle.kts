@@ -62,11 +62,13 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.androidx.material3.icons)
     implementation(libs.androidx.compose.navigation)
+    implementation(libs.androidx.workmanager)
     /** Koin **/
     implementation(platform(libs.koin.bom))
     implementation(libs.koin.core)
     implementation(libs.koin.android)
     implementation(libs.koin.compose)
+    implementation(libs.koin.workmanager)
     /** Ktor **/
     implementation(libs.ktor.cio)
     /** Supabase **/

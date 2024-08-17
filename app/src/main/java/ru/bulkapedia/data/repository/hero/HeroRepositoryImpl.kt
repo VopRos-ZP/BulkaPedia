@@ -1,19 +1,23 @@
 package ru.bulkapedia.data.repository.hero
 
-import io.github.jan.supabase.annotations.SupabaseExperimental
-import io.github.jan.supabase.realtime.selectAsFlow
-import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import ru.bulkapedia.data.SupabaseWrapper
+import ru.bulkapedia.data.room.heroes.HeroDatabase
+import ru.bulkapedia.data.room.heroes.HeroDto
+import ru.bulkapedia.data.room.heroes.HeroWithFraction
+import ru.bulkapedia.data.room.heroes.fromDto
 import ru.bulkapedia.domain.repository.HeroRepository
 
-class HeroRepositoryImpl(wrapper: SupabaseWrapper) : HeroRepository {
+class HeroRepositoryImpl(
+    private val heroDatabase: HeroDatabase
+) : HeroRepository {
 
-    @OptIn(SupabaseExperimental::class)
-    override val heroes = wrapper.postgres
-        .from("heroes")
-        .selectAsFlow(Hero::id)
-        .distinctUntilChanged()
-        .map { it.map(Hero::toPojo) }
+    override fun listenAll(): Flow<List<ru.bulkapedia.domain.model.hero.Hero>> =
+        heroDatabase.dao.listenAll()
+            .map { it.map(HeroWithFraction::fromDto) }
+
+    override suspend fun upsert(heroDto: HeroDto) {
+        heroDatabase.dao.upsertHero(heroDto)
+    }
 
 }

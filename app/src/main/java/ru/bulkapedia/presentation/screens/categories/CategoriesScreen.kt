@@ -31,7 +31,7 @@ fun CategoriesScreen(
         contentPadding = PaddingValues(20.dp),
         verticalArrangement = Arrangement.spacedBy(20.dp)
     ) {
-        items(state.categories) {
+        items(state) {
             CategoryItem(category = it) {
                 onNavigate(Screen.CategoryOf(it.route))
             }

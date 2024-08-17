@@ -1,8 +1,7 @@
 package ru.bulkapedia.domain.repository
 
-import kotlinx.coroutines.flow.Flow
-import ru.bulkapedia.domain.model.Fraction
+import ru.bulkapedia.data.room.heroes.FractionDto
 
 interface FractionRepository {
-    val fractions: Flow<List<Fraction>>
+    suspend fun upsert(fractionDto: FractionDto)
 }

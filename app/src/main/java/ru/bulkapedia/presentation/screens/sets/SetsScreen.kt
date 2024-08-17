@@ -55,7 +55,6 @@ fun SetsScreen(
                 items(state.heroes) {
                     HeroItem(
                         hero = it,
-                        fraction = state.fractions.find { f -> f.id == it.fraction },
                         onClick = {}
                     )
                 }
@@ -70,7 +69,6 @@ fun SetsScreen(
 @Composable
 fun HeroItem(
     hero: Hero,
-    fraction: Fraction?,
     onClick: () -> Unit
 ) {
     Card(
@@ -82,13 +80,11 @@ fun HeroItem(
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.TopStart
         ) {
-            if (fraction != null) {
-                AsyncImage(
-                    modifier = Modifier.size(40.dp).padding(start = 5.dp, top = 5.dp),
-                    model = fraction.imageUrl,
-                    contentDescription = fraction.id
-                )
-            }
+            AsyncImage(
+                modifier = Modifier.size(40.dp).padding(start = 5.dp, top = 5.dp),
+                model = hero.fractionImageUrl,
+                contentDescription = hero.fraction
+            )
             AsyncImage(
                 modifier = Modifier
                     .fillMaxSize()

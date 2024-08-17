@@ -6,19 +6,19 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import ru.bulkapedia.domain.model.Category
-import ru.bulkapedia.domain.category.GetAllCategoryUseCase
+import ru.bulkapedia.domain.usecase.category.GetAllCategoryUseCase
 
 class CategoriesViewModel(
     private val getAllCategoryUseCase: GetAllCategoryUseCase
 ) : ViewModel() {
 
-    private val _state = MutableStateFlow(CategoriesViewState())
+    private val _state = MutableStateFlow(emptyList<Category>())
     val state = _state.asStateFlow()
 
     init {
         viewModelScope.launch {
             getAllCategoryUseCase().collect {
-                _state.emit(state.value.copy(categories = it.filter(Category::isVisible)))
+                _state.emit(it.filter(Category::isVisible))
             }
         }
     }

@@ -1,15 +1,18 @@
-package ru.bulkapedia.data.repository.hero
+package ru.bulkapedia.data.room.heroes
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Hero(
+@Entity(tableName = "heroes")
+data class HeroDto(
+    @PrimaryKey
     val id: String,
     @SerialName("is_active")
     val isActive: Boolean,
     val fraction: String,
-    val difficult: List<Float>,
     val type: String,
-    val imageUrl: String,
+    val imageUrl: String
 )

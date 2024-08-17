@@ -13,4 +13,5 @@ data class CategoryDto(
     val isEnabled: Boolean,
     @ColumnInfo("is_visible")
     val isVisible: Boolean,
+    val route: String
 )

@@ -4,7 +4,7 @@ data class Hero(
     val id: String,
     val isActive: Boolean,
     val fraction: String,
-    val difficult: List<Float>,
-    val type: String,
+    val fractionImageUrl: String,
+    val type: HeroType,
     val imageUrl: String,
 )
