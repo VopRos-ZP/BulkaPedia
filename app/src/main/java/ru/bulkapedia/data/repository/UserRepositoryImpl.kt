@@ -13,10 +13,21 @@ class UserRepositoryImpl(
     private val userDatabase: UserDatabase
 ) : UserRepository {
 
-    override fun listenAll(): Flow<List<User>> = userDatabase.dao.listenAll()
+    override val users: Flow<List<User>> = userDatabase.dao
+        .usersFlow
         .map { it.map(UserDto::fromDto) }
 
-    override suspend fun fetchAll(): List<User> = userDatabase.dao.fetchAll().map(UserDto::fromDto)
+    override suspend fun fetchAll(): List<User> = userDatabase.dao
+        .fetchAll()
+        .map(UserDto::fromDto)
+
+    override suspend fun fetchByEmail(email: String): User = userDatabase.dao
+        .fetchByEmail(email)
+        .fromDto()
+
+    override suspend fun fetchById(id: String): User = userDatabase.dao
+        .fetchById(id)
+        .fromDto()
 
     override suspend fun upsert(user: User) {
         userDatabase.dao.upsert(user.toDto())

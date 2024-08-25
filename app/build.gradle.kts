@@ -84,9 +84,13 @@ dependencies {
     /** Coil **/
     implementation(libs.coil.compose)
     /** MVI **/
-    implementation(libs.orbit.core)
-    implementation(libs.orbit.viewmodel)
-    implementation(libs.orbit.compose)
+    implementation(libs.mvikotlin)
+    implementation(libs.mvikotlin.main)
+    implementation(libs.mvikotlin.logging)
+    implementation(libs.mvikotlin.extensions.coroutines)
+    /** Decompose **/
+    implementation(libs.decompose)
+    implementation(libs.decompose.extensions.compose)
     /** Test **/
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

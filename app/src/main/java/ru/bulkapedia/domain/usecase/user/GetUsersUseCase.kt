@@ -7,8 +7,8 @@ class GetUsersUseCase(
     private val userRepository: UserRepository
 ) : BaseUseCase() {
 
-    operator fun invoke() = userRepository.listenAll().stateIn()
+    suspend operator fun invoke() = userRepository.fetchAll()
 
-    suspend fun fetchAll() = userRepository.fetchAll()
+    val users = userRepository.users.stateIn()
 
 }
