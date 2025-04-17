@@ -13,23 +13,17 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
 import ru.bulkapedia.domain.model.Category
 import ru.bulkapedia.presentation.ui.screens.categories.component.CategoriesComponent
 
 @Composable
-fun CategoriesScreen(
-    navController: NavController,
-    viewModel: CategoriesViewModel = hiltViewModel()
-) {
-    val state by viewModel.state.collectAsState()
+fun CategoriesScreen(component: CategoriesComponent) {
+    val state by component.state.collectAsState()
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
@@ -41,7 +35,9 @@ fun CategoriesScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             items(state.categories) {
-                CategoryCard(it) { navController.navigate(it.id) }
+                CategoryCard(it) {
+                    component.onCategoryClick(it)
+                }
             }
         }
         if (state.error != null) {
@@ -49,15 +45,12 @@ fun CategoriesScreen(
                 onDismissRequest = {/* On click outside */},
                 text = { Text(text = state.error!!) },
                 confirmButton = {
-                    Button(onClick = { viewModel.closeError() }) {
+                    Button(onClick = { component.onCloseError() }) {
                         Text(text = "Закрыть")
                     }
                 }
             )
         }
-    }
-    LaunchedEffect(key1 = Unit) {
-        viewModel.fetchCategories()
     }
 }
 

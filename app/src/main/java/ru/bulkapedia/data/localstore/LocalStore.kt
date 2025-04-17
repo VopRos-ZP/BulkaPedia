@@ -6,14 +6,10 @@ import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
-import javax.inject.Inject
 
-class LocalStore @Inject constructor(
-    @ApplicationContext private val ctx: Context
-) {
+class LocalStore(private val ctx: Context) {
 
     companion object {
         private const val NAME = "config"

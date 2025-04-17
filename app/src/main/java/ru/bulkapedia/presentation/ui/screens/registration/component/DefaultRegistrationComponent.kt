@@ -4,21 +4,17 @@ import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.mvikotlin.core.instancekeeper.getStore
 import com.arkivanov.mvikotlin.extensions.coroutines.labels
 import com.arkivanov.mvikotlin.extensions.coroutines.stateFlow
-import dagger.assisted.Assisted
-import dagger.assisted.AssistedFactory
-import dagger.assisted.AssistedInject
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import ru.bulkapedia.presentation.extensions.componentScope
 import ru.bulkapedia.presentation.ui.screens.registration.mvi.Registration
 import ru.bulkapedia.presentation.ui.screens.registration.mvi.RegistrationStoreFactory
-import javax.inject.Inject
 
-class DefaultRegistrationComponent @AssistedInject constructor(
+class DefaultRegistrationComponent(
     private val registrationStoreFactory: RegistrationStoreFactory,
-    @Assisted("onNavBackClick") private val onNavBackClick: () -> Unit,
-    @Assisted("onSuccess") private val onSuccess: () -> Unit,
+    private val onNavBackClick: () -> Unit,
+    private val onSuccess: () -> Unit,
     context: ComponentContext
 ) : RegistrationComponent, ComponentContext by context {
 
@@ -73,16 +69,6 @@ class DefaultRegistrationComponent @AssistedInject constructor(
 
     override fun onCloseError() {
         store.accept(Registration.Intent.ErrorChanged)
-    }
-
-    @AssistedFactory
-    interface Factory {
-
-        fun create(
-            @Assisted("onNavBackClick") onNavBackClick: () -> Unit,
-            @Assisted("onSuccess") onSuccess: () -> Unit,
-        ): DefaultRegistrationComponent
-
     }
 
 }

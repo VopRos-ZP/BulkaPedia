@@ -9,17 +9,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.navigation.NavController
 
 @Composable
 fun ScaffoldToolbar(
     @StringRes id: Int,
-    navController: NavController? = null,
     content: @Composable BoxScope.() -> Unit
 ) {
     ScaffoldToolbar(
         text = stringResource(id),
-        navController = navController,
         content = content
     )
 }
@@ -27,14 +24,7 @@ fun ScaffoldToolbar(
 @Composable
 fun ScaffoldToolbar(
     text: String,
-    navController: NavController? = null,
     content: @Composable BoxScope.() -> Unit
 ) {
-    Scaffold(topBar = { Toolbar(text, navController) }) {
-        Box(
-            modifier = Modifier.padding(it),
-            contentAlignment = Alignment.Center,
-            content = content
-        )
-    }
+
 }

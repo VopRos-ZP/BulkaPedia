@@ -8,40 +8,45 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.navigation.NavDestination.Companion.hierarchy
-import androidx.navigation.compose.currentBackStackEntryAsState
+import com.arkivanov.decompose.extensions.compose.stack.Children
+import com.arkivanov.decompose.extensions.compose.stack.animation.slide
+import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
+import com.arkivanov.decompose.extensions.compose.subscribeAsState
+import com.arkivanov.decompose.router.stack.backStack
 import ru.bulkapedia.presentation.ui.navigation.AppNavGraph
 import ru.bulkapedia.presentation.ui.navigation.BottomNavItem
-import ru.bulkapedia.presentation.ui.navigation.rememberNavigationState
 
 @Composable
-fun RootContent() {
-    val navState = rememberNavigationState()
+fun RootContent(component: RootComponent) {
+    val stack by component.stack.subscribeAsState()
 
-    Scaffold(
-        bottomBar = {
-            NavigationBar {
-                val navBackStackEntry by navState.navHostController.currentBackStackEntryAsState()
-                BottomNavItem.entries.forEach { item ->
-                    val selected = navBackStackEntry?.destination?.hierarchy?.any {
-                        it.route == item.screen.route
-                    } ?: false
-                    NavigationBarItem(
-                        selected = selected,
-                        onClick = {
-                            if (!selected) {
-                                navState.navigateTo(item.screen.route)
-                            }
-                        },
-                        icon = { Icon(imageVector = item.image, contentDescription = null) }
-                    )
-                }
-            }
-        }
-    ) {
-        AppNavGraph(
-            navHostController = navState.navHostController,
-            modifier = Modifier.padding(it)
-        )
-    }
+
 }
+
+
+//Scaffold(
+//        bottomBar = {
+//            NavigationBar {
+//                BottomNavItem.entries.forEach { item ->
+//                    val selected = stack.backStack.any { it.configuration ==  }
+//                    NavigationBarItem(
+//                        selected = selected,
+//                        onClick = {
+//                            if (!selected) {
+//
+//                            }
+//                        },
+//                        icon = { Icon(imageVector = item.image, contentDescription = null) }
+//                    )
+//                }
+//            }
+//        }
+//    ) { inner ->
+//        Children(
+//            modifier = Modifier.padding(inner),
+//            stack = component.stack,
+//            animation = stackAnimation(slide()),
+//        ) {
+//
+//        }
+//    }

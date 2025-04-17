@@ -5,14 +5,12 @@ import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.coroutines.coroutineBootstrapper
 import com.arkivanov.mvikotlin.extensions.coroutines.coroutineExecutorFactory
 import kotlinx.coroutines.launch
-import ru.bulkapedia.di.qualifiers.DefaultSF
 import ru.bulkapedia.domain.model.User
 import ru.bulkapedia.domain.model.UserSet
 import ru.bulkapedia.domain.repository.UserRepository
-import javax.inject.Inject
 
-class ProfileStoreFactory @Inject constructor(
-    @DefaultSF
+class ProfileStoreFactory (
+
     private val storeFactory: StoreFactory,
     private val userRepository: UserRepository,
 ) {

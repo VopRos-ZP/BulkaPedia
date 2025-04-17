@@ -7,12 +7,9 @@ import com.arkivanov.mvikotlin.extensions.coroutines.coroutineBootstrapper
 import com.arkivanov.mvikotlin.extensions.coroutines.coroutineExecutorFactory
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.launch
-import ru.bulkapedia.di.qualifiers.DefaultSF
 import ru.bulkapedia.domain.repository.MapsRepository
-import javax.inject.Inject
 
-class MapsStoreFactory @Inject constructor(
-    @DefaultSF
+class MapsStoreFactory(
     private val storeFactory: StoreFactory,
     private val mapsRepository: MapsRepository
 ) {
@@ -28,9 +25,7 @@ class MapsStoreFactory @Inject constructor(
                     dispatch(Maps.Action.ErrorChanged(throwable.localizedMessage))
                 }
                 launch(handler) {
-                    mapsRepository.maps.collect {
-                        dispatch(Maps.Action.GameMapsChanged(it))
-                    }
+
                 }
             },
             executorFactory = coroutineExecutorFactory {

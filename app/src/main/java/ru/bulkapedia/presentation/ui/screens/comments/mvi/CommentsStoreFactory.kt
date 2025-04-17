@@ -7,12 +7,9 @@ import com.arkivanov.mvikotlin.extensions.coroutines.coroutineBootstrapper
 import com.arkivanov.mvikotlin.extensions.coroutines.coroutineExecutorFactory
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.launch
-import ru.bulkapedia.di.qualifiers.DefaultSF
 import ru.bulkapedia.domain.repository.CommentsRepository
-import javax.inject.Inject
 
-class CommentsStoreFactory @Inject constructor(
-    @DefaultSF
+class CommentsStoreFactory(
     private val storeFactory: StoreFactory,
     private val commentsRepository: CommentsRepository
 ) {

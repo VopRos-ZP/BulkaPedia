@@ -27,7 +27,7 @@ data class BulkaPediaColors(
     val secondary: Color,
     val secondaryDark: Color,
     val tintColor: Color,
-    val white: Color
+    val white: Color,
 )
 
 val basePalette = BulkaPediaColors(

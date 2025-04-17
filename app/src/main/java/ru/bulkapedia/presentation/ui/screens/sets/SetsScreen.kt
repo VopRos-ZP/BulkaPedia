@@ -21,8 +21,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import ru.bulkapedia.domain.model.Hero
 import ru.bulkapedia.domain.model.HeroType
@@ -32,45 +30,8 @@ import ru.bulkapedia.presentation.ui.components.ScaffoldToolbar
 
 @Composable
 fun SetsScreen(
-    navController: NavController,
-    viewModel: SetsViewModel = hiltViewModel()
 ) {
-    val state by viewModel.state.collectAsState()
-    ScaffoldToolbar(text = "Сеты", navController) {
-        WithAlert(message = state.error, onClose = viewModel::closeError)
-        Column(modifier = Modifier.fillMaxSize()) {
-            val tags = HeroType.entries.toList()
-            LazyRow(
-                modifier = Modifier.fillMaxWidth(),
-                contentPadding = PaddingValues(horizontal = 20.dp),
-                horizontalArrangement = Arrangement.spacedBy(5.dp)
-            ) {
-                items(tags) { type ->
-                    val isSelected = state.selectedHeroType == type
-                    FilterChip(
-                        selected = isSelected,
-                        onClick = { viewModel.filterType(if (isSelected) null else type) },
-                        label = { Text(text = stringResource(Utils.resourceManager.toSource(type.name.lowercase()))) }
-                    )
-                }
-            }
-            val heroes = state.selectedHeroType?.let { type -> state.heroes.filter { m -> m.type == type } } ?: state.heroes
-            LazyVerticalGrid(
-                columns = GridCells.Fixed(2),
-                modifier = Modifier.fillMaxSize(),
-                contentPadding = PaddingValues(20.dp),
-                verticalArrangement = Arrangement.spacedBy(20.dp),
-                horizontalArrangement = Arrangement.spacedBy(20.dp),
-            ) {
-                items(heroes) { hero ->
-                    HeroCard(hero) {}
-                }
-            }
-        }
-    }
-    LaunchedEffect(key1 = Unit) {
-        viewModel.fetchHeroes()
-    }
+
 }
 
 @Composable

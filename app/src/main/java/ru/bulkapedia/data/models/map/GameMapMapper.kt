@@ -5,14 +5,16 @@ import ru.bulkapedia.domain.model.MapMode
 
 fun GameMapDto.toGameMap() = GameMap(
     id = id,
-    original = original,
-    spawns = spawns,
+    name = name,
+    imageUrl = imageUrl,
+    spawnsUrl = spawnsUrl,
     mode = MapMode.valueOf(mode)
 )
 
 fun GameMap.toDto() = GameMapDto(
     id = id,
-    original = original,
-    spawns = spawns,
+    name = name,
+    imageUrl = imageUrl,
+    spawnsUrl = spawnsUrl,
     mode = mode.name
 )

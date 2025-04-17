@@ -6,6 +6,7 @@ object Table {
     const val COMMENTS = "comments"
     const val EFFECTS = "effects"
     const val GEARS = "gears"
+    const val GEAR_PRICES = "gear_prices"
     const val HERO_INFO = "heroInfo"
     const val HEROES = "heroes"
     const val MAINS = "mains"

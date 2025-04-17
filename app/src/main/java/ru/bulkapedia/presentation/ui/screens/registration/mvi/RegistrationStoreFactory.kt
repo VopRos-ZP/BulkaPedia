@@ -6,14 +6,11 @@ import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.coroutines.coroutineExecutorFactory
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.launch
-import ru.bulkapedia.di.qualifiers.DefaultSF
 import ru.bulkapedia.domain.model.User
 import ru.bulkapedia.domain.repository.AuthRepository
 import ru.bulkapedia.domain.repository.UserRepository
-import javax.inject.Inject
 
-class RegistrationStoreFactory @Inject constructor(
-    @DefaultSF
+class RegistrationStoreFactory  (
     private val storeFactory: StoreFactory,
     private val authRepository: AuthRepository,
     private val userRepository: UserRepository

@@ -25,29 +25,24 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
 import ru.bulkapedia.presentation.ui.navigation.Screen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginScreen(
-    navController: NavController,
 ) {
     Scaffold(
         topBar = { CenterAlignedTopAppBar(title = { Text(text = "Авторизация") }) }
     ) {
-        LoginScreenContent(it, navController)
+        LoginScreenContent(it)
     }
 }
 
 @Composable
 private fun LoginScreenContent(
-    paddingValues: PaddingValues,
-    navController: NavController,
-    viewModel: LoginViewModel = hiltViewModel()
+    paddingValues: PaddingValues
 ) {
-    val state by viewModel.state.collectAsState()
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -58,31 +53,31 @@ private fun LoginScreenContent(
             verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {
             OutlinedTextField(
-                value = state.email,
-                onValueChange = { viewModel.emailChanged(it) },
+                value = "",
+                onValueChange = {  },
                 prefix = { Text(text = "@") },
                 singleLine = true
             )
             OutlinedTextField(
-                value = state.password,
-                onValueChange = { viewModel.passwordChanged(it) },
+                value = "state.password",
+                onValueChange = {  },
                 singleLine = true,
                 trailingIcon = {
-                    IconButton(onClick = { viewModel.toggleShowPassword() }) {
+                    IconButton(onClick = {  }) {
                         Icon(
-                            if (state.isShowPassword) Icons.Filled.VisibilityOff
+                            if (true) Icons.Filled.VisibilityOff
                             else Icons.Filled.Visibility,
                             contentDescription = null
                         )
                     }
                 },
-                visualTransformation = if (state.isShowPassword) VisualTransformation.None
+                visualTransformation = if (true) VisualTransformation.None
                 else PasswordVisualTransformation()
             )
-            Button(onClick = { viewModel.loginClick { navController.navigate("profile") } }) {
+            Button(onClick = { }) {
                 Text(text = "Войти")
             }
-            Button(onClick = { navController.navigate(Screen.Registration.route) }) {
+            Button(onClick = {  }) {
                 Text(text = "Регистрация")
             }
         }

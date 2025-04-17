@@ -1,14 +1,12 @@
 package ru.bulkapedia.data.models.comment
 
-import com.google.firebase.Timestamp
-import com.google.firebase.firestore.DocumentId
-import com.google.firebase.firestore.DocumentReference
+import java.util.Date
+
 
 data class CommentDto(
-    @DocumentId
     val id: String,
     val text: String,
-    val author: DocumentReference,
+    val author: String,
     val set: String,
-    val date: Timestamp
+    val date: Date
 )

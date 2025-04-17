@@ -1,12 +1,18 @@
 package ru.bulkapedia.data.models.map
 
-import com.google.firebase.firestore.DocumentId
-import ru.bulkapedia.domain.model.MapMode
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class GameMapDto(
-    @DocumentId
-    val id: String = "",
-    val original: String = "",
-    val spawns: String = "",
-    val mode: String = MapMode.BATTLE_ROYALE.name
+    @SerialName("id")
+    val id: Int,
+    @SerialName("name")
+    val name: String,
+    @SerialName("image_url")
+    val imageUrl: String,
+    @SerialName("spawns_url")
+    val spawnsUrl: String,
+    @SerialName("game_mode")
+    val mode: String
 )

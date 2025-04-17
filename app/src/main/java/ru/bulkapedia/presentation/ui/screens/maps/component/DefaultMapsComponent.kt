@@ -4,9 +4,6 @@ import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.mvikotlin.core.instancekeeper.getStore
 import com.arkivanov.mvikotlin.extensions.coroutines.labels
 import com.arkivanov.mvikotlin.extensions.coroutines.stateFlow
-import dagger.assisted.Assisted
-import dagger.assisted.AssistedFactory
-import dagger.assisted.AssistedInject
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -16,13 +13,12 @@ import ru.bulkapedia.presentation.extensions.componentScope
 import ru.bulkapedia.presentation.ui.screens.maps.mvi.Maps
 import ru.bulkapedia.presentation.ui.screens.maps.mvi.MapsStore
 import ru.bulkapedia.presentation.ui.screens.maps.mvi.MapsStoreFactory
-import javax.inject.Inject
 
-class DefaultMapsComponent @AssistedInject constructor(
+class DefaultMapsComponent(
     private val mapsStoreFactory: MapsStoreFactory,
-    @Assisted("onNavBackClick") private val onNavBackClick: () -> Unit,
-    @Assisted("onMapClick") private val onMapClick: (GameMap) -> Unit,
-    @Assisted("context") context: ComponentContext
+    private val onNavBackClick: () -> Unit,
+    private val onMapClick: (GameMap) -> Unit,
+    context: ComponentContext
 ) : MapsComponent, ComponentContext by context {
 
     private val store: MapsStore = instanceKeeper.getStore { mapsStoreFactory.create() }
@@ -58,15 +54,5 @@ class DefaultMapsComponent @AssistedInject constructor(
         store.accept(Maps.Intent.OnCloseError)
     }
 
-    @AssistedFactory
-    interface Factory {
-
-        fun create(
-            @Assisted("onNavBackClick") onNavBackClick: () -> Unit,
-            @Assisted("onMapClick") onMapClick: (GameMap) -> Unit,
-            @Assisted("context") context: ComponentContext
-        ): DefaultMapsComponent
-
-    }
 
 }

@@ -7,12 +7,9 @@ import com.arkivanov.mvikotlin.extensions.coroutines.coroutineBootstrapper
 import com.arkivanov.mvikotlin.extensions.coroutines.coroutineExecutorFactory
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.launch
-import ru.bulkapedia.di.qualifiers.DefaultSF
 import ru.bulkapedia.domain.repository.CategoryRepository
-import javax.inject.Inject
 
-class CategoriesStoreFactory @Inject constructor(
-    @DefaultSF
+class CategoriesStoreFactory(
     private val storeFactory: StoreFactory,
     private val categoryRepository: CategoryRepository
 ) {
@@ -23,9 +20,7 @@ class CategoriesStoreFactory @Inject constructor(
             initialState = Categories.State(),
             bootstrapper = coroutineBootstrapper {
                 val handler = CoroutineExceptionHandler { _, throwable ->
-
                     Log.e("CategoriesStore", throwable.stackTraceToString())
-
                     dispatch(Categories.Action.Error(throwable.localizedMessage))
                 }
                 launch(handler) {

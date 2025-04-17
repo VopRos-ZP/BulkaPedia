@@ -3,9 +3,6 @@ package ru.bulkapedia.presentation.def
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.mvikotlin.core.instancekeeper.getStore
 import com.arkivanov.mvikotlin.extensions.coroutines.stateFlow
-import dagger.assisted.Assisted
-import dagger.assisted.AssistedFactory
-import dagger.assisted.AssistedInject
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -14,9 +11,9 @@ import ru.bulkapedia.presentation.components.LoginComponent
 import ru.bulkapedia.presentation.ui.screens.login.mvi.Login
 import ru.bulkapedia.presentation.ui.screens.login.mvi.LoginStoreFactory
 
-class DefaultLoginComponent @AssistedInject constructor(
+class DefaultLoginComponent(
     private val storeFactory: LoginStoreFactory,
-    @Assisted("context") context: ComponentContext
+    context: ComponentContext
 ) : LoginComponent, ComponentContext by context {
 
     private val store = instanceKeeper.getStore { storeFactory.create() }
@@ -44,13 +41,5 @@ class DefaultLoginComponent @AssistedInject constructor(
         store.accept(Login.Intent.ForgotPasswordClick)
     }
 
-    @AssistedFactory
-    interface Factory {
-
-        fun create(
-            @Assisted("context") context: ComponentContext
-        ): DefaultLoginComponent
-
-    }
 
 }
