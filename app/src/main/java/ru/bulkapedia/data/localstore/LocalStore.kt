@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.map
 class LocalStore(private val ctx: Context) {
 
     companion object {
-        private const val NAME = "config"
+        private const val NAME = "settings"
         private val Context.dataStore by preferencesDataStore(NAME)
         /** Keys **/
         private val ID_KEY = stringPreferencesKey("id")
@@ -23,11 +23,6 @@ class LocalStore(private val ctx: Context) {
     val isSign = ctx.dataStore.data.map { it[SIGN_KEY] ?: false }
 
     val config = id.combine(isSign) { id, isSign -> Pair(id, isSign) }
-
-    suspend fun saveAll(id: String, isSign: Boolean) {
-        saveId(id)
-        saveSign(isSign)
-    }
 
     suspend fun saveId(id: String) {
         save(ID_KEY, id)

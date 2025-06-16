@@ -20,11 +20,12 @@ fun Toolbar(
 @Composable
 fun BackTopAppBar(
     text: String,
+    onClick: () -> Unit,
 ) {
     TopAppBar(
         title = { Text(text = text) },
         navigationIcon = {
-            IconButton(onClick = {  }) {
+            IconButton(onClick = onClick) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Default.ArrowBack,
                     contentDescription = null

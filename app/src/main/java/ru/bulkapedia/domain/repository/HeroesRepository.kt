@@ -5,4 +5,5 @@ import ru.bulkapedia.domain.model.Hero
 
 interface HeroesRepository {
     val heroes: Flow<List<Hero>>
+    fun listenHero(id: String): Flow<Hero>
 }

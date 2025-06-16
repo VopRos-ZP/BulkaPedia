@@ -2,14 +2,18 @@ package ru.bulkapedia.data.models.category
 
 import ru.bulkapedia.domain.model.Category
 
-fun CategoryDto.toCategory() = Category(
-    id = id, title = title,
-    enabled = enabled,
-    visible = visible
+fun CategoryDto.fromDto() = Category(
+    id = id,
+    name = name,
+    route = route,
+    isEnable = isEnable,
+    isVisible = isVisible,
 )
 
 fun Category.toDto() = CategoryDto(
-    id = id, title = title,
-    enabled = enabled,
-    visible = visible
+    id = id,
+    name = name,
+    route = route,
+    isEnable = isEnable,
+    isVisible = isVisible,
 )

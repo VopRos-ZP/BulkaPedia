@@ -1,11 +1,18 @@
 package ru.bulkapedia.data.models.category
 
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class CategoryDto(
-    val id: String = "",
-    val title: String = "",
-    @JvmField
-    val enabled: Boolean = false,
-    @JvmField
-    val visible: Boolean = false
+    @SerialName("id")
+    val id: Int,
+    @SerialName("name")
+    val name: String,
+    @SerialName("route")
+    val route: String,
+    @SerialName("is_enable")
+    val isEnable: Boolean,
+    @SerialName("is_visible")
+    val isVisible: Boolean,
 )
