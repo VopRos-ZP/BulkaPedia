@@ -9,6 +9,9 @@ object Splash
 object Main
 
 @Serializable
+object GearPrices
+
+@Serializable
 object Categories
 
 @Serializable

@@ -1,4 +1,4 @@
-package ru.bulkapedia.data.repository
+package ru.bulkapedia.data.models.category
 
 import io.github.jan.supabase.annotations.SupabaseExperimental
 import io.github.jan.supabase.postgrest.query.filter.FilterOperation
@@ -6,8 +6,6 @@ import io.github.jan.supabase.postgrest.query.filter.FilterOperator
 import io.github.jan.supabase.realtime.selectAsFlow
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import ru.bulkapedia.data.models.category.CategoryDto
-import ru.bulkapedia.data.models.category.fromDto
 import ru.bulkapedia.data.supabase.SupabaseHelper
 import ru.bulkapedia.domain.model.Category
 import ru.bulkapedia.domain.repository.CategoryRepository

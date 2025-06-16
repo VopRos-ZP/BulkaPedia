@@ -126,18 +126,21 @@
     <string name="sparkle">Sparkle</string>
     <string name="hurricane">Hurricane</string>
     <string name="shenji">Shenji</string>
+    <string name="molly">Molly</string>
     <!--   ПП -->
     <string name="ghost">Ghost</string>
     <string name="freddie">Freddie</string>
     <string name="angel">Angel</string>
     <string name="raven">Raven</string>
     <string name="alice">Alice</string>
+    <string name="twinkle">Twinkle</string>
     <!--   Снайперы -->
     <string name="blot">Blot</string>
     <string name="firefly">Firefly</string>
     <string name="slayer">Slayer</string>
     <string name="mirage">Mirage</string>
     <string name="lynx">Lynx</string>
+    <string name="blizzard">Blizzard</string>
     <!--    Танки -->
     <string name="smog">Smog</string>
     <string name="dragoon">Dragoon</string>
@@ -145,12 +148,15 @@
     <string name="bertha">Bertha</string>
     <string name="leviathan">Leviathan</string>
     <string name="ramsey">Ramsey</string>
+    <string name="kwon">Kwon</string>
     <!--   Штурмовики -->
     <string name="stalker">Stalker</string>
     <string name="doc">Doc</string>
     <string name="tess">Tess</string>
     <string name="levi">Levi</string>
     <string name="satoshi">Satoshi</string>
+    <string name="vi">Vi</string>
+    <string name="graviel">Graviel</string>
     <!--   названия карт -->
     <!--   Кб -->
     <string name="hotel">Hotel</string>
@@ -268,5 +274,19 @@
     <string name="two" translatable="false">№2</string>
     <string name="three" translatable="false">№3</string>
     <string name="create_set">Create set</string>
+
+    <string-array name="ranks">
+        <item>Common</item>
+        <item>Rare</item>
+        <item>Epic</item>
+        <item>Legendary</item>
+        <item>Mythic</item>
+        <item>Supreme</item>
+        <item>Ultimate</item>
+        <item>Celestial</item>
+        <item>Stellar</item>
+        <item>Immortal</item>
+        <item>Divine</item>
+    </string-array>
 
 </resources>

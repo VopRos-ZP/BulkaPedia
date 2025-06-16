@@ -8,9 +8,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import coil.compose.AsyncImage
 import org.orbitmvi.orbit.compose.collectAsState
 import org.orbitmvi.orbit.compose.collectSideEffect
+import ru.bulkapedia.domain.utils.ResourceManager
+import ru.bulkapedia.domain.utils.Utils.resourceManager
 import ru.bulkapedia.presentation.ui.components.BackTopAppBar
 
 @Composable
@@ -27,7 +30,7 @@ fun HeroDetailsScreen(
 
     Scaffold(
         topBar = {
-            BackTopAppBar("") {
+            BackTopAppBar(stringResource(resourceManager.toSource(state.id))) {
                 viewModel.onBackClick()
             }
         }

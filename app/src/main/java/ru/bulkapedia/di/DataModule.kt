@@ -4,8 +4,8 @@ import org.koin.core.module.dsl.bind
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 import ru.bulkapedia.data.models.hero.HeroesRepositoryImpl
-import ru.bulkapedia.data.repository.CategoryRepositoryImpl
-import ru.bulkapedia.data.repository.GearPriceRepositoryImpl
+import ru.bulkapedia.data.models.category.CategoryRepositoryImpl
+import ru.bulkapedia.data.models.gears_prices.GearPriceRepositoryImpl
 import ru.bulkapedia.data.supabase.SupabaseHelper
 import ru.bulkapedia.domain.repository.CategoryRepository
 import ru.bulkapedia.domain.repository.GearPriceRepository
