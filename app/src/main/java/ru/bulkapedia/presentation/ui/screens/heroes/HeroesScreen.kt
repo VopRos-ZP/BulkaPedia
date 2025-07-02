@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -17,6 +18,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import org.koin.androidx.compose.koinViewModel
@@ -88,12 +90,13 @@ fun HeroCard(
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(vertical = 5.dp),
+                .height(175.dp),
             contentAlignment = Alignment.Center
         ) {
             AsyncImage(
                 model = hero.imageUrl,
                 contentDescription = hero.id,
+                modifier = Modifier.fillMaxWidth(),
             )
         }
     }

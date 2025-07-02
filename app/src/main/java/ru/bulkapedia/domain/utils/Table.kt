@@ -14,4 +14,5 @@ object Table {
     const val MECHANICS = "mechanics"
     const val SETS = "sets"
     const val USERS = "users"
+    const val DRAFTS = "drafts"
 }
