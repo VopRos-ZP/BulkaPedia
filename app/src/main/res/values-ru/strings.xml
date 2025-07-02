@@ -127,18 +127,21 @@
     <string name="hurricane">Ураган</string>
     <string name="shenji">Шенджи</string>
     <!--    ПП -->
+    <string name="molly">Молли</string>
     <string name="ghost">Призрак</string>
     <string name="freddie">Фредди</string>
     <string name="angel">Ангел</string>
     <string name="raven">Ворон</string>
     <string name="alice">Алиса</string>
     <!--    Снайперы -->
+    <string name="twinkle">Твинкл</string>
     <string name="blot">Блот</string>
     <string name="firefly">Огонёк</string>
     <string name="slayer">Губитель</string>
     <string name="mirage">Мираж</string>
     <string name="lynx">Линкс</string>
     <!--   Танки -->
+    <string name="blizzard">Вьюга</string>
     <string name="smog">Смог</string>
     <string name="dragoon">Драгун</string>
     <string name="bastion">Бастион</string>
@@ -146,6 +149,7 @@
     <string name="leviathan">Левиафан</string>
     <string name="ramsey">Левиафан</string>
     <!--   Штурмовики -->
+    <string name="kwon">Квон</string>
     <string name="stalker">Сталкер</string>
     <string name="doc">Док</string>
     <string name="tess">Тесс</string>
@@ -153,6 +157,7 @@
     <string name="satoshi">Сатоши</string>
     <!--   названия карт -->
     <!--   Кб -->
+    <string name="graviel">Гравиэль</string>
     <string name="hotel">Отель</string>
     <string name="bank">Банк</string>
     <string name="city">Город</string>
@@ -265,5 +270,20 @@
     <string name="update_content">Доступна новая версия приложения</string>
     <string name="no_effects">Нет эффектов</string>
     <string name="create_set">Создать сет</string>
+    <string name="vi">Ви</string>
+
+    <string-array name="ranks">
+        <item>Обычный</item>
+        <item>Редкий</item>
+        <item>Эпический</item>
+        <item>Легендарный</item>
+        <item>Мифический</item>
+        <item>Высший</item>
+        <item>Ультимативный</item>
+        <item>Небесный</item>
+        <item>Звездный</item>
+        <item>Бессмертный</item>
+        <item>Божественный</item>
+    </string-array>
 
 </resources>
