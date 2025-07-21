@@ -9,6 +9,9 @@ object Splash
 object Main
 
 @Serializable
+object App
+
+@Serializable
 object GearPrices
 
 @Serializable
@@ -19,3 +22,12 @@ object Heroes
 
 @Serializable
 data class HeroDetails(val id: String)
+
+@Serializable
+object Auth
+
+@Serializable
+object Login
+
+@Serializable
+object Registration

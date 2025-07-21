@@ -17,10 +17,11 @@ fun Loader() {
 
 @Composable
 fun CenterContent(
+    modifier: Modifier = Modifier,
     content: @Composable BoxScope.() -> Unit
 ) {
     Box(
-        modifier = Modifier.fillMaxSize(),
+        modifier = modifier.fillMaxSize(),
         contentAlignment = Alignment.Center,
         content = content
     )
